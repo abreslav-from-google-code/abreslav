@@ -5,7 +5,7 @@ import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
 
-public abstract class Graph<D, V extends Vertex<D>, E extends Edge<D, V>> implements Iterable<V> {
+public abstract class Graph<D, V extends Vertex<D>, E extends Edge<V>> implements Iterable<V> {
 	private final ArrayList<V> vertices = new ArrayList<V>();
 	protected final List<V> unmodifiableVertices = Collections.unmodifiableList(vertices);
 	private final VertexFactory<D, V> vertexFactory;

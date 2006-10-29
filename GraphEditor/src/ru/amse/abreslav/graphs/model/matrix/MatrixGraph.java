@@ -1,12 +1,12 @@
 package ru.amse.abreslav.graphs.model.matrix;
 
-import ru.amse.abreslav.graphs.model.Edge;
+import ru.amse.abreslav.graphs.model.SimpleEdge;
 import ru.amse.abreslav.graphs.model.Graph;
 import ru.amse.abreslav.graphs.model.VertexFactory;
 
-public class MatrixGraph<D> extends Graph<D, MatrixVertex<D>, Edge.Default<D, MatrixVertex<D>>> {
+public class MatrixGraph<D> extends Graph<D, MatrixVertex<D>, SimpleEdge<MatrixVertex<D>>> {
 
-	private Edge.Default<D, MatrixVertex<D>>[][] matrix;
+	private SimpleEdge<MatrixVertex<D>>[][] matrix;
 	
 	public MatrixGraph(int capacity) {
 		super(new VertexFactory<D, MatrixVertex<D>>() {
@@ -19,7 +19,7 @@ public class MatrixGraph<D> extends Graph<D, MatrixVertex<D>, Edge.Default<D, Ma
 
 	@SuppressWarnings("unchecked")
 	private void createMatrix(int capacity) {
-		matrix = new Edge.Default[capacity][capacity];
+		matrix = new SimpleEdge[capacity][capacity];
 	}
 	
 	public int getCapacity() {
@@ -37,12 +37,12 @@ public class MatrixGraph<D> extends Graph<D, MatrixVertex<D>, Edge.Default<D, Ma
 	}
 
 	@Override
-	public Edge.Default<D, MatrixVertex<D>> connect(MatrixVertex<D> a, MatrixVertex<D> b) {
-		Edge.Default<D, MatrixVertex<D>> edge = getConnected(a, b);
+	public SimpleEdge<MatrixVertex<D>> connect(MatrixVertex<D> a, MatrixVertex<D> b) {
+		SimpleEdge<MatrixVertex<D>> edge = getConnected(a, b);
 		if (edge != null) {
 			return edge;
 		}
-		matrix[a.getIndex()][b.getIndex()] = new Edge.Default<D, MatrixVertex<D>>(a, b); 
+		matrix[a.getIndex()][b.getIndex()] = new SimpleEdge<MatrixVertex<D>>(a, b); 
 		return matrix[a.getIndex()][b.getIndex()];
 	}
 
@@ -52,7 +52,7 @@ public class MatrixGraph<D> extends Graph<D, MatrixVertex<D>, Edge.Default<D, Ma
 	}
 
 	@Override
-	public Edge.Default<D, MatrixVertex<D>> getConnected(MatrixVertex<D> a, MatrixVertex<D> b) {
+	public SimpleEdge<MatrixVertex<D>> getConnected(MatrixVertex<D> a, MatrixVertex<D> b) {
 		return matrix[a.getIndex()][b.getIndex()];
 	}
 

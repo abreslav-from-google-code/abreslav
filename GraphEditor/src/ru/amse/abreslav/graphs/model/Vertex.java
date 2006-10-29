@@ -7,7 +7,7 @@ public interface Vertex<D> {
 	String toString();
 	
 	/**
-	 * Default implementation 
+	 * SimpleEdge implementation 
 	 */
 	public class Default<D> implements Vertex<D> {
 		private D data;

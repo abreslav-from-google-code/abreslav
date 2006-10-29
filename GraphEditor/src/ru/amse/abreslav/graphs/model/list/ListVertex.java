@@ -6,21 +6,22 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 
+import ru.amse.abreslav.graphs.model.SimpleEdge;
 import ru.amse.abreslav.graphs.model.Vertex;
 
 public class ListVertex<D> extends Vertex.Default<D> {
 
-	private final Map<ListVertex<D>, ListEdge<D>> edges = new HashMap<ListVertex<D>, ListEdge<D>>();
+	private final Map<ListVertex<D>, SimpleEdge<ListVertex<D>>> edges = new HashMap<ListVertex<D>, SimpleEdge<ListVertex<D>>>();
 	private final Collection<ListVertex<D>> neighbors = Collections.unmodifiableCollection(edges.keySet());
 	
 	/*package-private*/ ListVertex() {		
 	}
 	
-	public ListEdge<D> getConnectedTo(ListVertex<D> v) {
+	public SimpleEdge<ListVertex<D>> getConnectedTo(ListVertex<D> v) {
 		return edges.get(v);
 	}
 	
-	/*package-private*/ void acceptEdge(ListEdge<D> e) {
+	/*package-private*/ void acceptEdge(SimpleEdge<ListVertex<D>> e) {
 		if (e.getStart() != this) {
 			throw new IllegalArgumentException("Edge start doesn't match");
 		}

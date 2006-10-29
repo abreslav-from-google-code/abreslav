@@ -1,9 +1,10 @@
 package ru.amse.abreslav.graphs.model.list;
 
 import ru.amse.abreslav.graphs.model.Graph;
+import ru.amse.abreslav.graphs.model.SimpleEdge;
 import ru.amse.abreslav.graphs.model.VertexFactory;
 
-public class ListGraph<D> extends Graph<D, ListVertex<D>, ListEdge<D>> {
+public class ListGraph<D> extends Graph<D, ListVertex<D>, SimpleEdge<ListVertex<D>>> {
 
 	public ListGraph() {
 		super(new VertexFactory<D, ListVertex<D>>() {
@@ -17,8 +18,12 @@ public class ListGraph<D> extends Graph<D, ListVertex<D>, ListEdge<D>> {
 	}
 
 	@Override
-	public ListEdge<D> connect(ListVertex<D> a, ListVertex<D> b) {
-		ListEdge<D> edge = new ListEdge<D>(a, b);
+	public SimpleEdge<ListVertex<D>> connect(ListVertex<D> a, ListVertex<D> b) {
+		SimpleEdge<ListVertex<D>> oldEdge = getConnected(a, b);
+		if (oldEdge != null) {
+			return oldEdge;
+		}
+		SimpleEdge<ListVertex<D>> edge = new SimpleEdge<ListVertex<D>>(a, b);
 		a.acceptEdge(edge);
 		return edge;
 	}
@@ -29,7 +34,7 @@ public class ListGraph<D> extends Graph<D, ListVertex<D>, ListEdge<D>> {
 	}
 
 	@Override
-	public ListEdge<D> getConnected(ListVertex<D> a, ListVertex<D> b) {
+	public SimpleEdge<ListVertex<D>> getConnected(ListVertex<D> a, ListVertex<D> b) {
 		return a.getConnectedTo(b);
 	}
 
