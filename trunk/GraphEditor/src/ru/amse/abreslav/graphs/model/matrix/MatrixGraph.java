@@ -1,12 +1,16 @@
 package ru.amse.abreslav.graphs.model.matrix;
 
-import ru.amse.abreslav.graphs.model.SimpleEdge;
+import java.util.Collection;
+import java.util.LinkedHashSet;
+
 import ru.amse.abreslav.graphs.model.Graph;
+import ru.amse.abreslav.graphs.model.SimpleEdge;
 import ru.amse.abreslav.graphs.model.VertexFactory;
 
 public class MatrixGraph<D> extends Graph<D, MatrixVertex<D>, SimpleEdge<MatrixVertex<D>>> {
 
 	private SimpleEdge<MatrixVertex<D>>[][] matrix;
+	private Collection<SimpleEdge<MatrixVertex<D>>> edges = new LinkedHashSet<SimpleEdge<MatrixVertex<D>>>();
 	
 	public MatrixGraph(int capacity) {
 		super(new VertexFactory<D, MatrixVertex<D>>() {
@@ -27,33 +31,41 @@ public class MatrixGraph<D> extends Graph<D, MatrixVertex<D>, SimpleEdge<MatrixV
 	}
 	
 	@Override
-	public MatrixVertex<D> addVertex() {
+	protected void beforeVertexAdded() {
 		if (size() >= matrix.length) {
 			throw new IllegalStateException("Capacity exceeded");
 		}
-		MatrixVertex<D> result = super.addVertex();
-		result.setIndex(size() - 1);
-		return result;
 	}
 
 	@Override
+	protected void afterVertexAdded(MatrixVertex<D> v) {
+		v.setIndex(size() - 1);
+	}
+	
 	public SimpleEdge<MatrixVertex<D>> connect(MatrixVertex<D> a, MatrixVertex<D> b) {
 		SimpleEdge<MatrixVertex<D>> edge = getConnected(a, b);
 		if (edge != null) {
 			return edge;
 		}
-		matrix[a.getIndex()][b.getIndex()] = new SimpleEdge<MatrixVertex<D>>(a, b); 
+		edge = new SimpleEdge<MatrixVertex<D>>(a, b);
+		matrix[a.getIndex()][b.getIndex()] = edge;
+		edges.add(edge);
 		return matrix[a.getIndex()][b.getIndex()];
 	}
 
-	@Override
 	public void disconnect(MatrixVertex<D> a, MatrixVertex<D> b) {
-		matrix[a.getIndex()][b.getIndex()] = null;
+		if (matrix[a.getIndex()][b.getIndex()] != null) {
+			edges.remove(matrix[a.getIndex()][b.getIndex()]);
+			matrix[a.getIndex()][b.getIndex()] = null;
+		}
 	}
 
-	@Override
 	public SimpleEdge<MatrixVertex<D>> getConnected(MatrixVertex<D> a, MatrixVertex<D> b) {
 		return matrix[a.getIndex()][b.getIndex()];
+	}
+
+	public Iterable<SimpleEdge<MatrixVertex<D>>> getEdges() {
+		return edges;
 	}
 
 }

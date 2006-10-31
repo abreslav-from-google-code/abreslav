@@ -45,5 +45,11 @@ public class TestListGraph extends TestGraph<Integer, ListVertex<Integer>,
 		r.add(d);
 		assertEquals(r, r);
 	}
+
+	
+	@Override
+	protected Integer getVertexData() {
+		return 0;
+	}
 	
 }

@@ -5,7 +5,7 @@ import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
 
-public abstract class Graph<D, V extends Vertex<D>, E extends Edge<V>> implements Iterable<V> {
+public abstract class Graph<D, V extends Vertex<D>, E extends Edge<V>> implements IGraph<D, V, E> {
 	private final ArrayList<V> vertices = new ArrayList<V>();
 	protected final List<V> unmodifiableVertices = Collections.unmodifiableList(vertices);
 	private final VertexFactory<D, V> vertexFactory;
@@ -18,16 +18,24 @@ public abstract class Graph<D, V extends Vertex<D>, E extends Edge<V>> implement
 		return vertices.size();
 	}
 	
-	public V addVertex(D data) {
+	public final V addVertex(D data) {
 		V v = addVertex();
 		v.setData(data);
 		return v;
 	}
 	
-	public V addVertex() {
+	public final V addVertex() {
+		beforeVertexAdded();
 		V v = vertexFactory.createVertex();
 		vertices.add(v);
+		afterVertexAdded(v);
 		return v;
+	}
+
+	protected void beforeVertexAdded() {
+	}
+
+	protected void afterVertexAdded(V v) {
 	}
 	
 	public final boolean hasVertex(V v) {
@@ -38,10 +46,18 @@ public abstract class Graph<D, V extends Vertex<D>, E extends Edge<V>> implement
 		if (!beforeVertexRemoved(v)) {
 			return false;
 		}
+		disconnectNeighbors(v);
 		vertices.remove(v);
 		return true;
 	}
 	
+	protected void disconnectNeighbors(V v) {
+		for (V a : vertices) {
+			disconnect(a, v);
+			disconnect(v, a);
+		}		
+	}
+
 	protected boolean beforeVertexRemoved(V v) {
 		return true;
 	}
@@ -53,10 +69,6 @@ public abstract class Graph<D, V extends Vertex<D>, E extends Edge<V>> implement
 	public final List<V> getVertexList() {
 		return new ArrayList<V>(vertices);
 	}
-	
-	public abstract E getConnected(V a, V b);
-	public abstract E connect(V a, V b);
-	public abstract void disconnect(V a, V b);
 	
 	@Override
 	public String toString() {

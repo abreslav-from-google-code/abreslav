@@ -38,4 +38,9 @@ public class TestMatrixGraph extends TestGraph<Integer, MatrixVertex<Integer>,
 		}
 	}
 
+	@Override
+	protected Integer getVertexData() {
+		return 0;
+	}
+
 }
