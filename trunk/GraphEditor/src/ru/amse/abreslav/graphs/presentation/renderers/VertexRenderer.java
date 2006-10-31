@@ -1,4 +1,4 @@
-package ru.amse.abreslav.graphs.ui.renderers;
+package ru.amse.abreslav.graphs.presentation.renderers;
 
 import java.awt.Graphics;
 

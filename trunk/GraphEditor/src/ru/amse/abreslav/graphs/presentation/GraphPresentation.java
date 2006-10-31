@@ -10,7 +10,6 @@ import ru.amse.abreslav.graphs.model.Edge;
 import ru.amse.abreslav.graphs.model.Vertex;
 import ru.amse.abreslav.graphs.presentation.events.GraphModificationListener;
 import ru.amse.abreslav.graphs.presentation.events.NotifyingGraph;
-import ru.amse.abreslav.graphs.presentation.events.PresentationListener;
 
 public class GraphPresentation<D> {
 	private final PresentationFactory<D> factory;

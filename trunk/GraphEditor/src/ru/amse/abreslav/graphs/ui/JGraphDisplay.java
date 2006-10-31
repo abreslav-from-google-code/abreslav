@@ -7,10 +7,13 @@ import java.awt.event.ComponentEvent;
 
 import javax.swing.JComponent;
 
+import ru.amse.abreslav.graphs.presentation.CircleLayout;
+import ru.amse.abreslav.graphs.presentation.GraphLayout;
 import ru.amse.abreslav.graphs.presentation.GraphPresentation;
-import ru.amse.abreslav.graphs.ui.renderers.CircleVertexRenderer;
-import ru.amse.abreslav.graphs.ui.renderers.GraphRenderer;
-import ru.amse.abreslav.graphs.ui.renderers.LineEdgeRenderer;
+import ru.amse.abreslav.graphs.presentation.PresentationListener;
+import ru.amse.abreslav.graphs.presentation.renderers.CircleVertexRenderer;
+import ru.amse.abreslav.graphs.presentation.renderers.GraphRenderer;
+import ru.amse.abreslav.graphs.presentation.renderers.LineEdgeRenderer;
 
 public class JGraphDisplay extends JComponent {
 
@@ -35,6 +38,12 @@ public class JGraphDisplay extends JComponent {
 				layout.layout(presentation, bounds);
 				repaint();
 			}			
+		});
+		
+		presentation.addListener(new PresentationListener() {
+			public void presentationUpdated() {
+				repaint();
+			}
 		});
 		
 		painter = new Painter() {
