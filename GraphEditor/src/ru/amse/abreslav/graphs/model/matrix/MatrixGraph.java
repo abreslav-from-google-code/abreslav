@@ -50,12 +50,13 @@ public class MatrixGraph<D> extends Graph<D, MatrixVertex<D>, SimpleEdge<MatrixV
 		edge = new SimpleEdge<MatrixVertex<D>>(a, b);
 		matrix[a.getIndex()][b.getIndex()] = edge;
 		edges.add(edge);
-		return matrix[a.getIndex()][b.getIndex()];
+		return edge;
 	}
 
 	public void disconnect(MatrixVertex<D> a, MatrixVertex<D> b) {
-		if (matrix[a.getIndex()][b.getIndex()] != null) {
-			edges.remove(matrix[a.getIndex()][b.getIndex()]);
+		SimpleEdge<MatrixVertex<D>> edge = matrix[a.getIndex()][b.getIndex()];
+		if (edge != null) {
+			edges.remove(edge);
 			matrix[a.getIndex()][b.getIndex()] = null;
 		}
 	}

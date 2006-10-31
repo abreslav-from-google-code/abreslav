@@ -6,9 +6,6 @@ public interface Vertex<D> {
 	void setData(D data);
 	String toString();
 	
-	/**
-	 * SimpleEdge implementation 
-	 */
 	public class Default<D> implements Vertex<D> {
 		private D data;
 		
