@@ -1,17 +1,22 @@
-package ru.amse.abreslav.graphs.model;
-
-import org.junit.runner.RunWith;
-import org.junit.runners.Suite;
-import org.junit.runners.Suite.SuiteClasses;
+package ru.amse.abreslav.graphs;
 
 import junit.framework.JUnit4TestAdapter;
 import junit.framework.Test;
 import junit.framework.TestSuite;
 
+import org.junit.runner.RunWith;
+import org.junit.runners.Suite;
+import org.junit.runners.Suite.SuiteClasses;
+
+import ru.amse.abreslav.graphs.model.TestListGraph;
+import ru.amse.abreslav.graphs.model.TestMatrixGraph;
+import ru.amse.abreslav.graphs.presentation.TestPresentation;
+
 @RunWith(Suite.class)
 @SuiteClasses({
 	TestListGraph.class,
-	TestMatrixGraph.class
+	TestMatrixGraph.class,
+	TestPresentation.class
 })
 public class AllTests {
 

@@ -8,7 +8,7 @@ import java.util.Set;
 import org.junit.Before;
 import org.junit.Test;
 
-public abstract class TestGraph<D, V extends Vertex<D>, E extends Edge<V>, G extends Graph<D, V, E>> {
+public abstract class TestGraph<D, V extends Vertex<D>, E extends Edge<V>, G extends IGraph<D, V, E>> {
 
 	protected G graph;
 	protected V a;
@@ -16,23 +16,30 @@ public abstract class TestGraph<D, V extends Vertex<D>, E extends Edge<V>, G ext
 	protected V c;
 	protected V d;
 	protected V e;
+	protected E ab;
+	protected E ac;
+	protected E ad;
+	protected E bc;
+	protected E be;
 	
 	public abstract G createGraph();
 	
 	@Before
 	public void setUp() throws Exception {
 		graph = createGraph();
-		a = graph.addVertex();
-		b = graph.addVertex();
-		c = graph.addVertex();
-		d = graph.addVertex();
-		e = graph.addVertex();
-		graph.connect(a, b);
-		graph.connect(a, c);
-		graph.connect(a, d);
-		graph.connect(b, c);
-		graph.connect(b, e);
+		a = graph.addVertex(getVertexData());
+		b = graph.addVertex(getVertexData());
+		c = graph.addVertex(getVertexData());
+		d = graph.addVertex(getVertexData());
+		e = graph.addVertex(getVertexData());
+		ab = graph.connect(a, b);
+		ac = graph.connect(a, c);
+		ad = graph.connect(a, d);
+		bc = graph.connect(b, c);
+		be = graph.connect(b, e);
 	}
+
+	protected abstract D getVertexData();
 
 	@Test
 	public void testAddVertex() {
@@ -42,7 +49,23 @@ public abstract class TestGraph<D, V extends Vertex<D>, E extends Edge<V>, G ext
 	}
 
 	@Test
-	public void testConnectMatrixVertexOfDMatrixVertexOfD() {
+	public void testRemoveVertex() {
+		assertEquals(graph.size(), 5);
+		graph.removeVertex(b);
+		assertEquals(graph.size(), 4);
+
+		Set<E> s = new HashSet<E>();
+		for (E e : graph.getEdges()) {
+			s.add(e);
+		}
+		Set<E> r = new HashSet<E>();
+		r.add(ac);
+		r.add(ad);
+		assertEquals(s, r);		
+	}
+
+	@Test
+	public void testConnect() {
 		E edge = graph.connect(b, a);
 		assertNotNull(edge);
 		E edge1 = graph.connect(b, a);
@@ -50,13 +73,13 @@ public abstract class TestGraph<D, V extends Vertex<D>, E extends Edge<V>, G ext
 	}
 
 	@Test
-	public void testDisconnectMatrixVertexOfDMatrixVertexOfD() {
+	public void testDisconnect() {
 		graph.disconnect(a, b);
 		assertNull(graph.getConnected(a, b));
 	}
 
 	@Test
-	public void testGetConnectedMatrixVertexOfDMatrixVertexOfD() {
+	public void testGetConnected() {
 		E edge = graph.getConnected(a, b);
 		assertSame(edge.getStart(), a);
 		assertSame(edge.getEnd(), b);
@@ -80,6 +103,22 @@ public abstract class TestGraph<D, V extends Vertex<D>, E extends Edge<V>, G ext
 		r.add(c);
 		r.add(d);
 		r.add(e);
+		assertEquals(s, r);
+	}
+
+	@Test
+	public void testEdges() {
+		Set<E> s = new HashSet<E>();
+		for (E e : graph.getEdges()) {
+			assertFalse(s.contains(e));
+			s.add(e);
+		}
+		Set<E> r = new HashSet<E>();
+		r.add(ab);
+		r.add(ac);
+		r.add(ad);
+		r.add(bc);
+		r.add(be);
 		assertEquals(s, r);
 	}
 
