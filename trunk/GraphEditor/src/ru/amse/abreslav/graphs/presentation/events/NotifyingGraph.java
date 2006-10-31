@@ -13,14 +13,16 @@ import ru.amse.abreslav.graphs.model.Vertex;
 public class NotifyingGraph<D, V extends Vertex<D>, E extends Edge<V>> implements IGraph<D, V, E> {
 	
 	private final IGraph<D, V, E> graph;
-	private final LinkedHashSet<GraphModificationListener<D, V, E>> listeners = new LinkedHashSet<GraphModificationListener<D,V,E>>();
+	private final LinkedHashSet<GraphModificationListener<V, E>> listeners = new LinkedHashSet<GraphModificationListener<V, E>>();
 
 	public NotifyingGraph(IGraph<D, V, E> g) {
 		graph = g;
 	}
 
 	public V addVertex(D data) {
-		return graph.addVertex(data);
+		V v = graph.addVertex(data);
+		fireVertexAdded(v);
+		return v;
 	}
 
 	public V addVertex() {
@@ -70,7 +72,9 @@ public class NotifyingGraph<D, V extends Vertex<D>, E extends Edge<V>> implement
 		boolean removed = graph.removeVertex(v);
 		if (removed) {
 			for (E e : edgesToRemove) {
-				fireVertexDisconnected(e);
+				if (e != null) {
+					fireVertexDisconnected(e);
+				}
 			}
 			fireVertexRemoved(v);
 		}
@@ -85,34 +89,34 @@ public class NotifyingGraph<D, V extends Vertex<D>, E extends Edge<V>> implement
 		return graph.iterator();
 	}
 	
-	public void addModificationListener(GraphModificationListener<D, V, E> listener) {
+	public void addModificationListener(GraphModificationListener<V, E> listener) {
 		listeners.add(listener);
 	}
 
-	public void removeModificationListener(GraphModificationListener<D, V, E> listener) {
+	public void removeModificationListener(GraphModificationListener<V, E> listener) {
 		listeners.remove(listener);
 	}
 	
 	private void fireVertexAdded(V v) {
-		for (GraphModificationListener<D, V, E> listener : listeners) {
+		for (GraphModificationListener<V, E> listener : listeners) {
 			listener.vertexAdded(v);
 		}
 	}
 	
 	private void fireVertexRemoved(V v) {
-		for (GraphModificationListener<D, V, E> listener : listeners) {
+		for (GraphModificationListener<V, E> listener : listeners) {
 			listener.vertexRemoved(v);
 		}
 	}
 
 	private void fireVertexConnected(E e) {
-		for (GraphModificationListener<D, V, E> listener : listeners) {
+		for (GraphModificationListener<V, E> listener : listeners) {
 			listener.vertexConnected(e);
 		}
 	}
 
 	private void fireVertexDisconnected(E e) {
-		for (GraphModificationListener<D, V, E> listener : listeners) {
+		for (GraphModificationListener<V, E> listener : listeners) {
 			listener.vertexDisconnected(e);
 		}
 	}	

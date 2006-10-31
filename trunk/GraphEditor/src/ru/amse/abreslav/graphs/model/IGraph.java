@@ -2,7 +2,7 @@ package ru.amse.abreslav.graphs.model;
 
 import java.util.List;
 
-public interface IGraph<D, V extends Vertex<D>, E extends Edge<V>> extends Iterable<V>{
+public interface IGraph<D, V extends Vertex<D>, E extends Edge<V>> extends Iterable<V> {
 
 	public abstract int size();
 
