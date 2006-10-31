@@ -12,60 +12,16 @@ public class GraphFrame extends JFrame {
 
 	private static final long serialVersionUID = 1L;
 
-	private JPanel jContentPane = null;
+	private JPanel contentPane = new JPanel(new BorderLayout());
+	private JToolBar toolBar = new JToolBar();
 
-	private JToolBar toolBar = null;
-
-	/**
-	 * This is the default constructor
-	 */
 	public <D> GraphFrame(GraphPresentation<D> presentation) {
-		super();
-		createJContentPane(presentation);
-		initialize();
-	}
-
-	/**
-	 * This method initializes this
-	 * 
-	 * @return void
-	 */
-	private void initialize() {
-		this.setSize(300, 200);
-		this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		this.setContentPane(getJContentPane());
-		this.setTitle("JFrame");
-	}
-
-	/**
-	 * This method initializes jContentPane
-	 * 
-	 * @return javax.swing.JPanel
-	 */
-	private JPanel getJContentPane() {
-		return jContentPane;
-	}
-
-	private <D> JPanel createJContentPane(GraphPresentation<D> presentation) {
-		if (jContentPane == null) {
-			jContentPane = new JPanel();
-			jContentPane.setLayout(new BorderLayout());
-			jContentPane.add(getToolBar(), BorderLayout.NORTH);
-			jContentPane.add(new JGraphDisplay(presentation), BorderLayout.CENTER);			
-		}
-		return jContentPane;
-	}
-
-	/**
-	 * This method initializes toolBar	
-	 * 	
-	 * @return javax.swing.JToolBar	
-	 */
-	private JToolBar getToolBar() {
-		if (toolBar == null) {
-			toolBar = new JToolBar();
-		}
-		return toolBar;
+		super("Graph Editor");
+		setSize(300, 200);
+		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		contentPane.add(toolBar, BorderLayout.NORTH);
+		contentPane.add(new JGraphDisplay(presentation), BorderLayout.CENTER);			
+		this.setContentPane(contentPane);		
 	}
 
 }

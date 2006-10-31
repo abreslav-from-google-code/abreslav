@@ -1,4 +1,4 @@
-package ru.amse.abreslav.graphs.presentation.events;
+package ru.amse.abreslav.graphs.presentation;
 
 public interface PresentationListener {
 	void presentationUpdated();
