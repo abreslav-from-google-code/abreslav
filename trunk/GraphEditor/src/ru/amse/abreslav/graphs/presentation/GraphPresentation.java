@@ -7,6 +7,7 @@ import java.util.LinkedHashSet;
 import java.util.Map;
 
 import ru.amse.abreslav.graphs.model.Edge;
+import ru.amse.abreslav.graphs.model.IGraph;
 import ru.amse.abreslav.graphs.model.Vertex;
 import ru.amse.abreslav.graphs.presentation.events.GraphModificationListener;
 import ru.amse.abreslav.graphs.presentation.events.NotifyingGraph;
@@ -66,7 +67,10 @@ public class GraphPresentation<D> {
 		if (edgePresentations.containsKey(e)) {
 			return false;
 		}
-		edgePresentations.put(e, factory.createEdgePresentation(e));
+		EdgePresentation ep = factory.createEdgePresentation(e);
+		ep.setStart(getVertexPresentation(e.getStart()).getPositionCopy());
+		ep.setEnd(getVertexPresentation(e.getEnd()).getPositionCopy());
+		edgePresentations.put(e, ep);
 		return true;
 	}
 
@@ -118,6 +122,10 @@ public class GraphPresentation<D> {
 		for (PresentationListener listener : listeners) {
 			listener.presentationUpdated();
 		}		
+	}
+	
+	public IGraph getNotifyingGraph() {
+		return notifyingGraph;
 	}
 
 }
