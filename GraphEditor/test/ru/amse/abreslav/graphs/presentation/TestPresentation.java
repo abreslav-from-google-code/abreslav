@@ -73,7 +73,7 @@ public class TestPresentation {
 	
 	@Test
 	public void testVertices() {
-		assertEquals(allVertices, collectDeclaredVertices());
+		assertEquals(allVertices, collectPresentedVertices());
 	}
 
 	@Test
@@ -83,7 +83,7 @@ public class TestPresentation {
 		allEdges.remove(ab);
 		allEdges.remove(bc);
 		allEdges.remove(be);
-		assertEquals(allVertices, collectDeclaredVertices());
+		assertEquals(allVertices, collectPresentedVertices());
 		assertEquals(allEdges, collectPresentedEdges());
 	}
 
@@ -94,7 +94,23 @@ public class TestPresentation {
 		assertEquals(allEdges, collectPresentedEdges());
 	}
 
-	private Set<Vertex<?>> collectDeclaredVertices() {
+	@Test
+	public void testAddVertex() {
+		ListVertex<Integer> v1 = workingGraph.addVertex(100);
+		ListVertex<Integer> v2 = workingGraph.addVertex(101);
+		allVertices.add(v1);
+		allVertices.add(v2);
+		assertEquals(allVertices, collectPresentedVertices());
+	}
+
+	@Test
+	public void testAddEdge() {
+		SimpleEdge<ListVertex<Integer>> ce = workingGraph.createEdge(c, e);
+		allEdges.add(ce);
+		assertEquals(allEdges, collectPresentedEdges());
+	}
+
+	private Set<Vertex<?>> collectPresentedVertices() {
 		Set<Vertex<?>> v = new HashSet<Vertex<?>>();
 		for (VertexPresentation<?> vp : gp.getVertexPresentations()) {
 			v.add(vp.getVertex());		
