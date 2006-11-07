@@ -16,28 +16,18 @@ public class Main {
 
 	public static void main(String[] args) {
 		ListGraph<String> graph = new ListGraph<String>();
-//		ListVertex<String> a = graph.addVertex("A");
-//		ListVertex<String> b = graph.addVertex("B");
-//		ListVertex<String> c = graph.addVertex("C");
-//		ListVertex<String> d = graph.addVertex("D");
-//		graph.createEdge(a, c);
-//		graph.createEdge(b, d);
 		Result<String, ListVertex<String>, SimpleEdge<ListVertex<String>>> result = PresentationFactory.createFactory(graph);
 		final IGraph<String, ListVertex<String>, SimpleEdge<ListVertex<String>>> wg = result.graph;
-//		wg.createEdge(a, b);
-//		wg.createEdge(c, d);
-//		ListVertex<String> x = wg.addVertex("X");
-//		ListVertex<String> y = wg.addVertex("Y");
-//		wg.createEdge(x, y);
-//		wg.createEdge(x, a);
 		ElementCreator<String, ListVertex<String>> ec = new ElementCreator<String, ListVertex<String>>() {
 
+			private int n = 0;
+			
 			public Edge<ListVertex<String>> createEdge(ListVertex<String> a, ListVertex<String> b) {
 				return wg.createEdge(a, b);
 			}
 
 			public ListVertex<String> createVertex() {
-				return wg.addVertex(JOptionPane.showInputDialog(ENTER_VERTEX_DATA));
+				return wg.addVertex(++n + "");
 			}
 
 						

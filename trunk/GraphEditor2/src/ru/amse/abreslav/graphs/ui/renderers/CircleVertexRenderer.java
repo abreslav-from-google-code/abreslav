@@ -19,7 +19,10 @@ public class CircleVertexRenderer<D> implements VertexRenderer<D> {
 	
 	public void render(VertexPresentation<D> vp, Graphics gc) {
 		renderVertexShape(vp.getX(), vp.getY(), gc);
-		gc.drawString(vp.getVertex().toString(), vp.getX() - radius / 4, vp.getY() + radius / 2);
+		String data = vp.getVertex().toString();
+		int w = gc.getFontMetrics().stringWidth(data);
+		int h = gc.getFontMetrics().getMaxAscent() - gc.getFontMetrics().getMaxDescent();		
+		gc.drawString(data, (int) (vp.getX() - w / 2), (int) (vp.getY() + h / 2));
 	}
 
 	public boolean isPointInVertexBounds(int x, int y, int vx, int vy) {		
