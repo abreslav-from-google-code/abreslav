@@ -25,13 +25,13 @@ public class TestMatrixGraph extends TestGraph<Integer, MatrixVertex<Integer>,
 	public void testAddVertex() {
 		try {
 			assertEquals(graph.size(), 5);
-			graph.addVertex();
+			graph.addVertex(getVertexData());
 			assertEquals(graph.size(), 6);
 		} catch (IllegalStateException e) {
 			fail("Capacity exceeded");
 		}
 		try {
-			graph.addVertex();
+			graph.addVertex(getVertexData());
 			fail("Capacity not exceeded");
 		} catch (IllegalStateException e) {
 			assertTrue(true);

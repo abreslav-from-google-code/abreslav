@@ -1,5 +1,6 @@
 package ru.amse.abreslav.graphs.presentation.events;
 
+import java.util.Collection;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.LinkedHashSet;
@@ -25,36 +26,31 @@ public class NotifyingGraph<D, V extends Vertex<D>, E extends Edge<V>> implement
 		return v;
 	}
 
-	public V addVertex() {
-		V v = graph.addVertex();
-		fireVertexAdded(v);
-		return v;
-	}
-
-	public E connect(V a, V b) {
-		E e = graph.connect(a, b);
+	public E createEdge(V a, V b) {
+		E e = graph.createEdge(a, b);
 		fireVertexConnected(e);
 		return e;
 	}
 
-	public void disconnect(V a, V b) {
-		E e = graph.getConnected(a, b);
-		graph.disconnect(a, b);
-		if (e != null) {
+	public boolean removeEdge(V a, V b) {
+		E e = graph.getEdge(a, b);
+		boolean result = graph.removeEdge(a, b);
+		if (result) {
 			fireVertexDisconnected(e);
 		}
+		return result;
 	}
 
-	public E getConnected(V a, V b) {
-		return graph.getConnected(a, b);
+	public E getEdge(V a, V b) {
+		return graph.getEdge(a, b);
 	}
 
-	public Iterable<E> getEdges() {
+	public Collection<E> getEdges() {
 		return graph.getEdges();
 	}
 
-	public List<V> getVertexList() {
-		return graph.getVertexList();
+	public List<V> getVertices() {
+		return graph.getVertices();
 	}
 
 	public boolean hasVertex(V v) {
@@ -66,8 +62,8 @@ public class NotifyingGraph<D, V extends Vertex<D>, E extends Edge<V>> implement
 		// Due to notifications
 		Set<E> edgesToRemove = new HashSet<E>();
 		for (V a : graph) {
-			edgesToRemove.add(getConnected(a, v));
-			edgesToRemove.add(getConnected(v, a));
+			edgesToRemove.add(getEdge(a, v));
+			edgesToRemove.add(getEdge(v, a));
 		}		
 		boolean removed = graph.removeVertex(v);
 		if (removed) {

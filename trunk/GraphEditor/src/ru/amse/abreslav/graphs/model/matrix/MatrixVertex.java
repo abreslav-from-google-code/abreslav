@@ -1,8 +1,8 @@
 package ru.amse.abreslav.graphs.model.matrix;
 
-import ru.amse.abreslav.graphs.model.Vertex;
+import ru.amse.abreslav.graphs.model.SimpleVertex;
 
-public class MatrixVertex<D> extends Vertex.Default<D> {
+public class MatrixVertex<D> extends SimpleVertex<D> {
 
 	private int index;
 	
