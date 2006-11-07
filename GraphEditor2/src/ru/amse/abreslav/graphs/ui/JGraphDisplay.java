@@ -6,6 +6,7 @@ import java.awt.Rectangle;
 import java.awt.event.ActionEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -15,7 +16,6 @@ import javax.swing.AbstractAction;
 import javax.swing.Action;
 import javax.swing.JComponent;
 
-import ru.amse.abreslav.graphs.model.Edge;
 import ru.amse.abreslav.graphs.model.Vertex;
 import ru.amse.abreslav.graphs.presentation.GraphPresentation;
 import ru.amse.abreslav.graphs.presentation.PresentationListener;
@@ -28,31 +28,33 @@ import ru.amse.abreslav.graphs.ui.renderers.LineEdgeRenderer;
 
 public class JGraphDisplay extends JComponent {
 
-	public interface ElementCreator<D, V extends Vertex<D>> {
-		V createVertex();
-		Edge<V> createEdge(V a, V b);
-	}
-	
-	public interface GraphActionListener<D> {
-		boolean vertexClicked(Vertex<D> v);
+	private interface Painter {
+		void paint(Graphics g);
 	}
 
-	private abstract class Mode {
+	private abstract class Mode extends MouseAdapter implements MouseMotionListener {
 		
 		public void additionalPaint(Graphics g) {
 		}
 
-		public void handleMouse(MouseEvent e) {
+		public void modeChangedTo(Mode newMode) {			
 		}
 		
-		public void modeChangedTo(Mode newMode) {			
+		public void mouseDragged(MouseEvent e) {
+		}
+		
+		public void mouseMoved(MouseEvent e) {
 		}
 	}
 
-	/* Defined in the constructor due to typisation */
+	private static final long serialVersionUID = 8706834037109961071L;
+
+	/* Defined in the constructor due to typification */
 	private final Mode DEFAULT; 
 
 	private final Mode ADD_VERTEX = new Mode() {
+		private static final int RADIUS = 10;
+
 		@Override
 		public void additionalPaint(Graphics g) {
 			g.drawOval(mouseListener.getX() - RADIUS, mouseListener.getY()
@@ -60,58 +62,59 @@ public class JGraphDisplay extends JComponent {
 		}
 
 		@Override
-		public void handleMouse(MouseEvent e) {
-			switch (e.getID()) {
-			case MouseEvent.MOUSE_MOVED:
-				repaint();
-				break;
-			case MouseEvent.MOUSE_CLICKED:
-				Vertex vertex = elementCreator.createVertex();
-				VertexPresentation<?> vertexPresentation = presentation
-						.getVertexPresentation(vertex);
-				vertexPresentation.setX(e.getX());
-				vertexPresentation.setY(e.getY());
-				break;
-			}
+		public void mouseMoved(MouseEvent e) {
+			repaint();
 		}
 		
+		@Override
+		public void mouseClicked(MouseEvent e) {
+			Vertex vertex = elementCreator.createVertex();
+			VertexPresentation<?> vertexPresentation = presentation.getVertexPresentation(vertex);
+			vertexPresentation.setX(e.getX());
+			vertexPresentation.setY(e.getY());
+		}
+		
+		@Override
 		public void modeChangedTo(Mode newMode) {
-			repaint();
+			if (newMode != this) {
+				repaint();
+			}
 		}
 	};
 
 	private final Mode CREATE_EDGE = new Mode() {
 		private VertexPresentation start;
 
-		public void handleMouse(MouseEvent e) {
-			switch (e.getID()) {
-			case MouseEvent.MOUSE_DRAGGED:
-			case MouseEvent.MOUSE_MOVED:
-				if (start != null) {
-					repaint();
+		@Override
+		public void mouseReleased(MouseEvent e) {
+			if (start != null) {
+				VertexPresentation v = findVertex(e);
+				if (v != null) {
+					createEdge(v);
 				}
-				break;
-			case MouseEvent.MOUSE_PRESSED:
-				start = findVertex(e);
-				break;
-			case MouseEvent.MOUSE_RELEASED:
-				if (start != null) {
-					VertexPresentation v = findVertex(e);
-					if (v != null) {
-						createEdge(v);
-					}
-					repaint();
-				}
-				start = null;
-				break;
+				repaint();
+			}
+			start = null;
+		}
+		
+		@Override
+		public void mousePressed(MouseEvent e) {
+			start = findVertex(e);
+		}
+		
+		@Override
+		public void mouseDragged(MouseEvent e) {
+			if (start != null) {
+				repaint();
 			}
 		}
-
+		
 		@SuppressWarnings("unchecked")
 		private void createEdge(VertexPresentation v) {
 			elementCreator.createEdge(start.getVertex(), v.getVertex());
 		}
 
+		@Override
 		public void additionalPaint(Graphics g) {
 			if (start != null) {
 				g.drawLine(start.getX(), start.getY(), mouseListener.getX(), mouseListener.getY());
@@ -125,31 +128,32 @@ public class JGraphDisplay extends JComponent {
 		private int dy;		
 		
 		@Override
-		public void handleMouse(MouseEvent e) {
-			switch (e.getID()) {
-			case MouseEvent.MOUSE_PRESSED:
-				moved = findVertex(e);
-				if (moved != null) {
-					dx = moved.getX() - e.getX(); 
-					dy = moved.getY() - e.getY(); 
-				}
-				break;
-			case MouseEvent.MOUSE_DRAGGED:
-				if (moved != null) {
-					moved.setX(e.getX() + dx);
-					moved.setY(e.getY() + dy);
-				}						 
-				break;
-			case MouseEvent.MOUSE_RELEASED:
-				moved = null;
-				break;
+		public void mouseReleased(MouseEvent e) {
+			moved = null;
+		}
+		
+		@Override
+		public void mousePressed(MouseEvent e) {
+			moved = findVertex(e);
+			if (moved != null) {
+				dx = moved.getX() - e.getX(); 
+				dy = moved.getY() - e.getY(); 
 			}
+		}
+		
+		@Override
+		public void mouseDragged(MouseEvent e) {
+			if (moved != null) {
+				moved.setX(e.getX() + dx);
+				moved.setY(e.getY() + dy);
+			}						 
 		}
 	};
 
 	private final Mode DELETE_VERTEX = new Mode() {
 		private VertexPresentation<?> v;
 		
+		@Override
 		public void additionalPaint(Graphics g) {
 			if (v != null) {
 				g.setColor(Color.RED);
@@ -160,56 +164,64 @@ public class JGraphDisplay extends JComponent {
 			}
 		}
 		
-		public void handleMouse(MouseEvent e) {
-			switch (e.getID()) {
-			case MouseEvent.MOUSE_CLICKED:
-				v = findVertex(e);
-				if (v != null) {
-					removeVertex(v);
-					v = null;
-				}
-				break;
-			case MouseEvent.MOUSE_MOVED:
-				v = findVertex(e);
-				repaint();
-				break;
+		@Override
+		public void mouseClicked(MouseEvent e) {
+			v = findVertex(e);
+			if (v != null) {
+				removeVertex(v);
+				v = null;
 			}
 		}
-
+		
+		@Override
+		public void mouseMoved(MouseEvent e) {
+			v = findVertex(e);
+			repaint();
+		}
+		
 		@SuppressWarnings("unchecked")
 		private void removeVertex(VertexPresentation<?> v) {
 			presentation.getNotifyingGraph().removeVertex(v.getVertex());
 		}
 	};
 
-	private class MyMouseListener extends MouseAdapter implements
-			MouseMotionListener {
+	private class MyMouseListener implements MouseListener, MouseMotionListener {
 		private int x;
 
 		private int y;
 
 		public void mouseDragged(MouseEvent e) {
-			mouseMoved(e);
+			x = e.getX();
+			y = e.getY();
+			mode.mouseDragged(e);
 		}
 
 		public void mouseMoved(MouseEvent e) {
 			x = e.getX();
 			y = e.getY();
-			mode.handleMouse(e);
+			mode.mouseMoved(e);
 		}
 
 		public void mouseClicked(MouseEvent e) {
-			mode.handleMouse(e);
+			mode.mouseClicked(e);
 		}
 		
 		public void mousePressed(MouseEvent e) {
-			mode.handleMouse(e);
+			mode.mousePressed(e);
 		}
 		
 		public void mouseReleased(MouseEvent e) {
-			mode.handleMouse(e);
+			mode.mouseReleased(e);
 		}
 
+		public void mouseEntered(MouseEvent e) {
+			mode.mouseEntered(e);
+		}
+		
+		public void mouseExited(MouseEvent e) {
+			mode.mouseExited(e);
+		}
+		
 		public int getX() {
 			return x;
 		}
@@ -220,23 +232,13 @@ public class JGraphDisplay extends JComponent {
 
 	}
 
-	private static final long serialVersionUID = 8706834037109961071L;
-
-	protected static final int RADIUS = 10;
-
-	// private IGraph<Integer, ? extends Vertex<Integer>, ? extends Edge<?
-	// extends Vertex<Integer>>> graph = new ListGraph<Integer>();
-
-	private interface Painter {
-		void paint(Graphics g);
-	}
+	// private IGraph<Integer, ? extends Vertex<Integer>, ? extends Edge<? extends Vertex<Integer>>> graph = new ListGraph<Integer>();
 
 	private final Painter painter;
 
 	private final List<Action> actions = new ArrayList<Action>();
 
-	private final List<Action> unmodifiableActions = Collections
-			.unmodifiableList(actions);
+	private final List<Action> unmodifiableActions = Collections.unmodifiableList(actions);
 
 	private Mode mode;
 
@@ -259,13 +261,13 @@ public class JGraphDisplay extends JComponent {
 		this.renderer = renderer;
 		
 		DEFAULT = new Mode() {
-			public void handleMouse(MouseEvent e) {
-				if (e.getID() == MouseEvent.MOUSE_CLICKED) {
-					for (VertexPresentation<D> vp : presentation.getVertexPresentations()) {
-						if (renderer.getVertexRenderer().isPointInVertexBounds(e.getX(), e.getY(), vp.getX(), vp.getY())) {
-							if (gal.vertexClicked(vp.getVertex())) {
-								repaint();							
-							}
+			
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				for (VertexPresentation<D> vp : presentation.getVertexPresentations()) {
+					if (renderer.getVertexRenderer().isPointInVertexBounds(e.getX(), e.getY(), vp.getX(), vp.getY())) {
+						if (gal.vertexClicked(vp.getVertex())) {
+							repaint();							
 						}
 					}
 				}

@@ -29,7 +29,6 @@ public class TestPresentation {
 	protected Edge<ListVertex<Integer>> ad;
 	protected Edge<ListVertex<Integer>> bc;
 	protected Edge<ListVertex<Integer>> be;
-	private PresentationFactory<Integer> factory;
 	private GraphPresentation<Integer> gp;
 	private Set<Edge<?>> allEdges;
 	private Set<Vertex<?>> allVertices;
@@ -60,10 +59,9 @@ public class TestPresentation {
 		allEdges.add(ad);
 		allEdges.add(bc);
 		allEdges.add(be);
-		Result<Integer, ListVertex<Integer>, SimpleEdge<ListVertex<Integer>>> result = PresentationFactory.createFactory(graph);
-		factory = result.factory;
-		gp = factory.getGraphPresentation();
-		workingGraph = result.graph;
+		Result<Integer, ListVertex<Integer>, SimpleEdge<ListVertex<Integer>>> png = PresentationFactory.createPresentationAndGraph(graph);
+		gp = png.presentation;
+		workingGraph = png.graph;
 	}
 
 	@Test
