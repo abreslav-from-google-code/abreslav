@@ -9,9 +9,9 @@ import javax.swing.JToolBar;
 
 import ru.amse.abreslav.graphs.model.Vertex;
 import ru.amse.abreslav.graphs.presentation.GraphPresentation;
+import ru.amse.abreslav.graphs.ui.ElementCreator;
+import ru.amse.abreslav.graphs.ui.GraphActionListener;
 import ru.amse.abreslav.graphs.ui.JGraphDisplay;
-import ru.amse.abreslav.graphs.ui.JGraphDisplay.ElementCreator;
-import ru.amse.abreslav.graphs.ui.JGraphDisplay.GraphActionListener;
 
 public class GraphFrame extends JFrame {
 
@@ -28,13 +28,9 @@ public class GraphFrame extends JFrame {
 		JGraphDisplay graphDisplay = new JGraphDisplay(ec, presentation, gal);
 		contentPane.add(graphDisplay, BorderLayout.CENTER);
 		for (Action a: graphDisplay.getActions()) {
-			addAction(a);
+			toolBar.add(a);
 		}
 		this.setContentPane(contentPane);		
-	}
-	
-	public void addAction(Action action) {
-		toolBar.add(action);
 	}
 
 }
