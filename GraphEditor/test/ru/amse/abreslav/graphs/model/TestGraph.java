@@ -32,11 +32,11 @@ public abstract class TestGraph<D, V extends Vertex<D>, E extends Edge<V>, G ext
 		c = graph.addVertex(getVertexData());
 		d = graph.addVertex(getVertexData());
 		e = graph.addVertex(getVertexData());
-		ab = graph.connect(a, b);
-		ac = graph.connect(a, c);
-		ad = graph.connect(a, d);
-		bc = graph.connect(b, c);
-		be = graph.connect(b, e);
+		ab = graph.createEdge(a, b);
+		ac = graph.createEdge(a, c);
+		ad = graph.createEdge(a, d);
+		bc = graph.createEdge(b, c);
+		be = graph.createEdge(b, e);
 	}
 
 	protected abstract D getVertexData();
@@ -44,7 +44,7 @@ public abstract class TestGraph<D, V extends Vertex<D>, E extends Edge<V>, G ext
 	@Test
 	public void testAddVertex() {
 		assertEquals(graph.size(), 5);
-		graph.addVertex();
+		graph.addVertex(getVertexData());
 		assertEquals(graph.size(), 6);
 	}
 
@@ -66,21 +66,21 @@ public abstract class TestGraph<D, V extends Vertex<D>, E extends Edge<V>, G ext
 
 	@Test
 	public void testConnect() {
-		E edge = graph.connect(b, a);
+		E edge = graph.createEdge(b, a);
 		assertNotNull(edge);
-		E edge1 = graph.connect(b, a);
+		E edge1 = graph.createEdge(b, a);
 		assertSame(edge, edge1);
 	}
 
 	@Test
 	public void testDisconnect() {
-		graph.disconnect(a, b);
-		assertNull(graph.getConnected(a, b));
+		graph.removeEdge(a, b);
+		assertNull(graph.getEdge(a, b));
 	}
 
 	@Test
 	public void testGetConnected() {
-		E edge = graph.getConnected(a, b);
+		E edge = graph.getEdge(a, b);
 		assertSame(edge.getStart(), a);
 		assertSame(edge.getEnd(), b);
 	}

@@ -49,11 +49,11 @@ public class TestPresentation {
 		allVertices.add(c);
 		allVertices.add(d);
 		allVertices.add(e);
-		ab = graph.connect(a, b);
-		ac = graph.connect(a, c);
-		ad = graph.connect(a, d);
-		bc = graph.connect(b, c);
-		be = graph.connect(b, e);
+		ab = graph.createEdge(a, b);
+		ac = graph.createEdge(a, c);
+		ad = graph.createEdge(a, d);
+		bc = graph.createEdge(b, c);
+		be = graph.createEdge(b, e);
 		allEdges = new HashSet<Edge<?>>();
 		allEdges.add(ab);
 		allEdges.add(ac);
@@ -89,7 +89,7 @@ public class TestPresentation {
 
 	@Test
 	public void testRemoveEdge() {
-		workingGraph.disconnect(a, b);
+		workingGraph.removeEdge(a, b);
 		allEdges.remove(ab);
 		assertEquals(allEdges, collectPresentedEdges());
 	}

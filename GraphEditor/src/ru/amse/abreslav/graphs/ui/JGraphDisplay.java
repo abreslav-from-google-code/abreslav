@@ -2,15 +2,18 @@ package ru.amse.abreslav.graphs.ui;
 
 import java.awt.Graphics;
 import java.awt.Rectangle;
+import java.awt.event.ActionEvent;
 import java.awt.event.ComponentAdapter;
 import java.awt.event.ComponentEvent;
 
+import javax.swing.AbstractAction;
+import javax.swing.Action;
 import javax.swing.JComponent;
 
-import ru.amse.abreslav.graphs.presentation.CircleLayout;
-import ru.amse.abreslav.graphs.presentation.GraphLayout;
 import ru.amse.abreslav.graphs.presentation.GraphPresentation;
 import ru.amse.abreslav.graphs.presentation.PresentationListener;
+import ru.amse.abreslav.graphs.presentation.layout.CircleLayout;
+import ru.amse.abreslav.graphs.presentation.layout.GraphLayout;
 import ru.amse.abreslav.graphs.presentation.renderers.CircleVertexRenderer;
 import ru.amse.abreslav.graphs.presentation.renderers.GraphRenderer;
 import ru.amse.abreslav.graphs.presentation.renderers.LineEdgeRenderer;
@@ -25,18 +28,29 @@ public class JGraphDisplay extends JComponent {
 		void paint(Graphics g);
 	}
 	private final Painter painter;
+	private Action layoutAction;
 	
 	public <D> JGraphDisplay(
 					final GraphPresentation<D> presentation, 
 					final GraphLayout<D> layout, 
 					final GraphRenderer<D> renderer) {
 
+		layoutAction = new AbstractAction("Layout") {
+			private static final long serialVersionUID = 1L;
+
+			public void actionPerformed(ActionEvent e) {
+				Rectangle bounds = getBounds();
+				bounds.x = 0;
+				bounds.y = 0;
+				layout.layout(presentation, bounds);
+				repaint();
+			}
+		};
+		
 		addComponentListener(new ComponentAdapter() {
 			@Override
 			public void componentResized(ComponentEvent e) {
-				Rectangle bounds = getBounds();
-				layout.layout(presentation, bounds);
-				repaint();
+				layoutAction.actionPerformed(null);
 			}			
 		});
 		
@@ -60,9 +74,14 @@ public class JGraphDisplay extends JComponent {
 				new LineEdgeRenderer()
 		));
 	}
+	
 	@Override
 	protected void paintComponent(Graphics g) {
 		painter.paint(g);
+	}
+	
+	public Action getLayoutAction() {
+		return layoutAction;
 	}
 
 }

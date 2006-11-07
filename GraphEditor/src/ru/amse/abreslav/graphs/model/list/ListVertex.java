@@ -6,10 +6,10 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 
+import ru.amse.abreslav.graphs.model.SimpleVertex;
 import ru.amse.abreslav.graphs.model.SimpleEdge;
-import ru.amse.abreslav.graphs.model.Vertex;
 
-public class ListVertex<D> extends Vertex.Default<D> {
+public class ListVertex<D> extends SimpleVertex<D> {
 
 	private final Map<ListVertex<D>, SimpleEdge<ListVertex<D>>> edges = new HashMap<ListVertex<D>, SimpleEdge<ListVertex<D>>>();
 	private final Collection<ListVertex<D>> neighbors = Collections.unmodifiableCollection(edges.keySet());

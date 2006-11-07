@@ -1,7 +1,10 @@
-package ru.amse.abreslav.graphs.presentation;
+package ru.amse.abreslav.graphs.presentation.layout;
 
 import java.awt.Rectangle;
 import java.util.Collection;
+
+import ru.amse.abreslav.graphs.presentation.GraphPresentation;
+import ru.amse.abreslav.graphs.presentation.VertexPresentation;
 
 
 import static java.lang.Math.*;

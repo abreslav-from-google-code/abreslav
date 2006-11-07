@@ -22,7 +22,7 @@ public class TestListGraph extends TestGraph<Integer, ListVertex<Integer>,
 	
 	@Test
 	public void testListVertexGetConnectedTo() throws Exception {
-		assertSame(a.getConnectedTo(b), graph.getConnected(a, b));
+		assertSame(a.getConnectedTo(b), graph.getEdge(a, b));
 	}
 	
 	@Test
