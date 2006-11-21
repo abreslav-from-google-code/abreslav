@@ -14,7 +14,7 @@ public class ListVertex<D> extends SimpleVertex<D> {
 	private final Map<ListVertex<D>, SimpleEdge<ListVertex<D>>> edges = new HashMap<ListVertex<D>, SimpleEdge<ListVertex<D>>>();
 	private final Collection<ListVertex<D>> neighbors = Collections.unmodifiableCollection(edges.keySet());
 	
-	/*package-private*/ ListVertex() {		
+	protected ListVertex() {		
 	}
 	
 	public SimpleEdge<ListVertex<D>> getConnectedTo(ListVertex<D> v) {
