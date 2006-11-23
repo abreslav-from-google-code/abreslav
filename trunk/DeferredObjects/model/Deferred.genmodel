@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<genmodel:GenModel xmi:version="2.0"
+    xmlns:xmi="http://www.omg.org/XMI" xmlns:ecore="http://www.eclipse.org/emf/2002/Ecore"
+    xmlns:genmodel="http://www.eclipse.org/emf/2002/GenModel" modelDirectory="/DeferredObjects/src"
+    modelPluginID="DeferredObjects" modelName="Deferred" importerID="org.eclipse.emf.importer.ecore"
+    usedGenPackages="../../../plugin/org.eclipse.emf.ecore/model/Ecore.genmodel#//ecore">
+  <foreignModel>Deferred.ecore</foreignModel>
+  <genPackages prefix="Deferred" disposableProviderFactory="true" ecorePackage="Deferred.ecore#/">
+    <genDataTypes ecoreDataType="Deferred.ecore#//ResolveFailedException"/>
+    <genClasses ecoreClass="Deferred.ecore#//Deferred">
+      <genFeatures property="Readonly" createChild="false" ecoreFeature="ecore:EAttribute Deferred.ecore#//Deferred/resolved"/>
+      <genOperations ecoreOperation="Deferred.ecore#//Deferred/resolve"/>
+    </genClasses>
+    <genClasses ecoreClass="Deferred.ecore#//DeferredOperation"/>
+    <genClasses image="false" ecoreClass="Deferred.ecore#//DObject">
+      <genFeatures property="Readonly" notify="false" createChild="false" ecoreFeature="ecore:EReference Deferred.ecore#//DObject/value"/>
+    </genClasses>
+    <genClasses image="false" ecoreClass="Deferred.ecore#//DDataType">
+      <genFeatures property="Readonly" createChild="false" ecoreFeature="ecore:EAttribute Deferred.ecore#//DDataType/value"/>
+    </genClasses>
+    <genClasses ecoreClass="Deferred.ecore#//DBoolean">
+      <genOperations ecoreOperation="Deferred.ecore#//DBoolean/typedResolve"/>
+    </genClasses>
+    <genClasses ecoreClass="Deferred.ecore#//DByte">
+      <genOperations ecoreOperation="Deferred.ecore#//DByte/typedResolve"/>
+    </genClasses>
+    <genClasses ecoreClass="Deferred.ecore#//DChar">
+      <genOperations ecoreOperation="Deferred.ecore#//DChar/typedResolve"/>
+    </genClasses>
+    <genClasses ecoreClass="Deferred.ecore#//DShort">
+      <genOperations ecoreOperation="Deferred.ecore#//DShort/typedResolve"/>
+    </genClasses>
+    <genClasses ecoreClass="Deferred.ecore#//DInt">
+      <genOperations ecoreOperation="Deferred.ecore#//DInt/typedResolve"/>
+    </genClasses>
+    <genClasses ecoreClass="Deferred.ecore#//DLong">
+      <genOperations ecoreOperation="Deferred.ecore#//DLong/typedResolve"/>
+    </genClasses>
+    <genClasses ecoreClass="Deferred.ecore#//DFloat">
+      <genOperations ecoreOperation="Deferred.ecore#//DFloat/typedResolve"/>
+    </genClasses>
+    <genClasses ecoreClass="Deferred.ecore#//DDouble">
+      <genOperations ecoreOperation="Deferred.ecore#//DDouble/typedResolve"/>
+    </genClasses>
+    <genClasses ecoreClass="Deferred.ecore#//DJavaObject">
+      <genOperations ecoreOperation="Deferred.ecore#//DJavaObject/typedResolve"/>
+    </genClasses>
+    <genClasses ecoreClass="Deferred.ecore#//DString">
+      <genOperations ecoreOperation="Deferred.ecore#//DString/typedResolve"/>
+    </genClasses>
+  </genPackages>
+</genmodel:GenModel>
