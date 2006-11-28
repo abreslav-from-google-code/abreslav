@@ -20,9 +20,17 @@ public class Demo {
 		public int getSquare() {
 			return width * height;
 		}
+		
+		public void setHeight(int height) {
+			System.out.println("new height: " + height);
+			this.height = height;
+		}
 	}
 	
 	public static void main(String[] args) {
+		Rectangle rectangle = new Rectangle(0, 0, 20, 20);
+		rectangle.height = 10;
+		rectangle.square = 0;
 		System.out.println(new Rectangle(0, 0, 10, 20).square);
 	}
 	
