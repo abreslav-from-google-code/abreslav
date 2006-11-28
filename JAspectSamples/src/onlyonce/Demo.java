@@ -4,6 +4,9 @@ package onlyonce;
 @Cacheable 
 public class Demo {
 
+	/**
+	 * @return
+	 */
 	@OnlyOnce(acceptNull = false)
 	Integer cached() {
 		System.out.println("cached()");

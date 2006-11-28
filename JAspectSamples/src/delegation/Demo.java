@@ -13,7 +13,7 @@ public class Demo<T> implements Collection<T> {
 	
 	private static aspect Delegation {
 				
-		Object around(Demo obj) : (call(* Collection.*(..)) || execution(@Delegated * Demo.*(..))) && target(obj) {
+		Object around(Demo obj) : execution(* Collection.*(..)) && target(obj) {
 			MethodSignature sig = (MethodSignature) thisJoinPoint.getSignature();
 			Method method = sig.getMethod();
 			

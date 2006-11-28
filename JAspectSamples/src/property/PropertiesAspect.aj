@@ -39,6 +39,11 @@ public aspect PropertiesAspect {
 		}
 	}
 
+	void around() : set(@ReadOnly @Property * *.*) {
+		Field field = ((FieldSignature) thisJoinPoint.getSignature()).getField();
+		throw new RuntimeException("Unable to set read only property " + field);
+	}
+
 	private Method findGetter(Field f) {
 		return findMethod(f.getDeclaringClass(), "get" + methodSuffix(f), f.getType(), new Class[] {});
 	}
