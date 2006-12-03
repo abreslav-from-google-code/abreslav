@@ -21,7 +21,7 @@ begin
     Rewrite(output, ParamStr(2));
 
     while input.Read(t, 1) <> 0 do begin
-      Write(output, tokenPresentation(t), ' ');
+      WriteLn(output, tokenPresentation(t), ' ');
     end;
 
     CloseFile(output);
