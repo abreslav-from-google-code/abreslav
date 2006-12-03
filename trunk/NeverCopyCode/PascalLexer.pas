@@ -8,7 +8,13 @@ uses
 var
   _DEBUG : Boolean = false;
 
-procedure tokenize(input, output : TStream);
+type
+  TTokenizeResult = record
+    tokens : Integer;
+    errors : Integer;
+  end;
+
+function tokenize(input, output : TStream) : TTokenizeResult;
 function byteToTokenName(b : Byte) : String;
 function byteToTokenPresentation(b : Byte) : String;
 
@@ -105,10 +111,12 @@ const
 var
   input : TStream;
   output : TStream;
-  c : Char;
   eof : Boolean = false;
+  c : Char;
   currentId : String[255];
   handlers : array[TLexerState] of TStateHandler;
+  tokens : Integer = 0;
+  errors : Integer = 0;
 
 procedure next;
 begin
@@ -123,6 +131,9 @@ procedure addToken(t : TPascalToken);
 begin
   if _DEBUG then
     WriteLn(TokenNames[t], ' ');
+  inc(tokens);
+  if (t = ptError) then
+    inc(errors);
   output.Write(t, sizeOf(t));
 end;
 
@@ -427,18 +438,23 @@ begin
   Result := processRealExponentTag(c);
 end;
 
-procedure tokenize(input, output : TStream);
+function tokenize(input, output : TStream) : TTokenizeResult;
 var
   state : TLexerState;
 begin
   PascalLexer.input := input;
   PascalLexer.output := output;
+  eof := false;
+  errors := 0;
+  tokens := 0;
   state := lsStart;
   next();
   repeat
     Assert(@handlers[state] <> nil, 'No handler for state: ' + StateNames[state]);
     state := handlers[state](c);
   until (state in END_STATES);
+  Result.tokens := tokens;
+  Result.errors := errors;
 end;
 
 function byteToTokenName(b : Byte) : String;

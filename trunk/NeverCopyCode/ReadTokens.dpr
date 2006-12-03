@@ -1,4 +1,4 @@
-program Lexer;
+program ReadTokens;
 {$APPTYPE CONSOLE}
 uses
   SysUtils,
@@ -7,23 +7,25 @@ uses
 
 var
   input : TStream;
-  output : TStream;
-  r : TTokenizeResult;
+  output : TextFile;
+  b : Byte;
 begin
   if ParamCount < 2 then begin
     WriteLn('Usage:');
-    WriteLn('lexer <in.pas> <out.dat>');
+    WriteLn('readtokens <in.dat> <out.tok>');
     Exit;
   end;
 
   try
     input := TFileStream.Create(ParamStr(1), fmOpenRead or fmShareDenyWrite);
-    output := TFileStream.Create(ParamStr(2), fmCreate);
+    Rewrite(output, ParamStr(2));
 
-    r := tokenize(input, output);
+    while input.Read(b, 1) <> 0 do begin
+      WriteLn(output, byteToTokenName(b));
+    end;
 
-    WriteLn('Found tokens: ', r.tokens);
-    WriteLn('Errors: ', r.errors);
+    CloseFile(output);
+
   except
     on e : Exception do
       WriteLn('Fatal error: ', e.Message);
