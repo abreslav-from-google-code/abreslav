@@ -9,14 +9,31 @@ var
   _DEBUG : Boolean = false;
 
 type
+  TPascalToken = (
+    ptAND, ptARRAY, ptAS, ptASM, ptBEGIN, ptCASE, ptCLASS, ptCONST, ptCONSTRUCTOR,
+    ptDESTRUCTOR, ptDISPINTERFACE, ptDIV, ptDO, ptDOWNTO, ptELSE, ptEND, ptEXCEPT,
+    ptEXPORTS, ptFILE, ptFINALIZATION, ptFINALLY, ptFOR, ptFUNCTION, ptGOTO, ptIF,
+    ptIMPLEMENTATION, ptIN, ptINHERITED, ptINITIALIZATION, ptINLINE, ptINTERFACE,
+    ptIS, ptLABEL, ptLIBRARY, ptMOD, ptNIL, ptNOT, ptOBJECT, ptOF, ptOR, ptOUT,
+    ptPACKED, ptPROCEDURE, ptPROGRAM, ptPROPERTY, ptRAISE, ptRECORD, ptREPEAT,
+    ptRESOURCESTRING, ptSET, ptSHL, ptSHR, ptSTRING, ptTHEN, ptTHREADVAR, ptTO,
+    ptTRY, ptTYPE, ptUNIT, ptUNTIL, ptUSES, ptVAR, ptWHILE, ptWITH, ptXOR,
+    ptERROR,
+    ptID,
+    ptINT, ptREAL, ptSTRINGLITERAL, ptCHAR,
+    ptDOT, ptCOLON, ptCOMMA, ptSEMICOLON, ptSLASH, ptPLUS, ptMINUS, ptTIMES, ptAT, ptCARET,
+    ptLBRACKET, ptRBRACKET, ptLBRACE, ptRBRACE,
+    ptTWO_DOTS, ptASSIGN,
+    ptLT, ptGT, ptLE, ptGE, ptEQ, ptNE
+  );
   TTokenizeResult = record
     tokens : Integer;
     errors : Integer;
   end;
 
 function tokenize(input, output : TStream) : TTokenizeResult;
-function byteToTokenName(b : Byte) : String;
-function byteToTokenPresentation(b : Byte) : String;
+function tokenName(t : TPascalToken) : String;
+function tokenPresentation(t : TPascalToken) : String;
 
 implementation
 
@@ -36,24 +53,7 @@ type
     lsLessNotEqualOrLessOrEqual, // < or <> or <=
     lsGreaterOrGreaterOrEqual // > or >=
   );
-  TStateHandler = function(c : Char) : TLexerState;
-  TPascalToken = (
-    ptAND, ptARRAY, ptAS, ptASM, ptBEGIN, ptCASE, ptCLASS, ptCONST, ptCONSTRUCTOR,
-    ptDESTRUCTOR, ptDISPINTERFACE, ptDIV, ptDO, ptDOWNTO, ptELSE, ptEND, ptEXCEPT,
-    ptEXPORTS, ptFILE, ptFINALIZATION, ptFINALLY, ptFOR, ptFUNCTION, ptGOTO, ptIF,
-    ptIMPLEMENTATION, ptIN, ptINHERITED, ptINITIALIZATION, ptINLINE, ptINTERFACE,
-    ptIS, ptLABEL, ptLIBRARY, ptMOD, ptNIL, ptNOT, ptOBJECT, ptOF, ptOR, ptOUT,
-    ptPACKED, ptPROCEDURE, ptPROGRAM, ptPROPERTY, ptRAISE, ptRECORD, ptREPEAT,
-    ptRESOURCESTRING, ptSET, ptSHL, ptSHR, ptSTRING, ptTHEN, ptTHREADVAR, ptTO,
-    ptTRY, ptTYPE, ptUNIT, ptUNTIL, ptUSES, ptVAR, ptWHILE, ptWITH, ptXOR,
-    ptERROR,
-    ptID,
-    ptINT, ptREAL, ptSTRINGLITERAL, ptCHAR,
-    ptDOT, ptCOLON, ptCOMMA, ptSEMICOLON, ptSLASH, ptPLUS, ptMINUS, ptTIMES, ptAT, ptCARET,
-    ptLBRACKET, ptRBRACKET, ptLBRACE, ptRBRACE,
-    ptTWO_DOTS, ptASSIGN,
-    ptLT, ptGT, ptLE, ptGE, ptEQ, ptNE
-  );
+ TStateHandler = function(c : Char) : TLexerState;
 
 const
   StateNames : array[TLexerState] of String = (
@@ -457,14 +457,14 @@ begin
   Result.errors := errors;
 end;
 
-function byteToTokenName(b : Byte) : String;
+function tokenName(t : TPascalToken) : String;
 begin
-  Result := TokenNames[TPascalToken(b)];
+  Result := TokenNames[t];
 end;
 
-function byteToTokenPresentation(b : Byte) : String;
+function tokenPresentation(t : TPascalToken) : String;
 begin
-  Result := TokenPresentations[TPascalToken(b)];
+  Result := TokenPresentations[t];
 end;
 
 initialization

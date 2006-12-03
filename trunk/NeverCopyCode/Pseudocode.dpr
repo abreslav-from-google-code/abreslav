@@ -1,4 +1,4 @@
-program ReadTokens;
+program Pseudocode;
 {$APPTYPE CONSOLE}
 uses
   SysUtils,
@@ -12,7 +12,7 @@ var
 begin
   if ParamCount < 2 then begin
     WriteLn('Usage:');
-    WriteLn('readtokens <in.dat> <out.tok>');
+    WriteLn('pseudocode <in.dat> <out.pas>');
     Exit;
   end;
 
@@ -21,7 +21,7 @@ begin
     Rewrite(output, ParamStr(2));
 
     while input.Read(t, 1) <> 0 do begin
-      WriteLn(output, tokenName(t));
+      Write(output, tokenPresentation(t), ' ');
     end;
 
     CloseFile(output);
