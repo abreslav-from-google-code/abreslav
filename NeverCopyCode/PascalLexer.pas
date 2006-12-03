@@ -5,7 +5,12 @@ interface
 uses
   Classes;
 
+var
+  _DEBUG : Boolean = false;
+
 procedure tokenize(input, output : TStream);
+function byteToTokenName(b : Byte) : String;
+function byteToTokenPresentation(b : Byte) : String;
 
 implementation
 
@@ -79,9 +84,27 @@ const
     'TWO_DOTS', 'ASSIGN',
     'LT', 'GT', 'LE', 'GE', 'EQ', 'NE'
   );
+  TokenPresentations : array[TPascalToken] of String = (
+    'and', 'array', 'as', 'asm', 'begin', 'case', 'class', 'const', 'constructor',
+    'destructor', 'dispinterface', 'div', 'do', 'downto', 'else', 'end', 'except',
+    'exports', 'file', 'finalization', 'finally', 'for', 'function', 'goto', 'if',
+    'implementation', 'in', 'inherited', 'initialization', 'inline', 'interface',
+    'is', 'label', 'library', 'mod', 'nil', 'not', 'object', 'of', 'or', 'out',
+    'packed', 'procedure', 'program', 'property', 'raise', 'record', 'repeat',
+    'resourcestring', 'set', 'shl', 'shr', 'string', 'then', 'threadvar', 'to',
+    'try', 'type', 'unit', 'until', 'uses', 'var', 'while', 'with', 'xor',
+    'ERROR',
+    'ID',
+    '239', '23.9', '''string''', '#239',
+    '.', ':', ',', ';', '/', '+', '-', '*', '@', '^',
+    '[', ']', '(', ')',
+    '..', ':=',
+    '<', '>', '<=', '>=', '=', '<>'
+  );
   END_STATES : set of TLexerState = [lsEnd, lsError];
 var
   input : TStream;
+  output : TStream;
   c : Char;
   eof : Boolean = false;
   currentId : String[255];
@@ -94,13 +117,13 @@ begin
     c := #0;
   end else if c = #0 then
     next();
-//  WriteLn('Next read: ', c);
 end;
 
 procedure addToken(t : TPascalToken);
 begin
-//  if t = ptError then
-    Write(TokenNames[t], ' ');
+  if _DEBUG then
+    WriteLn(TokenNames[t], ' ');
+  output.Write(t, sizeOf(t));
 end;
 
 procedure addID(id : String);
@@ -143,7 +166,9 @@ begin
       addToken(simpleToken(c));
     end;
     ' ', TAB, CR : ;
-    LF : WriteLn;
+    LF :
+      if _DEBUG then
+        WriteLn;
     '.': Result := lsDotOrTwoDots;
     ':': Result := lsColonOrAssignment;
     '<': Result := lsLessNotEqualOrLessOrEqual;
@@ -161,7 +186,8 @@ begin
     '''': Result := lsString;
     #0: Result := lsEnd;
     else begin
-      WriteLn('Error on symbol: ', c);
+      if _DEBUG then
+        WriteLn('Error on symbol: ', c);
       addToken(ptError);
     end;
   end;
@@ -405,12 +431,24 @@ procedure tokenize(input, output : TStream);
 var
   state : TLexerState;
 begin
+  PascalLexer.input := input;
+  PascalLexer.output := output;
   state := lsStart;
   next();
   repeat
     Assert(@handlers[state] <> nil, 'No handler for state: ' + StateNames[state]);
     state := handlers[state](c);
   until (state in END_STATES);
+end;
+
+function byteToTokenName(b : Byte) : String;
+begin
+  Result := TokenNames[TPascalToken(b)];
+end;
+
+function byteToTokenPresentation(b : Byte) : String;
+begin
+  Result := TokenPresentations[TPascalToken(b)];
 end;
 
 initialization
