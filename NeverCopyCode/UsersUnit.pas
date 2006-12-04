@@ -3,10 +3,11 @@ unit UsersUnit;
 interface
 
 uses
-  Classes;
+  Classes, DataCommons;
 
 const
   USER_NAME_LENGTH = 100;
+  USERS_FILE = DATA_DIR + '\' + '.users';
 
 type
   TUserName = String[USER_NAME_LENGTH];
@@ -56,7 +57,7 @@ end;
 procedure TUserFile.CheckBounds(Index : Integer);
 begin
   if (Index < 0) or (Index >= Size) then
-    raise Exception.Create('No such user'); 
+    raise Exception.Create('No such user');
 end;
 
 constructor TUserFile.Create(fileName: String);
