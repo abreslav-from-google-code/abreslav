@@ -95,7 +95,7 @@ begin
     New(pud);
     pud.name := Result;
     myCache[Index] := pud;
-  end;
+  end else Result := PUserData(myCache[Index])^.name;
 end;
 
 function TUserFile.IndexOf(name: String): Integer;

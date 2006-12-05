@@ -7,6 +7,7 @@ type
   PBytes = ^TBytes;
   TInts = array[0..(1 shl 30)] of Integer;
   PInts = ^TInts;
+  PMetricFunction = function (a : PBytes; asize : Integer; b : PBytes; bsize : Integer) : Integer;
 
 function mcs(a : PBytes; asize : Integer; b : PBytes; bsize : Integer) : Integer;
 function editingDistance(a : PBytes; asize : Integer; b : PBytes; bsize : Integer) : Integer;
