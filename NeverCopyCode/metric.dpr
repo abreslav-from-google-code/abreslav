@@ -66,10 +66,6 @@ begin
       WriteLn('MAX Common Suseq. : ', count, '%');
     end;
     
-    if asize > bsize then
-      WriteLn(count / bsize * 100 :0:0, '% of ', bname)
-    else WriteLn(count / asize * 100 :0:0, '% of ', aname);
-
     FreeMem(adata);
     FreeMem(bdata);
   except
