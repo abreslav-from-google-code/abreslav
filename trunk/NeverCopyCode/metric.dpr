@@ -59,11 +59,11 @@ begin
     WriteLn('Size of ', bname, ': ', bsize, ' tokens');
 
     if mode then begin
-      count := editingDistance(adata, asize, bdata, bsize);
-      WriteLn('Editing Distance : ', count, ' tokens');
+      count := editingDistanceMetric(adata, asize, bdata, bsize);
+      WriteLn('Editing Distance : ', count, '%');
     end else begin
-      count := mcs(adata, asize, bdata, bsize);
-      WriteLn('MAX Common Suseq. : ', count, ' tokens');
+      count := mcsMetric(adata, asize, bdata, bsize);
+      WriteLn('MAX Common Suseq. : ', count, '%');
     end;
     
     if asize > bsize then

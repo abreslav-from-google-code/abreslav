@@ -10,7 +10,12 @@ type
   PMetricFunction = function (a : PBytes; asize : Integer; b : PBytes; bsize : Integer) : Integer;
 
 function mcs(a : PBytes; asize : Integer; b : PBytes; bsize : Integer) : Integer;
+{ Returns normalized metric in percents (100 - shortest/mcs * 100) }
+function mcsMetric(a : PBytes; asize : Integer; b : PBytes; bsize : Integer) : Integer;
+
 function editingDistance(a : PBytes; asize : Integer; b : PBytes; bsize : Integer) : Integer;
+{ Returns normalized metric in percents (100 - shortest/Ed * 100) }
+function editingDistanceMetric(a : PBytes; asize : Integer; b : PBytes; bsize : Integer) : Integer;
 
 implementation
 
@@ -95,5 +100,17 @@ function editingDistance(a : PBytes; asize : Integer; b : PBytes; bsize : Intege
 begin
   Result := dynamicTemplate(edStep, a, asize, b, bsize);
 end;
+
+function editingDistanceMetric(a : PBytes; asize : Integer; b : PBytes; bsize : Integer) : Integer;
+begin
+  Result := Round((1 - editingDistance(a, asize, b, bsize) / Min(asize, bsize)) * 100);
+end;
+
+
+function mcsMetric(a : PBytes; asize : Integer; b : PBytes; bsize : Integer) : Integer;
+begin
+  Result := Round(mcs(a, asize, b, bsize) / Min(asize, bsize) * 100);
+end;
+
 
 end.
