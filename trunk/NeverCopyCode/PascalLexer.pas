@@ -45,7 +45,7 @@ type
     lsStart, lsEnd, lsError,
     lsCurlyComment, lsBraceComment, lsBraceCommentEndOrAsterisk, lsInlineComment,
     lsId,
-    lsNumber, lsHex, lsReal, lsRealExponent, lsRealExponentTag, lsString, lsChar,
+    lsNumber, lsHex, lsRealOrIntegerAndTwoDots, lsRealExponent, lsRealExponentTag, lsString, lsChar,
     lsSlashOrInlineComment, // / or //
     lsLBraceOrComment, // ( or (*
     lsDotOrTwoDots, // . or ..
@@ -391,7 +391,7 @@ begin
       next();
     end;
     '.' : begin
-      Result := lsReal;
+      Result := lsRealOrIntegerAndTwoDots;
       next();
     end;
     'e', 'E' : begin
@@ -433,8 +433,17 @@ begin
   end;
 end;
 
-function processReal(c : Char) : TLexerState;
+function processRealOrIntegerAndTwoDots(c : Char) : TLexerState;
 begin
+  case c of
+    '.': begin
+      addToken(ptINT);
+      addToken(ptTWO_DOTS);
+      next();
+      Result := lsStart;
+      Exit;
+    end;
+  end;
   Result := processRealExponentTag(c);
 end;
 
@@ -487,5 +496,5 @@ initialization
   handlers[lsNumber] := processNumber;
   handlers[lsRealExponent] := processRealExponent;
   handlers[lsRealExponentTag] := processRealExponentTag;
-  handlers[lsReal] := processReal;
+  handlers[lsRealOrIntegerAndTwoDots] := processRealOrIntegerAndTwoDots;
 end.
