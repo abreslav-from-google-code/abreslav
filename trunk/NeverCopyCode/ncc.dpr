@@ -35,7 +35,7 @@ end;
 
 var
   mode : (modeAdd, modeReplace);
-  metric : (metricMCS, metricED) = metricED;
+  metricFn : PMetricFunction;
   authorName : String;
   fileName : String;
   threshold : Integer = 0;
@@ -44,11 +44,9 @@ var
   input : TFileStream = nil;
   tokenStream : TStream = nil;
   authorId : Integer;
-  metricFn : PMetricFunction;
   match : Integer;
   entry : TMetadataEntry;
   metadata : TMetadataRecord;
-  underThreshold : Boolean;
   tr : TTokenizeResult;
   respond : Char;
 begin
@@ -67,11 +65,12 @@ begin
   end;
 
   c := 2;
+  metricFn := editingDistanceMetric;
   if ParamCount = 5 then begin
     if ParamStr(2) = '-c' then
-      metric := metricMCS
+      metricFn := mcsMetric
     else if ParamStr(2) = '-e' then
-      metric := metricED
+      metricFn := editingDistanceMetric
     else begin
       WriteLn('Unknown metric: ', ParamStr(1));
       ShowUsage;
@@ -79,7 +78,7 @@ begin
     c := 3;
   end;
 
-  if metric = metricEd then
+  if @metricFn = @editingDistanceMetric then
     WriteLn('Using ED metric')
   else WriteLn('Using MCS metric');
 
@@ -117,20 +116,11 @@ begin
           authorId := uf.AddUser(authorName);
       end;
 
-      case metric of
-        metricMCS: metricFn := mcs;
-        metricED: metricFn := editingDistance;
-        else metricFn := nil;
-      end;
-      match := FindClosestMatching(tokenStream, authorId, metricFn, metric = metricMCS, entry);
+      match := FindClosestMatching(tokenStream, authorId, metricFn, entry);
 
       WriteLn('Closest match found: ', match, '%');
 
-      if metric = metricMCS then
-        underThreshold := match < threshold
-      else underThreshold := match > threshold;
-
-      if (match >= 0) and not underThreshold then begin
+      if (match >= threshold)  then begin
         WriteLn('Close match found:');
         WriteLn('Author: ', uf.UserNames[entry.data.authorId]);
         WriteLn('Date: ', DateTimeToStr(entry.data.lastWrite));

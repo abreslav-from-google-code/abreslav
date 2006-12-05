@@ -23,7 +23,7 @@ type
    if asc is true => the bigger is metric value the closer is match
    negative result means empty database
 }
-function FindClosestMatching(input : TStream; authorId: Integer; metric: PMetricFunction; asc : Boolean; out entry : TMetadataEntry) : Integer;
+function FindClosestMatching(input : TStream; authorId: Integer; metric: PMetricFunction; out entry : TMetadataEntry) : Integer;
 function AddSample(const metadata : TMetadataRecord; pascalCode, tokenStream : TStream) : Integer;
  
 implementation
@@ -93,7 +93,7 @@ begin
   end;
 end;
 
-function FindClosestMatching(input : TStream; authorId: Integer; metric: PMetricFunction; asc : Boolean; out entry : TMetadataEntry) : Integer;
+function FindClosestMatching(input : TStream; authorId: Integer; metric: PMetricFunction; out entry : TMetadataEntry) : Integer;
 var
   mf : file of TMetadataRecord;
   rec : TMetadataRecord;
@@ -102,8 +102,6 @@ var
   bufsize : Integer;
   sId : Integer;
   tokensLength, m : Integer;
-  b : Boolean;
-  resultAssigned : Boolean;
 begin
   Result := -1;
   AssignFile(mf, METADATA_FILE_NAME);
@@ -116,7 +114,6 @@ begin
       input.Seek(0, soFromBeginning);
       input.Read(idata^, input.Size);
       try
-        resultAssigned := false;
         sId := 0;
         while not Eof(mf) do begin
           Read(mf, rec);
@@ -125,17 +122,10 @@ begin
             tokensLength := GetTokenData(buffer, bufsize, sId);
 
             m := metric(idata, input.Size, buffer, tokensLength);
-
-            if resultAssigned then
-              if asc then
-                b := Result < m
-              else b := Result > m
-            else b := true;
-            if b then begin
+            if Result < m then begin
               Result := m;
               entry.id := sId;
               entry.data := rec;
-              resultAssigned := true;
             end;
           end;
           inc(sId);
