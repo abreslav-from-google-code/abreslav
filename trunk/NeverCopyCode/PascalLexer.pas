@@ -362,6 +362,10 @@ begin
       addToken(ptSTRINGLITERAL);
       Result := lsStart;
     end;
+    CR, LF : begin
+      addToken(ptERROR);
+      Result := lsStart;
+    end;
     else begin
       Result := lsString;
     end;
