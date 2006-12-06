@@ -25,7 +25,8 @@ type
 }
 function FindClosestMatching(input : TStream; authorId: Integer; metric: PMetricFunction; out entry : TMetadataEntry) : Integer;
 function AddSample(const metadata : TMetadataRecord; pascalCode, tokenStream : TStream) : Integer;
- 
+procedure EnsureDataExists;
+
 implementation
 
 uses
@@ -139,6 +140,13 @@ begin
   finally
     FreeMem(idata);
   end;
+end;
+
+procedure EnsureDataExists;
+begin
+  CreateDir(DATA_DIR);
+  if not FileExists(METADATA_FILE_NAME) then
+    TFileStream.Create(METADATA_FILE_NAME, fmCreate).Free;
 end;
 
 end.
