@@ -63,7 +63,9 @@ end;
 constructor TUserFile.Create(fileName: String);
 begin
   AssignFile(myFile, fileName);
-  Reset(myFile);
+  if FileExists(fileName) then
+    Reset(myFile)
+  else Rewrite(myFile);
   myCache := TList.Create;
   myCache.Count := Size;
 end;
