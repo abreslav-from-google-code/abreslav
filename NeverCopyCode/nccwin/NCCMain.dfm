@@ -936,6 +936,7 @@ object MainForm: TMainForm
       object About1: TMenuItem
         Caption = 'About'
         ShortCut = 112
+        OnClick = About1Click
       end
     end
   end

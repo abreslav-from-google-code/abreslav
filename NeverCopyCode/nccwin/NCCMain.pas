@@ -99,6 +99,7 @@ type
     procedure FileListContextPopup(Sender: TObject; MousePos: TPoint;
       var Handled: Boolean);
     procedure FileListDblClick(Sender: TObject);
+    procedure About1Click(Sender: TObject);
   private
     uf : TUserFile;
     buf : TBitmap;
@@ -542,6 +543,11 @@ end;
 procedure TMainForm.FileListDblClick(Sender: TObject);
 begin
   Compare.Execute;
+end;
+
+procedure TMainForm.About1Click(Sender: TObject);
+begin
+  ShowMessage('NeverCopyCode v 2.0'#13#10'Copyright(C) by Andrey Breslav, 2006'#13#10#13#10'Distributed as is');
 end;
 
 end.
