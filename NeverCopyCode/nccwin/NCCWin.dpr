@@ -9,7 +9,8 @@ uses
   UsersUnit in '..\UsersUnit.pas',
   DataCommons in '..\DataCommons.pas',
   PascalLexer in '..\PascalLexer.pas',
-  MetricUnit in '..\MetricUnit.pas';
+  MetricUnit in '..\MetricUnit.pas',
+  AuthorsDialogUnit in 'AuthorsDialogUnit.pas' {AuthorsDialog};
 
 {$R *.RES}
 
@@ -18,5 +19,6 @@ begin
   Application.Title := 'Never Copy Code';
   Application.CreateForm(TMainForm, MainForm);
   Application.CreateForm(TProgressForm, ProgressForm);
+  Application.CreateForm(TAuthorsDialog, AuthorsDialog);
   Application.Run;
 end.

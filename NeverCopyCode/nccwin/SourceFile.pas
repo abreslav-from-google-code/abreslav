@@ -3,9 +3,10 @@ unit SourceFile;
 interface
 
 uses
-  ComCtrls, DataCommons, UsersUnit;
+  ComCtrls, DataCommons, UsersUnit, Classes;
 
 type
+  TSourceFileStrategy = class;
   TSourceFileState = (fsNone, fsMatchUnderThreshold, fsCloseMatch, fsAdded, fsForcedAdded);
   TSourceFile = class
   private
@@ -15,6 +16,8 @@ type
     FAuthorName: String;
     FState: TSourceFileState;
     FClosestMatch : TMetadataEntry;
+    FTokens : TStream;
+    FPascal : TStream;
     FMatch : Integer;
     FThreshold: Integer;
     FUserFile : TUserFile;
@@ -23,11 +26,14 @@ type
     function GetMatch: Integer;
     procedure SetThreshold(const Value: Integer);
     procedure CalcMatchState;
+    procedure Add;
   public
     constructor Create(authorId : Integer; uf : TUserFile; path : String; threshold : Integer; li : TListItem);
+    destructor Destroy; override;
     procedure TryToAdd;
     procedure ForceAdd;
-    procedure FindMatch;
+    procedure FindMatch(force : Boolean = false);
+    procedure Accept(strategy : TSourceFileStrategy);
 
     property Path : String read FPath;
     property AuthorId : Integer read FAuthorId;
@@ -38,11 +44,31 @@ type
     property Match : Integer read GetMatch;
     property Threshold : Integer read FThreshold write SetThreshold;
   end;
+  TSourceFileStrategy = class
+  public
+    procedure perform(sf : TSourceFile); virtual; abstract;
+  end;
+  TTryToAddStrategy = class(TSourceFileStrategy)
+  public
+    procedure perform(sf : TSourceFile); override;
+  end;
+  TForceAddStrategy = class(TSourceFileStrategy)
+  public
+    procedure perform(sf : TSourceFile); override;
+  end;
+  TFindMatchStrategy = class(TSourceFileStrategy)
+  public
+    procedure perform(sf : TSourceFile); override;
+  end;
+  TForceFindMatchStrategy = class(TSourceFileStrategy)
+  public
+    procedure perform(sf : TSourceFile); override;
+  end;
 
 implementation
 
 uses
-  SysUtils, MetricUnit, Classes;
+  SysUtils, MetricUnit, PascalLexer;
 
 const
   AUTHOR_NAME = 1;
@@ -55,6 +81,8 @@ const
 { TSourceFile }
 
 constructor TSourceFile.Create(authorId : Integer; uf : TUserFile; path : String; threshold : Integer; li : TListItem);
+var
+  temp : TStream;
 begin
   FPath := path;
   FAuthorId := authorId;
@@ -70,6 +98,16 @@ begin
   FItem.SubItems.Add('<date>');
   FItem.ImageIndex := 0;
   FItem.Data := Self;
+  FPascal := TMemoryStream.Create;
+  FTokens := TMemoryStream.Create;
+  temp := nil;
+  try
+    temp := TFileStream.Create(path, fmOpenRead or fmShareDenyWrite);
+    FPascal.CopyFrom(temp, temp.Size);
+    FPascal.Size := FPascal.Size;
+  finally
+    temp.Free;
+  end;
   SetState(fsNone);
 end;
 
@@ -89,7 +127,7 @@ begin
   TryToAdd;
   if State in [fsForcedAdded, fsAdded] then
     Exit;
-  
+  Add;
   SetState(fsForcedAdded);
 end;
 
@@ -98,26 +136,23 @@ begin
   FindMatch;
   if State in [fsCloseMatch, fsForcedAdded, fsAdded] then
     Exit;
+  Add;
   SetState(fsAdded);
 end;
 
-procedure TSourceFile.FindMatch;
-var
-  fs : TFileStream;
+procedure TSourceFile.FindMatch(force : Boolean = false);
 begin
-  if FState <> fsNone then
+  if (FState <> fsNone) and (not force) then
     Exit;
-  fs := nil;
-  try
-    fs := TFileStream.Create(path, fmOpenRead or fmShareDenyWrite);
-    FMatch := FindClosestMatching(fs, AuthorId, editingDistanceMetric, FClosestMatch);
-    CalcMatchState;
-    FItem.SubItems[SAMPLE_AUTHOR] := FUserFile.UserNames[FClosestMatch.data.authorId];
-    FItem.SubItems[FILE_NAME] := FClosestMatch.data.fileName;
-    FItem.SubItems[DATE] := DateTimeToStr(FClosestMatch.data.lastWrite);
-  finally
-    fs.Free;
+  if FTokens.Size = 0 then begin
+    FPascal.Seek(0, soFromBeginning);
+    tokenize(FPascal, FTokens);
   end;
+  FMatch := FindClosestMatching(FTokens, AuthorId, editingDistanceMetric, FClosestMatch);
+  CalcMatchState;
+  FItem.SubItems[SAMPLE_AUTHOR] := FUserFile.UserNames[FClosestMatch.data.authorId];
+  FItem.SubItems[FILE_NAME] := FClosestMatch.data.fileName;
+  FItem.SubItems[DATE] := DateTimeToStr(FClosestMatch.data.lastWrite);
 end;
 
 function TSourceFile.GetClosestMatch: TMetadataEntry;
@@ -139,11 +174,63 @@ end;
 
 procedure TSourceFile.CalcMatchState;
 begin
-  if State in [fsAdded, fsForcedAdded] then
+  if State in [fsAdded, fsForcedAdded] then begin
+    Item.Update;
     Exit;
+  end;
   if FMatch < FThreshold then
     SetState(fsMatchUnderThreshold)
   else SetState(fsCloseMatch);
+end;
+
+procedure TSourceFile.Accept(strategy: TSourceFileStrategy);
+begin
+  strategy.perform(Self);
+end;
+
+procedure TSourceFile.Add;
+var
+  metadata : TMetadataRecord;
+begin
+  metadata.authorId := FAuthorId;
+  metadata.lastWrite := Now;
+  metadata.fileName := FPath;
+  AddSample(metadata, FPascal, FTokens);
+end;
+
+destructor TSourceFile.Destroy;
+begin
+  inherited;
+  FPascal.Free;
+  FTokens.Free;
+end;
+
+{ TTryToAddStrategy }
+
+procedure TTryToAddStrategy.perform(sf: TSourceFile);
+begin
+  sf.TryToAdd;
+end;
+
+{ TForceAddStrategy }
+
+procedure TForceAddStrategy.perform(sf: TSourceFile);
+begin
+  sf.ForceAdd;
+end;
+
+{ TFindMatchStrategy }
+
+procedure TFindMatchStrategy.perform(sf: TSourceFile);
+begin
+  sf.FindMatch;
+end;
+
+{ TForceFindMatchStrategy }
+
+procedure TForceFindMatchStrategy.perform(sf: TSourceFile);
+begin
+  sf.FindMatch(true);
 end;
 
 end.

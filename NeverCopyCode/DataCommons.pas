@@ -26,6 +26,7 @@ type
 function FindClosestMatching(input : TStream; authorId: Integer; metric: PMetricFunction; out entry : TMetadataEntry) : Integer;
 function AddSample(const metadata : TMetadataRecord; pascalCode, tokenStream : TStream) : Integer;
 procedure EnsureDataExists;
+function GetPascalFileName(sId : Integer) : String;
 
 implementation
 
