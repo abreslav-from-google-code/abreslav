@@ -28,16 +28,16 @@ object ProgressForm: TProgressForm
   end
   object CurrentFileST: TStaticText
     Left = 35
-    Top = 64
+    Top = 58
     Width = 305
-    Height = 17
+    Height = 36
     AutoSize = False
     Caption = 'CurrentFileST'
     TabOrder = 1
   end
   object CancelBtn: TButton
     Left = 150
-    Top = 97
+    Top = 102
     Width = 75
     Height = 25
     Cancel = True

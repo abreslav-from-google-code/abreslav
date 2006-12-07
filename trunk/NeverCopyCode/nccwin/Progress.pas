@@ -18,6 +18,7 @@ type
   public
     procedure Show(FileCount : Integer);
     procedure StartFile(fileName : String);
+    procedure SetCount(FileCount : Integer);
     property Cancelled : Boolean read FCancelled;
   end;
 
@@ -33,20 +34,28 @@ implementation
 procedure TProgressForm.Show(FileCount: Integer);
 begin
   FCancelled := false;
-  ProgressBar.Max := FileCount;
+  SetCount(FileCount);
   inherited Show;
+  Update;
 end;
 
 procedure TProgressForm.StartFile(fileName: String);
 begin
   CurrentFileST.Caption := fileName;
+  CurrentFileST.Update;
   ProgressBar.Position := ProgressBar.Position + 1;
-  Update;
+  ProgressBar.Update;
 end;
 
 procedure TProgressForm.CancelBtnClick(Sender: TObject);
 begin
   FCancelled := true;
+end;
+
+procedure TProgressForm.SetCount(FileCount: Integer);
+begin
+  ProgressBar.Max := FileCount;
+  ProgressBar.Update;
 end;
 
 end.
