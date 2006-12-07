@@ -251,6 +251,7 @@ begin
     '}': begin
       Result := lsStart;
     end;
+    #0 : Result := lsEnd;
     else Result := lsCurlyComment;
   end;
   next();
@@ -276,6 +277,7 @@ begin
     CR, LF: begin
       Result := lsStart;
     end;
+    #0 : Result := lsEnd;
     else Result := lsInlineComment;;
   end;
   next();
@@ -301,6 +303,7 @@ begin
     '*': begin
       Result := lsBraceCommentEndOrAsterisk;
     end;
+    #0 : Result := lsEnd;
     else begin
       Result := lsBraceComment;
     end;
@@ -358,7 +361,7 @@ end;
 function processString(c : Char) : TLexerState;
 begin
   case c of
-    '''': begin
+    '''', #0: begin
       addToken(ptSTRINGLITERAL);
       Result := lsStart;
     end;
