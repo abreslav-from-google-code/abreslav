@@ -7,6 +7,7 @@ uses
 
 const
   DATA_DIR = '.data';
+  DATA_EXTENSION = '.dat';
 
 type
   TMetadataRecord = packed record
@@ -27,6 +28,7 @@ function FindClosestMatching(input : TStream; authorId: Integer; metric: PMetric
 function AddSample(const metadata : TMetadataRecord; pascalCode, tokenStream : TStream) : Integer;
 procedure EnsureDataExists;
 function GetPascalFileName(sId : Integer) : String;
+function GetTokenFileName(sId : Integer) : String;
 
 implementation
 
@@ -43,7 +45,7 @@ end;
 
 function GetTokenFileName(sId : Integer) : String;
 begin
-  Result := GetFileName(sId) + '.dat';
+  Result := GetFileName(sId) + DATA_EXTENSION;
 end;
 
 function GetPascalFileName(sId : Integer) : String;
