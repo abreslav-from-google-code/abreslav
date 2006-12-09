@@ -361,11 +361,25 @@ end;
 procedure TMainForm.RemoveExecute(Sender: TObject);
 var
   i : Integer;
+  sf : TSourceFile;
+  all : Boolean;
 begin
-  for i := 0 to fList.Count - 1 do
-    TSourceFile(fList[i]).Free;
-  fList.Clear;
-  FileList.Items.Clear;
+  all := false;
+  for i := fList.Count - 1 downto 0 do begin
+    sf := TSourceFile(fList[i]);
+    if sf.Item.Selected then begin
+      if not (sf.State in [fsAdded, fsCloseMatch]) and not all then
+        case MessageDlg('The file'#13#10 + sf.path + #13#10'is not added. Do you want to remove it?',
+           mtConfirmation, [mbYes, mbAll, mbNo, mbCancel], -1) of
+          mrNo : continue;
+          mrCancel : break;
+          mrAll : all := true;
+        end;
+      FileList.Items.Delete(sf.Item.Index);
+      sf.Free;
+      fList.Delete(i);
+    end;
+  end;
 end;
 
 procedure TMainForm.ProcessAllExecute(Sender: TObject);
@@ -547,7 +561,7 @@ end;
 
 procedure TMainForm.About1Click(Sender: TObject);
 begin
-  ShowMessage('NeverCopyCode v 2.0'#13#10'Copyright(C) by Andrey Breslav, 2006'#13#10#13#10'Distributed as is');
+  ShowMessage('NeverCopyCode v 2.0'#13#10'Copyright(C) 2006 by Andrey Breslav'#13#10#13#10'Distributed as is');
 end;
 
 end.
