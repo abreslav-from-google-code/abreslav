@@ -294,6 +294,15 @@ procedure DeleteBuffer(var buf : TBuffer);
 procedure SaveScreenToBuffer(buf : TBuffer);
 procedure LoadScreenFromBuffer(buf : TBuffer);
 
+type
+  TPicture = type Integer;
+
+function LoadPicture(fileName : String) : TPicture;
+procedure UnLoadPicture(p : TPicture);
+procedure DrawPicture(x, y : Integer; p : TPicture);
+function GetPictureWidth(p : TPicture) : Integer;
+function GetPictureHeight(p : TPicture) : Integer;
+
 implementation
 
 uses
@@ -739,6 +748,42 @@ begin
 end;
 
 ////////////////////////////////////////////////////////////////////////////////
+
+var
+  Pictures : TObjectList;
+
+function LoadPicture(fileName : String) : TPicture;
+var
+  bmp : TBitmap;
+begin
+  bmp := TBitmap.Create;
+  bmp.LoadFromFile(fileName);
+  Result := Pictures.Add(bmp);
+end;
+
+procedure UnLoadPicture(p : TPicture);
+begin
+  Pictures[p].Free;
+  Pictures[p] := nil;
+end;
+
+procedure DrawPicture(x, y : Integer; p : TPicture);
+begin
+  Buffer.Canvas.Draw(x, y, TBitmap(Pictures[p]));
+  Repaint;
+end;
+
+function GetPictureWidth(p : TPicture) : Integer;
+begin
+  Result := TBitmap(Pictures[p]).Width;
+end;
+
+function GetPictureHeight(p : TPicture) : Integer;
+begin
+  Result := TBitmap(Pictures[p]).Height;
+end;
+
+////////////////////////////////////////////////////////////////////////////////
 ////////////////////////////////////////////////////////////////////////////////
 ////////////////////////////////////////////////////////////////////////////////
 
@@ -835,4 +880,9 @@ initialization
   KeyQueue := TObjectQueue.Create;
   FillChar(MESSAGE, SizeOf(MESSAGE), 0);
   Buffers := TObjectList.Create;
+  pictures := TObjectList.Create;
+finalization
+  KeyQueue.Free;
+  Buffers.Free;
+  Pictures.Free;
 end.
