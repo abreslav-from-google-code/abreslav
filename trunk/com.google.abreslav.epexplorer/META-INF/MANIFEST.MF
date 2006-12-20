@@ -1,0 +1,12 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: Extension Explorer Plug-in
+Bundle-SymbolicName: com.google.abreslav.epexplorer; singleton:=true
+Bundle-Version: 1.0.0
+Bundle-Activator: com.google.abreslav.epexplorer.Activator
+Bundle-Vendor: Andrey Breslav
+Bundle-Localization: plugin
+Require-Bundle: org.eclipse.ui,
+ org.eclipse.core.runtime,
+ org.eclipse.pde.runtime
+Eclipse-LazyStart: true
