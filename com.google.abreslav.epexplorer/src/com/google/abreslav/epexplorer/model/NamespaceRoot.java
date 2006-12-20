@@ -22,4 +22,12 @@ public class NamespaceRoot implements IRoot {
 		}
 		return namespaceNodes;
 	}
+
+	public String toString() {
+		return "namespaces";
+	}
+
+	public boolean isTopLevelElement(Object element) {
+		return element instanceof NamespaceNode;
+	}
 }

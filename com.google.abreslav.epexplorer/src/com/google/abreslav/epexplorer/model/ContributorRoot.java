@@ -56,5 +56,12 @@ public class ContributorRoot implements IRoot {
 
 		return contributorNodes;
 	}
+	
+	public String toString() {
+		return "contributors";
+	}
 
+	public boolean isTopLevelElement(Object element) {
+		return element instanceof ContributorNode;
+	}
 }
