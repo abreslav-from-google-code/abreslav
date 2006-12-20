@@ -1,5 +1,8 @@
 package com.google.abreslav.epexplorer.views;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.action.IMenuListener;
@@ -7,6 +10,10 @@ import org.eclipse.jface.action.IMenuManager;
 import org.eclipse.jface.action.IToolBarManager;
 import org.eclipse.jface.action.MenuManager;
 import org.eclipse.jface.action.Separator;
+import org.eclipse.jface.dialogs.Dialog;
+import org.eclipse.jface.dialogs.IDialogSettings;
+import org.eclipse.jface.dialogs.InputDialog;
+import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.jface.viewers.ViewerFilter;
@@ -15,100 +22,148 @@ import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Menu;
 import org.eclipse.ui.IActionBars;
-import org.eclipse.ui.IMemento;
-import org.eclipse.ui.IViewSite;
 import org.eclipse.ui.IWorkbenchActionConstants;
-import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.PlatformUI;
-import org.eclipse.ui.dialogs.FilteredTree;
 import org.eclipse.ui.dialogs.PatternFilter;
 import org.eclipse.ui.part.DrillDownAdapter;
 import org.eclipse.ui.part.ViewPart;
 
 import com.google.abreslav.epexplorer.Activator;
 import com.google.abreslav.epexplorer.model.AttributeNode;
-import com.google.abreslav.epexplorer.model.ConfigurationElementNode;
-import com.google.abreslav.epexplorer.model.ContributorNode;
 import com.google.abreslav.epexplorer.model.ContributorRoot;
-import com.google.abreslav.epexplorer.model.ExtensionNode;
-import com.google.abreslav.epexplorer.model.ExtensionPointNode;
 import com.google.abreslav.epexplorer.model.ExtensionPointRoot;
 import com.google.abreslav.epexplorer.model.IRoot;
 import com.google.abreslav.epexplorer.model.ITreeNode;
-import com.google.abreslav.epexplorer.model.NamespaceNode;
 import com.google.abreslav.epexplorer.model.NamespaceRoot;
 
 public class ExtensionsView extends ViewPart {
 	
-	private static final String HIDE_EMPTY = "hide_empty";
+	private class SetRootAction extends Action {
+		private final IRoot root;
 
-	private static final String HIDE_EMPTY_TOPLEVEL_ELEMENTS = "Hide empty toplevel elements";
-
-	private static final String FILTER_EVERYTHING = "Filter everything";
-
-	private static final String COLLAPSE_ALL = "Collapse all";
-
-	private static final String SHOW_CONTRIBUTORS = "Show contributors";
-
-	private static final String SHOW_EXTENSION_POINTS = "Show extension points";
-
-	private static final String SHOW_NAMESPACES = "Show namespaces";
-
-	private TreeViewer viewer;
-
-	private DrillDownAdapter drillDownAdapter;
-
-	private Action namespaceRootAction;
-
-	private Action extensionPointRootAction;
-
-	private Action contributorsRootAction;
-
-	private Action hideEmptyAction;
-	
-	private Action collapseAllAction;
-	
-	private Action filterEverythingAction;
-	
-	private final class NotifiableFilteredTree extends FilteredTree {
-		private NotifiableFilteredTree(Composite parent, int style, PatternFilter filter) {
-			super(parent, style, filter);
+		public SetRootAction(String text, ImageDescriptor image, final IRoot root) {
+			super(text, IAction.AS_RADIO_BUTTON);
+			setImageDescriptor(image);
+			setToolTipText(text);
+			this.root = root;
 		}
-		
-		protected void textChanged() {
-			super.textChanged();
-		}
-	}
-
-	private class FilterTypeAction extends Action {
-		
-		private final Class typeToFilter;
-
-		public FilterTypeAction(final Class typeToFilter, String text) {
-			super(text, IAction.AS_CHECK_BOX);
-			this.typeToFilter = typeToFilter;
-		} 
 		
 		public void run() {
-			if (isChecked()) {
-				patternFilter.addFilteredClass(typeToFilter);
-			} else {
-				patternFilter.removeFilteredClass(typeToFilter);
-			}			
-			filteredTree.textChanged();
+			settings.setRoot(root);
 		}
 	}
 
-	private ViewLabelProvider labelProvider = new ViewLabelProvider();
-	
-	private IAction[] filterTypeActions = new IAction[] {
-			new FilterTypeAction(ExtensionPointNode.class, "Filter extension points"),	
-			new FilterTypeAction(NamespaceNode.class, "Filter namespaces"),	
-			new FilterTypeAction(ContributorNode.class, "Filter contributors"),	
-			new FilterTypeAction(ExtensionNode.class, "Filter extensions"),	
-			new FilterTypeAction(ConfigurationElementNode.class, "Filter configuration elements"),	
-			new FilterTypeAction(AttributeNode.class, "Filter attributes"),	
+	private ViewLabelProvider labelProvider = new ViewLabelProvider();	
+
+	private SetRootAction[] rootActions = {
+			new SetRootAction(IConstants.SHOW_EXTENSION_POINTS, labelProvider.getExtensionPointImageDescriptor(), ExtensionPointRoot.INSTANCE),
+			new SetRootAction(IConstants.SHOW_NAMESPACES, labelProvider.getNamespaceImageDescriptor(), NamespaceRoot.INSTANCE),
+			new SetRootAction(IConstants.SHOW_CONTRIBUTORS, labelProvider.getContributorImageDescriptor(), ContributorRoot.INSTANCE),
 	};
+
+	private PatternFilter patternFilter = new PatternFilter() {
+		public boolean isElementVisible(Viewer viewer, Object element) {
+			if (settings.getRoot().isTopLevelElement(element)) {
+				return wordMatches(element.toString());
+			}
+			return true;
+		}
+	};
+	
+	private final class ExtensionsViewSettings {
+		private static final String ROOT = "root";
+		private static final String HIDE_EMPTY = "hideEmpty";
+		private static final String ID = "com.google.abreslav.epexplorer.views.ExtensionsView";
+		
+		private final Map nameToRoot = new HashMap();
+		{
+			nameToRoot.put(ExtensionPointRoot.INSTANCE.toString(), ExtensionPointRoot.INSTANCE);
+			nameToRoot.put(NamespaceRoot.INSTANCE.toString(), NamespaceRoot.INSTANCE);
+			nameToRoot.put(ContributorRoot.INSTANCE.toString(), ContributorRoot.INSTANCE);
+		}
+		private final Map rootToAction = new HashMap();
+		{
+			for (int i = 0; i < rootActions.length; i++) {
+				rootToAction.put(rootActions[i].root, rootActions[i]);
+			}
+		}
+		
+		private IRoot root = ExtensionPointRoot.INSTANCE;
+		private boolean hideEmpty = false;
+		private IDialogSettings section;
+		
+		public ExtensionsViewSettings(IDialogSettings ds) {
+			section = ds.getSection(ID);
+			if (section != null) {
+				load();
+			} else {
+				section = ds.addNewSection(ID);
+				save();
+				apply();
+			}
+			applyToActions();
+		}
+		
+		private void save() {
+			section.put(HIDE_EMPTY, hideEmpty);
+			section.put(ROOT, getRootName(root));
+		}
+
+		private void load() {
+			hideEmpty = section.getBoolean(HIDE_EMPTY);
+			IRoot rootByName = getRootByName(section.get(ROOT));
+			root = rootByName != null ? rootByName : root;
+			apply();
+		}
+
+		private void apply() {
+			viewer.setInput(root);
+			if (hideEmpty) {
+				viewer.addFilter(viewerFilter);
+			} else {
+				viewer.removeFilter(viewerFilter);				
+			}
+		}
+
+		private void applyToActions() {
+			((IAction) rootToAction.get(root)).setChecked(true);
+			hideEmptyAction.setChecked(hideEmpty);
+		}
+
+		private String getRootName(IRoot root) {
+			return root.toString();
+		}
+
+		private IRoot getRootByName(String string) {
+			return (IRoot) nameToRoot.get(string);
+		}
+
+		public boolean getHideEmpty() {
+			return hideEmpty;
+		}
+
+		public void setHideEmpty(boolean hideEmpty) {
+			this.hideEmpty = hideEmpty;
+			save();
+			apply();
+		}
+
+		public IRoot getRoot() {
+			return root;
+		}
+
+		public void setRoot(IRoot root) {
+			this.root = root;
+			save();
+			apply();
+		}
+	}
+	
+	private IAction hideEmptyAction;
+	
+	private IAction collapseAllAction;
+	
+	private IAction applyTextFilterAction;
 	
 	private final ViewerFilter viewerFilter = new ViewerFilter() {
 		public boolean select(Viewer viewer, Object parentElement, Object element) {
@@ -119,11 +174,7 @@ public class ExtensionsView extends ViewPart {
 		}
 	};
 
-	private NotifiableFilteredTree filteredTree;
-
-	private MyPatternFilter patternFilter = new MyPatternFilter();
-
-	class NameSorter extends ViewerSorter{
+	private class NameSorter extends ViewerSorter {
 		public int category(Object element) {
 			if (element instanceof AttributeNode) {
 				return 0;
@@ -132,13 +183,18 @@ public class ExtensionsView extends ViewPart {
 		}
 	}
 
+	private TreeViewer viewer;
+
+	private DrillDownAdapter drillDownAdapter;
+
+	private ExtensionsViewSettings settings;
+	
 	public ExtensionsView() {
 		PlatformUI.getWorkbench().getActiveWorkbenchWindow().getPartService().addPartListener(new MyWorkbenchPartListener());
 	}
 	
 	public void createPartControl(Composite parent) {
-		filteredTree = new NotifiableFilteredTree(parent, SWT.MULTI | SWT.H_SCROLL | SWT.V_SCROLL | SWT.BORDER, patternFilter);
-		viewer = filteredTree.getViewer();
+		viewer = new TreeViewer(parent, SWT.MULTI | SWT.H_SCROLL | SWT.V_SCROLL);
 		drillDownAdapter = new DrillDownAdapter(viewer);
 		viewer.setContentProvider(new ViewContentProvider());
 		viewer.setLabelProvider(labelProvider);
@@ -146,8 +202,7 @@ public class ExtensionsView extends ViewPart {
 		makeActions();
 		hookContextMenu();
 		contributeToActionBars();
-		
-		extensionPointRootAction.run();
+		settings = new ExtensionsViewSettings(Activator.getDefault().getDialogSettings());
 	}
 
 	private void hookContextMenu() {
@@ -170,17 +225,12 @@ public class ExtensionsView extends ViewPart {
 	}
 
 	private void fillLocalPullDown(IMenuManager manager) {
-		manager.add(extensionPointRootAction);
-		manager.add(namespaceRootAction);
-		manager.add(contributorsRootAction);
-		manager.add(new Separator());
-		manager.add(hideEmptyAction);
-		manager.add(new Separator());
-		for (int i = 0; i < filterTypeActions.length; i++) {
-			manager.add(filterTypeActions[i]);
+		for (int i = 0; i < rootActions.length; i++) {
+			manager.add(rootActions[i]);			
 		}
 		manager.add(new Separator());
-		manager.add(filterEverythingAction);
+		manager.add(hideEmptyAction);
+		manager.add(applyTextFilterAction);
 	}
 
 	private void fillContextMenu(IMenuManager manager) {
@@ -192,89 +242,52 @@ public class ExtensionsView extends ViewPart {
 	private void fillLocalToolBar(IToolBarManager manager) {
 		drillDownAdapter.addNavigationActions(manager);
 		manager.add(new Separator());
-		manager.add(extensionPointRootAction);
-		manager.add(namespaceRootAction);
-		manager.add(contributorsRootAction);
+		for (int i = 0; i < rootActions.length; i++) {
+			manager.add(rootActions[i]);			
+		}
 		manager.add(new Separator());
 		manager.add(hideEmptyAction);
+		manager.add(applyTextFilterAction);
 		manager.add(new Separator());
 		manager.add(collapseAllAction);
 	}
 
 	private void makeActions() {
-		namespaceRootAction = new Action(SHOW_NAMESPACES, IAction.AS_RADIO_BUTTON) {
+		hideEmptyAction = new Action(IConstants.HIDE_EMPTY_TOPLEVEL_ELEMENTS, IAction.AS_CHECK_BOX) {
 			public void run() {
-				viewer.setInput(NamespaceRoot.INSTANCE);
+				settings.setHideEmpty(isChecked());
 			}
 		};
-		namespaceRootAction.setToolTipText(SHOW_NAMESPACES);
-		namespaceRootAction.setImageDescriptor(labelProvider.getNamespaceImageDescriptor());
-
-		extensionPointRootAction = new Action(SHOW_EXTENSION_POINTS, IAction.AS_RADIO_BUTTON) {
-			public void run() {
-				viewer.setInput(ExtensionPointRoot.INSTANCE);
-			}
-		};
-		extensionPointRootAction.setChecked(true);
-		extensionPointRootAction.setToolTipText(SHOW_EXTENSION_POINTS);
-		extensionPointRootAction.setImageDescriptor(labelProvider.getExtensionPointImageDescriptor());
-
-		contributorsRootAction = new Action(SHOW_CONTRIBUTORS, IAction.AS_RADIO_BUTTON) {
-			public void run() {
-				viewer.setInput(ContributorRoot.INSTANCE);
-			}
-		};
-		contributorsRootAction.setToolTipText(SHOW_CONTRIBUTORS);
-		contributorsRootAction.setImageDescriptor(labelProvider.getContributorImageDescriptor());
-
-		hideEmptyAction = new Action(HIDE_EMPTY_TOPLEVEL_ELEMENTS, IAction.AS_CHECK_BOX) {
-			public void run() {
-				if (isChecked()) {
-					viewer.addFilter(viewerFilter);
-				} else {
-					viewer.removeFilter(viewerFilter);
-				}
-			}
-		};
-		hideEmptyAction.setToolTipText(HIDE_EMPTY_TOPLEVEL_ELEMENTS);
+		hideEmptyAction.setToolTipText(IConstants.HIDE_EMPTY_TOPLEVEL_ELEMENTS);
 		hideEmptyAction.setImageDescriptor(Activator.getImageDescriptor("icons/hideempty.gif"));
 		
 		
-		collapseAllAction = new Action(COLLAPSE_ALL) {
+		collapseAllAction = new Action(IConstants.COLLAPSE_ALL) {
 			public void run() {
 				viewer.collapseAll();
 			}
 		};
-		collapseAllAction.setToolTipText(COLLAPSE_ALL);
+		collapseAllAction.setToolTipText(IConstants.COLLAPSE_ALL);
 		collapseAllAction.setImageDescriptor(Activator.getImageDescriptor("icons/collapseall.gif"));
 		
-		filterEverythingAction = new Action(FILTER_EVERYTHING, IAction.AS_CHECK_BOX) {
+		applyTextFilterAction = new Action("Apply text filter...", Activator.getImageDescriptor("icons/filter.gif")) {
+			
+			private String pattern = "";
+			
 			public void run() {
-				patternFilter.setFilterEverything(isChecked());
-				filteredTree.textChanged();
+				InputDialog dialog = new InputDialog(getSite().getShell(), "Apply text filter...", "Input pattern (* and ? work):", pattern, null);
+				if (dialog.open() == Dialog.OK) {
+					pattern = dialog.getValue();
+					patternFilter.setPattern(pattern);
+					viewer.removeFilter(patternFilter);
+					viewer.addFilter(patternFilter);
+				}
 			}
 		};
-		filterEverythingAction.setToolTipText(FILTER_EVERYTHING);
 	}
 
 	public void setFocus() {
 		viewer.getControl().setFocus();
 	}
-	
-	public void init(IViewSite site, IMemento memento) throws PartInitException {
-		super.init(site, memento);
-		
-		if (memento != null) {
-			Integer hideEmpty = memento.getInteger(HIDE_EMPTY);
-			hideEmptyAction.setChecked(hideEmpty != null && hideEmpty.intValue() == 1);
-			hideEmptyAction.run();
-		}
-	}
-	
-	public void saveState(IMemento memento) {
-		memento.putInteger(HIDE_EMPTY, hideEmptyAction.isChecked() ? 1 : 0);
-		memento.putString("top_level", "");
-	}
-	
 	
 }

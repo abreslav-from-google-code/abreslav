@@ -23,4 +23,12 @@ public class ExtensionPointRoot implements IRoot {
 
 		return extensionPointNodes;
 	}
+
+	public String toString() {
+		return "extensionPoints";
+	}
+
+	public boolean isTopLevelElement(Object element) {
+		return element instanceof ExtensionPointNode;
+	}
 }
