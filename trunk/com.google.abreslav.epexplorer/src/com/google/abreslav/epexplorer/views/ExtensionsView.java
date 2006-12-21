@@ -23,7 +23,6 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Menu;
 import org.eclipse.ui.IActionBars;
 import org.eclipse.ui.IWorkbenchActionConstants;
-import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.dialogs.PatternFilter;
 import org.eclipse.ui.part.DrillDownAdapter;
 import org.eclipse.ui.part.ViewPart;
@@ -190,7 +189,6 @@ public class ExtensionsView extends ViewPart {
 	private ExtensionsViewSettings settings;
 	
 	public ExtensionsView() {
-		PlatformUI.getWorkbench().getActiveWorkbenchWindow().getPartService().addPartListener(new MyWorkbenchPartListener());
 	}
 	
 	public void createPartControl(Composite parent) {
