@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<genmodel:GenModel xmi:version="2.0"
+    xmlns:xmi="http://www.omg.org/XMI" xmlns:ecore="http://www.eclipse.org/emf/2002/Ecore"
+    xmlns:genmodel="http://www.eclipse.org/emf/2002/GenModel" modelDirectory="/AST2Model/src"
+    modelPluginID="AST2Model" modelName="Msg" importerID="org.eclipse.emf.importer.ecore">
+  <foreignModel>msg.ecore</foreignModel>
+  <genPackages prefix="Msg" disposableProviderFactory="true" ecorePackage="msg.ecore#/">
+    <genEnums ecoreEnum="msg.ecore#//BasicTypes">
+      <genEnumLiterals ecoreEnumLiteral="msg.ecore#//BasicTypes/int"/>
+      <genEnumLiterals ecoreEnumLiteral="msg.ecore#//BasicTypes/void"/>
+      <genEnumLiterals ecoreEnumLiteral="msg.ecore#//BasicTypes/boolean"/>
+    </genEnums>
+    <genEnums ecoreEnum="msg.ecore#//AccessModifier">
+      <genEnumLiterals ecoreEnumLiteral="msg.ecore#//AccessModifier/private"/>
+      <genEnumLiterals ecoreEnumLiteral="msg.ecore#//AccessModifier/protected"/>
+      <genEnumLiterals ecoreEnumLiteral="msg.ecore#//AccessModifier/public"/>
+    </genEnums>
+    <genClasses image="false" ecoreClass="msg.ecore#//Named">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute msg.ecore#//Named/name"/>
+    </genClasses>
+    <genClasses image="false" ecoreClass="msg.ecore#//Type"/>
+    <genClasses ecoreClass="msg.ecore#//BasicType">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute msg.ecore#//BasicType/type"/>
+    </genClasses>
+    <genClasses ecoreClass="msg.ecore#//ArrayType">
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference msg.ecore#//ArrayType/elementType"/>
+    </genClasses>
+    <genClasses ecoreClass="msg.ecore#//Field"/>
+    <genClasses ecoreClass="msg.ecore#//FormalParameter">
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference msg.ecore#//FormalParameter/type"/>
+    </genClasses>
+    <genClasses ecoreClass="msg.ecore#//Package">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference msg.ecore#//Package/classes"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference msg.ecore#//Package/subpackages"/>
+    </genClasses>
+    <genClasses ecoreClass="msg.ecore#//Class">
+      <genFeatures property="None" notify="false" createChild="false" ecoreFeature="ecore:EReference msg.ecore#//Class/package"/>
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference msg.ecore#//Class/super"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference msg.ecore#//Class/members"/>
+    </genClasses>
+    <genClasses ecoreClass="msg.ecore#//Method">
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference msg.ecore#//Method/throws"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference msg.ecore#//Method/formalParameters"/>
+    </genClasses>
+    <genClasses image="false" ecoreClass="msg.ecore#//Member">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute msg.ecore#//Member/accessModifier"/>
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference msg.ecore#//Member/type"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute msg.ecore#//Member/final"/>
+    </genClasses>
+  </genPackages>
+</genmodel:GenModel>
