@@ -1,6 +1,7 @@
 package proxy;
 
 import org.eclipse.emf.ecore.EObject;
+import org.eclipse.emf.ecore.InternalEObject;
 
 public class ProxyImpl<T extends EObject> extends DelegatingEObject<T> implements Proxy<T> {
 
@@ -24,5 +25,6 @@ public class ProxyImpl<T extends EObject> extends DelegatingEObject<T> implement
 	public void pResolve(T subj) {
 		pResolve();
 		subject = subj;
+		internal = (InternalEObject) subj;
 	}
 }

@@ -10,7 +10,6 @@ import msg.Field;
 import msg.MsgFactory;
 import msg.Type;
 import msg.proxies.ClassProxy;
-import msg.proxies.FieldProxy;
 import msg.proxies.PackageProxy;
 import msg.proxies.impl.PackageProxyImpl;
 import msjast.AccessModifier;
@@ -34,6 +33,10 @@ public class AST2MsgTransformation extends MsjastSwitch {
 	private PackageProxy thisPackage;
 	private final Map<String, ClassProxy> importedClasses = new HashMap<String, ClassProxy>();
 
+	public PackageProxy getDefaultPackage() {
+		return defaultPackage;
+	}
+	
 	private ClassProxy internalLookupClass(FQNameAS fqn) {
 		PackageProxy p = defaultPackage;
 		while (fqn.getSubFqn() != null) {
@@ -90,8 +93,10 @@ public class AST2MsgTransformation extends MsjastSwitch {
 	
 	@Override
 	public msg.Class caseClassAS(ClassAS ast) {
+		Class pClass = MsgFactory.eINSTANCE.createClass();
+
 		String name = ast.getName();
-		ClassProxy pClass = thisPackage.getClassNS().getAnyway(name);
+		pClass.setName(name);
 		
 		ClassReferenceAS superClass = ast.getSuperClass();
 		if (superClass != null) {
@@ -102,8 +107,6 @@ public class AST2MsgTransformation extends MsjastSwitch {
 		for (Iterator iter = members.iterator(); iter.hasNext();) {
 			MemberAS memberAS = (MemberAS) iter.next();
 			Field member = (Field) doSwitch(memberAS);
-			FieldProxy pField = pClass.getFieldNS().getAnyway(member.getName());
-			pField.pResolve(member);
 			pClass.getMembers().add(member);
 		}
 		

@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="ASCII"?>
+<msj:Package xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:msj="http://rain.ifmo.ru/~breslav/2006/msj" name="package" xsi:schemaLocation="http://rain.ifmo.ru/~breslav/2006/msj model/msg.ecore">
+  <classes name="A">
+    <members xsi:type="msj:Field" name="f1"/>
+  </classes>
+  <classes name="MyCollection">
+    <members xsi:type="msj:Field" name="f1"/>
+    <members xsi:type="msj:Field" name="f1" type="/"/>
+    <members xsi:type="msj:Field" name="f3"/>
+    <members xsi:type="msj:Field" name="f4">
+      <type xsi:type="msj:Class" href="#//@classes.0"/>
+    </members>
+  </classes>
+</msj:Package>
