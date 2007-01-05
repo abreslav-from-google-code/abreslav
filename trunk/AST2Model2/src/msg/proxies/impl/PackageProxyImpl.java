@@ -1,72 +1,67 @@
 package msg.proxies.impl;
 
-import java.util.Collection;
-
-import proxy.Namespace;
-
-
-import msg.impl.PackageImpl;
+import msg.Class;
+import msg.MsgFactory;
+import msg.Package;
 import msg.proxies.ClassProxy;
 import msg.proxies.PackageProxy;
 
-public class PackageProxyImpl extends PackageImpl implements PackageProxy {
+import org.eclipse.emf.common.util.EList;
 
-	private final Namespace<PackageProxy> subpackages = new Namespace<PackageProxy>() {
+import proxy.Namespace;
+import proxy.ProxyImpl;
+
+public class PackageProxyImpl extends ProxyImpl<msg.Package> implements PackageProxy {
+
+	private final Namespace<String, Package, PackageProxy> subpackages = new Namespace<String, msg.Package, PackageProxy>() {
 		@Override
-		protected Collection getNamedElements() {
-			return pIsResolved() ? getSubpackages() : null;
-		}
-		
-		@Override
-		protected PackageProxy createNSObject(Object lookup) {
-			assert lookup instanceof PackageProxyImpl;
-			return (PackageProxy) lookup;				
-		}
-		
-		@Override
-		protected PackageProxy createNSObjectWithKey(String key) {
-			PackageProxyImpl result = new PackageProxyImpl();
-			result.setName(key);
-			return result;
+		protected PackageProxy createElement(String key) {
+			System.out.println(getName() + "(" + System.identityHashCode(this) + ")" + " creates " + key);
+			return new PackageProxyImpl(key);
 		}
 	}; 
 	
-	private final Namespace<ClassProxy> classes = new Namespace<ClassProxy>() {
+	private final Namespace<String, Class, ClassProxy> classes = new Namespace<String, msg.Class, ClassProxy>() {
 		@Override
-		protected Collection getNamedElements() {
-			return pIsResolved() ? getClasses() : null;
+		protected ClassProxy createElement(String key) {
+			System.out.println(getName() + "(" + System.identityHashCode(this) + ")" + " creates " + key);
+			return new ClassProxyImpl(key);
 		}
 		
 		@Override
-		protected ClassProxy createNSObject(Object lookup) {
-			assert lookup instanceof ClassProxyImpl;
-			return (ClassProxy) lookup;				
-		}
-		
-		@Override
-		protected ClassProxy createNSObjectWithKey(String key) {
-			ClassProxyImpl result = new ClassProxyImpl();
-			result.setName(key);
-			return result;
+		protected String getKey(Class element) {
+			return element.getName();
 		}
 		
 	};
-
-	private boolean resolved;
 	
-	public boolean pIsResolved() {
-		return resolved;
+	public PackageProxyImpl(String name) {
+		super(MsgFactory.eINSTANCE.createPackage());
+		subject.setName(name);
 	}
 
-	public ClassProxy lookupClass(String name) {
-		return classes.get(name);
+
+	public Namespace<String, Class, ClassProxy> getClassNS() {
+		return classes;
+	}
+	
+	public Namespace<String, Package, PackageProxy> getSubpackageNS() {
+		return subpackages;
+	}
+	
+	public EList getClasses() {
+		return subject.getClasses();
 	}
 
-	public PackageProxy lookupSubpackage(String name) {
-		return subpackages.get(name);
+	public String getName() {
+		return subject.getName();
 	}
 
-	public void pResolve() {
-		resolved = true;		
+	public EList getSubpackages() {
+		return subject.getSubpackages();
+	}
+
+	public void setName(String value) {
+		subject.setName(value);
 	}
 }

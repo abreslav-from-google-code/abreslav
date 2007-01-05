@@ -19,14 +19,12 @@ import msjast.TypeReferenceAS;
 
 import org.eclipse.emf.common.util.EList;
 
-
-
 public class MSJTransformationFactory {
 
-	private final PackageProxy root = new PackageProxyImpl();
+	private final PackageProxy root = new PackageProxyImpl("");
 	
 	private PackageProxy lookupPackage(FQNameAS fqn, PackageProxy ns) {
-		PackageProxy pp = ns.lookupSubpackage(fqn.getName());
+		PackageProxy pp = ns.getSubpackageNS().getAnyway(fqn.getName());
 		if (fqn.getSubFqn() == null) {
 			return ns;
 		}
@@ -50,10 +48,10 @@ public class MSJTransformationFactory {
 		FQNameAS fqn = ast.getFqn();
 		PackageProxy pns = root;
 		while (fqn.getSubFqn() != null) {
-			pns = pns.lookupSubpackage(fqn.getName());
+			pns = pns.getSubpackageNS().getAnyway(fqn.getName());
 			fqn = fqn.getSubFqn();
 		}
-		return pns.lookupClass(fqn.getName());
+		return pns.getClassNS().getAnyway(fqn.getName());
 	}
 	
 	public Class getClassReference(ClassReferenceAS ast) {

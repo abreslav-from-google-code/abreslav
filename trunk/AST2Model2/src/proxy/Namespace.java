@@ -1,62 +1,78 @@
 package proxy;
-import java.util.Collection;
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
-import java.util.Iterator;
+import java.util.List;
 import java.util.Map;
 
-import msg.Named;
+import org.eclipse.emf.ecore.EObject;
 
-
-public class Namespace<T> {
+public class Namespace<K, V extends EObject, P extends Proxy<V>> {
 	
-	private final Map<String, T> map = new HashMap<String, T>();
+	private final Map<K, List<P>> map = new HashMap<K, List<P>>();
 	
-	public T get(String key) {
-		T result = map.get(key);
+	public P getAnyway(K key) {
+		P result = getExisting(key);
 		if (result != null) {
 			return result;
 		}
-		Object lookup = lookup(key);
-		if (lookup != null) {
-			T t = createNSObject(lookup);
-			map.put(key, t);
-			return t;
-		}
-		T t = createNSObjectWithKey(key);
-		if (t != null) {
-			map.put(key, t);
-		}
-		return t;
-	}
-	
-	protected T createNSObjectWithKey(String key) {		
-		return null;
+		
+		return createNew(key);
 	}
 
-	@SuppressWarnings("unchecked")
-	protected T createNSObject(Object lookup) {
-			return (T) lookup;	
-	}
-
-	protected Object lookup(String key) {
-		if (getNamedElements() == null) {
+	public P getExisting(K key) {
+		List<P> list = get(key);
+		if (list.isEmpty()) {
 			return null;
-		}
-		for (Iterator iter = getNamedElements().iterator(); iter.hasNext();) {
-			Named element = (Named) iter.next();
-			if (key.equals(element.getName())) {
-				return element;
-			}
-		}
-		return null;
-	}
-
-	protected Collection getNamedElements() {
-		return null;
-	}
-
-	public void put(String key, T value) {
-		map.put(key, value);
+		}		                  
+		return list.get(0);
 	}
 	
+	protected P createNew(K key) {
+		P result = createElement(key);
+		if (result != null) {
+			put(key, result);
+		}
+		return result;
+	}
+	
+	public P add(V element) {
+		K key = getKey(element);
+		P proxy = getExisting(key);
+		if (proxy == null || proxy.pIsResolved()) {
+			proxy = createNew(key);               
+		}
+		proxy.pResolve(element);
+		return proxy;
+	}
+
+	protected P createElement(K key) {		
+		return null;
+	}
+
+	protected K getKey(V element) {		
+		return null;
+	}
+
+	public boolean containsValueForKey(K key) {
+		return !get(key).isEmpty();
+	}
+
+	private List<P> get(K key) {
+		List<P> list = map.get(key);
+		if (list == null) {
+			list = Collections.emptyList();
+		}
+		return list;
+	}
+	
+	private void put(K key, P result) {
+		List<P> list = map.get(key);
+		if (list == null) {
+			list = new ArrayList<P>();
+			map.put(key, list);
+		}
+		list.add(result);
+	}
+
 }
