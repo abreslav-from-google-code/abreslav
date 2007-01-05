@@ -1,5 +1,7 @@
 import org.eclipse.emf.common.util.EList;
 
+import proxy.DelegatingEObject;
+
 import msjast.ClassAS;
 import msjast.ClassReferenceAS;
 
@@ -8,6 +10,7 @@ public class DClassAS extends DelegatingEObject<ClassAS> implements ClassAS {
 
 	public DClassAS(ClassAS s) {
 		super(s);
+		subject = s;
 	}
 
 	public EList getMembers() {
