@@ -2,6 +2,7 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.util.Collections;
 
+import msg.Field;
 import msg.MsgPackage;
 import msg.Package;
 import msjast.CompilationUnitAS;
@@ -38,11 +39,13 @@ public class Test {
 		
 		resource = getResource(new XMIResourceFactoryImpl(), MsgPackage.eINSTANCE);
 		resource.getContents().add(pack);
+		resource.getContents().add(transformation.getDefaultPackage());
 		
-//		msg.Class cl = (Class) pack.getClasses().get(1);
-//		System.out.println(resource.getURIFragment((EObject) cl));
+		msg.Class cl = (msg.Class) pack.getClasses().get(0);
+		Field f = (Field) cl.getMembers().get(0);		
+		System.out.println(resource.getURIFragment(f.getType()));
 		
-		resource.save(System.out, Collections.singletonMap(XMLResource.OPTION_PROCESS_DANGLING_HREF, XMLResource.OPTION_PROCESS_DANGLING_HREF_THROW));
+		resource.save(System.out, Collections.singletonMap(XMLResource.OPTION_PROCESS_DANGLING_HREF, XMLResource.OPTION_PROCESS_DANGLING_HREF_RECORD));
 	}
 
 	private static Resource getResource(Factory factory, EPackage p) {

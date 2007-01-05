@@ -8,19 +8,9 @@ import proxy.ProxyImpl;
 
 public class FieldProxyImpl extends ProxyImpl<Field> implements FieldProxy {
 
-	private boolean resolved;
-	
 	public FieldProxyImpl(String name) {
 		super(MsgFactory.eINSTANCE.createField());
 		subject.setName(name);
-	}
-
-	public boolean pIsResolved() {
-		return resolved;
-	}
-
-	public void pResolve() {
-		resolved = true;
 	}
 
 	public AccessModifier getAccessModifier() {

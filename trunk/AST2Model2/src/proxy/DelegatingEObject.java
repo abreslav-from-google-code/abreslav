@@ -20,7 +20,7 @@ public class DelegatingEObject<T extends EObject> extends EObjectImpl {
 	protected T subject;
 	protected final T initialSubject;
 	
-	private InternalEObject internal;
+	protected InternalEObject internal;
 	
 	public DelegatingEObject(T subject) {
 		this.initialSubject = subject;
@@ -121,7 +121,7 @@ public class DelegatingEObject<T extends EObject> extends EObjectImpl {
 	}
 
 	public boolean eIsProxy() {
-		return subject.eIsProxy();
+		return true;// subject.eIsProxy();
 	}
 
 	public boolean eIsSet(EStructuralFeature feature) {
@@ -145,11 +145,15 @@ public class DelegatingEObject<T extends EObject> extends EObjectImpl {
 	}
 
 	public URI eProxyURI() {
-		return internal.eProxyURI();
+		Resource resource = internal.eResource();
+		return resource == null 
+			? internal.eProxyURI() 
+// TODO: Ugly hack. Works within the single resource only
+			: URI.createURI("#" + resource.getURIFragment(internal)); // internal.eProxyURI();
 	}
 
 	public EObject eResolveProxy(InternalEObject proxy) {
-		return internal.eResolveProxy(proxy);
+		return subject; // internal.eResolveProxy(proxy);
 	}
 
 	public Resource eResource() {
