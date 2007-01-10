@@ -6,6 +6,11 @@ import org.eclipse.emf.ecore.EObject;
 public interface Proxy<T extends EObject> {
 
 	/**
+	 * @return the proxy's subject
+	 */
+	T pSubject();
+	
+	/**
 	 * If the proxy is resolved
 	 */
 	public boolean pIsResolved();
