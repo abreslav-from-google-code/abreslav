@@ -4,14 +4,13 @@ import java.util.Map;
 
 import msg.ArrayType;
 import msg.BasicType;
-import msg.BasicTypes;
 import msg.Class;
 import msg.Field;
 import msg.MsgFactory;
 import msg.Type;
-import msg.proxies.ClassProxy;
-import msg.proxies.PackageProxy;
+import msg.proxies.MsgNamespaceFactory;
 import msg.proxies.impl.PackageProxyImpl;
+import msg.util.BasicTypeConstants;
 import msjast.AccessModifier;
 import msjast.ArrayTypeAS;
 import msjast.BasicTypeAS;
@@ -26,29 +25,29 @@ import msjast.util.MsjastSwitch;
 
 import org.eclipse.emf.common.util.EList;
 
-
 public class AST2MsgTransformation extends MsjastSwitch {
 
-	private final PackageProxy defaultPackage = new PackageProxyImpl("");
-	private PackageProxy thisPackage;
-	private final Map<String, ClassProxy> importedClasses = new HashMap<String, ClassProxy>();
+	private final MsgNamespaceFactory nsFactory = MsgNamespaceFactory.INSTANCE; 
+	private final msg.Package defaultPackage = new PackageProxyImpl("");
+	private msg.Package thisPackage;
+	private final Map<String, msg.Class> importedClasses = new HashMap<String, msg.Class>();
 
-	public PackageProxy getDefaultPackage() {
+	public msg.Package getDefaultPackage() {
 		return defaultPackage;
 	}
 	
-	private ClassProxy internalLookupClass(FQNameAS fqn) {
-		PackageProxy p = defaultPackage;
+	private Class internalLookupClass(FQNameAS fqn) {
+		msg.Package p = defaultPackage;
 		while (fqn.getSubFqn() != null) {
-			p = p.getSubpackageNS().getAnyway(fqn.getName());
+			p = nsFactory.createSubpackageNS(p).getAnyway(fqn.getName());
 			fqn = fqn.getSubFqn();
 		}
-		return p.getClassNS().getAnyway(fqn.getName());
+		return nsFactory.createClassesNS(p).getAnyway(fqn.getName());
 	}
 	
-	private ClassProxy lookupClass(FQNameAS fqn) {
+	private msg.Class lookupClass(FQNameAS fqn) {
 		if (fqn.getSubFqn() == null) {
-			ClassProxy proxy = thisPackage.getClassNS().getExisting(fqn.getName());
+			msg.Class proxy = nsFactory.createClassesNS(thisPackage).getExisting(fqn.getName());
 			if (proxy != null) {
 				return proxy;
 			}
@@ -60,10 +59,10 @@ public class AST2MsgTransformation extends MsjastSwitch {
 		return internalLookupClass(fqn);
 	}
 	
-	private PackageProxy lookupPackage(FQNameAS fqn) {
-		PackageProxy result = defaultPackage;
+	private msg.Package lookupPackage(FQNameAS fqn) {
+		msg.Package result = defaultPackage;
 		while (fqn != null) {
-			result = result.getSubpackageNS().getAnyway(fqn.getName());
+			result = nsFactory.createSubpackageNS(result).getAnyway(fqn.getName());
 			fqn = fqn.getSubFqn();
 		}
 		return result;
@@ -77,7 +76,7 @@ public class AST2MsgTransformation extends MsjastSwitch {
 		EList imports = ast.getImports();
 		for (Iterator iter = imports.iterator(); iter.hasNext();) {
 			ClassReferenceAS imp = (ClassReferenceAS) iter.next();
-			ClassProxy proxy = internalLookupClass(imp.getFqn());
+			msg.Class proxy = internalLookupClass(imp.getFqn());
 			importedClasses.put(proxy.getName(), proxy);
 		}
 		
@@ -85,8 +84,7 @@ public class AST2MsgTransformation extends MsjastSwitch {
 		for (Iterator iter = classes.iterator(); iter.hasNext();) {
 			ClassAS classAS = (ClassAS) iter.next();
 			Class pClass = caseClassAS(classAS);
-			thisPackage.getClassNS().add(pClass);
-			thisPackage.getClasses().add(pClass);
+			nsFactory.createClassesNS(thisPackage).add(pClass);
 		}
 		return thisPackage;
 	}
@@ -115,7 +113,7 @@ public class AST2MsgTransformation extends MsjastSwitch {
 	}
 	
 	@Override
-	public ClassProxy caseClassReferenceAS(ClassReferenceAS ast) {
+	public msg.Class caseClassReferenceAS(ClassReferenceAS ast) {
 		return lookupClass(ast.getFqn());
 	}
 	
@@ -149,19 +147,17 @@ public class AST2MsgTransformation extends MsjastSwitch {
 
 	@Override
 	public BasicType caseBasicTypeAS(BasicTypeAS ast) {
-		BasicType type = MsgFactory.eINSTANCE.createBasicType();
-		type.setType(translateBasicType(ast.getType()));
-		return type;
+		return translateBasicType(ast.getType());
 	}
 
-	private BasicTypes translateBasicType(msjast.BasicType type) {
+	private BasicType translateBasicType(msjast.BasicType type) {
 		switch (type.getValue()) {
 		case msjast.BasicType.BOOLEAN:
-			return BasicTypes.BOOLEAN_LITERAL;
+			return BasicTypeConstants.INSTANCE.BOOLEAN;
 		case msjast.BasicType.INT:
-			return BasicTypes.INT_LITERAL;
+			return BasicTypeConstants.INSTANCE.INT;
 		case msjast.BasicType.VOID:
-			return BasicTypes.VOID_LITERAL;
+			return BasicTypeConstants.INSTANCE.VOID;
 		}
 		return null;
 	}

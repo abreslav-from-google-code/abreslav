@@ -1,14 +1,26 @@
 <?xml version="1.0" encoding="ASCII"?>
-<msj:Package xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:msj="http://rain.ifmo.ru/~breslav/2006/msj" name="package" xsi:schemaLocation="http://rain.ifmo.ru/~breslav/2006/msj model/msg.ecore">
-  <classes name="A">
-    <members xsi:type="msj:Field" name="f1"/>
-  </classes>
-  <classes name="MyCollection">
-    <members xsi:type="msj:Field" name="f1"/>
-    <members xsi:type="msj:Field" name="f1" type="/"/>
-    <members xsi:type="msj:Field" name="f3"/>
-    <members xsi:type="msj:Field" name="f4">
-      <type xsi:type="msj:Class" href="#//@classes.0"/>
-    </members>
-  </classes>
+<msj:Package xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:msj="http://rain.ifmo.ru/~breslav/2006/msj" xsi:schemaLocation="http://rain.ifmo.ru/~breslav/2006/msj model/msg.ecore" name="">
+  <classes name="MyCollection"/>
+  <subpackages name="my">
+    <subpackages name="new">
+      <subpackages name="package">
+        <classes name="MyCollection" super="//@subpackages.1/@subpackages.0/@classes.0">
+          <members xsi:type="msj:Field" name="f1" type="//@subpackages.0/@subpackages.0/@subpackages.0/@classes.0"/>
+          <members xsi:type="msj:Field" name="f1">
+            <type xsi:type="msj:BasicType" href="model/boolean.xmi#/"/>
+          </members>
+          <members xsi:type="msj:Field" name="f3" type="//@subpackages.1/@subpackages.0/@classes.0"/>
+          <members xsi:type="msj:Field" name="f4" type="//@subpackages.0/@subpackages.0/@subpackages.0/@classes.1"/>
+        </classes>
+        <classes name="A" super="//@classes.0">
+          <members xsi:type="msj:Field" name="f1" type="//@subpackages.0/@subpackages.0/@subpackages.0/@classes.0"/>
+        </classes>
+      </subpackages>
+    </subpackages>
+  </subpackages>
+  <subpackages name="java">
+    <subpackages name="util">
+      <classes name="Collection"/>
+    </subpackages>
+  </subpackages>
 </msj:Package>

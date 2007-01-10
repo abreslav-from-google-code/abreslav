@@ -1,18 +1,28 @@
 package proxy;
 import java.util.ArrayList;
-import java.util.Collections;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import org.eclipse.emf.ecore.EObject;
 
-public class Namespace<K, V extends EObject, P extends Proxy<V>> {
+public abstract class Namespace<K, V extends EObject> {
 	
-	private final Map<K, List<P>> map = new HashMap<K, List<P>>();
+	private List<V> list;
 	
-	public P getAnyway(K key) {
-		P result = getExisting(key);
+	public Namespace(List<V> list) {
+		this.list = list;
+	}
+	
+	@SuppressWarnings("unchecked")
+	public void setList(List list) {
+		this.list = list;
+	}
+	
+	public List getList() {
+		return list;
+	}
+	
+	public V getAnyway(K key) {
+		V result = getExisting(key);
 		if (result != null) {
 			return result;
 		}
@@ -20,59 +30,64 @@ public class Namespace<K, V extends EObject, P extends Proxy<V>> {
 		return createNew(key);
 	}
 
-	public P getExisting(K key) {
-		List<P> list = get(key);
-		if (list.isEmpty()) {
-			return null;
-		}		                  
-		return list.get(0);
+	public V getExisting(K key) {
+		for (int i = 0; i < list.size(); i++) {
+			K itemKey = getKey(list.get(i));
+			if (itemKey.equals(key)) {
+				return list.get(i);
+			}
+		}
+		return null;
 	}
 	
-	protected P createNew(K key) {
-		P result = createElement(key);
+	protected V createNew(K key) {
+		V result = createElement(key);
 		if (result != null) {
-			put(key, result);
+			list.add(result);
 		}
 		return result;
 	}
 	
-	public P add(V element) {
-		K key = getKey(element);
-		P proxy = getExisting(key);
-		if (proxy == null || proxy.pIsResolved()) {
-			proxy = createNew(key);               
+	public List<V> getAll(K key) {
+		List<V> result = new ArrayList<V>();
+		for (int i = 0; i < list.size(); i++) {
+			K itemKey = getKey(list.get(i));
+			if (itemKey.equals(key)) {
+				result.add(list.get(i));
+			}
 		}
-		proxy.pResolve(element);
-		return proxy;
-	}
-
-	protected P createElement(K key) {		
-		return null;
-	}
-
-	protected K getKey(V element) {		
-		return null;
-	}
-
-	public boolean containsValueForKey(K key) {
-		return !get(key).isEmpty();
-	}
-
-	private List<P> get(K key) {
-		List<P> list = map.get(key);
-		if (list == null) {
-			list = Collections.emptyList();
-		}
-		return list;
+		return result;
 	}
 	
-	private void put(K key, P result) {
-		List<P> list = map.get(key);
-		if (list == null) {
-			list = new ArrayList<P>();
-			map.put(key, list);
+	public V add(V element) {
+		K key = getKey(element);
+		List<V> all = getAll(key);
+		for (V v : all) {
+			if (v instanceof Proxy) {
+				@SuppressWarnings("unchecked")
+				Proxy<V> proxy = (Proxy) v;
+				
+				if (!proxy.pIsResolved()) {
+					proxy.pResolve(element);
+//					list.remove(proxy);
+					list.add(element);
+					
+					@SuppressWarnings("unchecked")
+					V result = (V) proxy;
+					return result;
+				}
+			}
 		}
-		list.add(result);
+		list.add(element);
+		return element;               
+	}
+
+	protected abstract V createElement(K key);
+
+	protected abstract K getKey(V element);
+
+	public boolean containsValueForKey(K key) {
+		return getExisting(key) != null;
 	}
 
 }
