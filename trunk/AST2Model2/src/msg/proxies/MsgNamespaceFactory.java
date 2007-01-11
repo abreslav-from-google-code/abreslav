@@ -23,7 +23,6 @@ public class MsgNamespaceFactory {
 
 			@Override
 			protected Package createElement(String key) {
-				System.out.println("Created: " + key);
 				return new PackageProxyImpl(key);
 			}
 
@@ -40,7 +39,6 @@ public class MsgNamespaceFactory {
 
 			@Override
 			protected Class createElement(String key) {
-				System.out.println("Created: " + key);
 				return new ClassProxyImpl(key);
 			}
 
@@ -57,7 +55,6 @@ public class MsgNamespaceFactory {
 
 			@Override
 			protected Field createElement(String key) {
-				System.out.println("Created: " + key);
 				return new FieldProxyImpl(key);
 			}
 
