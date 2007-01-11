@@ -26,7 +26,8 @@ public class Test {
 		Package defaultPackage = transformation.getDefaultPackage();
 
 		resource = EMFHelper.getResource(new XMIResourceFactoryImpl(), MsgPackage.eINSTANCE, "res.xmi");
-		resource.getContents().add(ProxyUtil.copyFilteringProxies(defaultPackage, transformation.getNoncontainedProxies()));
+		@SuppressWarnings({"unchecked", "unused"})
+		boolean b = resource.getContents().add(ProxyUtil.copyFilteringProxies(defaultPackage, transformation.getNoncontainedProxies()));
 
 		resource.save(System.out, Collections.singletonMap(XMLResource.OPTION_PROCESS_DANGLING_HREF, XMLResource.OPTION_PROCESS_DANGLING_HREF_THROW));
 	}

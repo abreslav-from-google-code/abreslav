@@ -34,6 +34,7 @@ public class MsgNamespaceFactory {
 		};
 	}
 
+	@SuppressWarnings("unchecked")
 	public INamespace<String, Class> createClassesNS(msg.Package pack) {
 		return new Namespace<String, msg.Class>(pack.getClasses()) {
 
@@ -50,6 +51,7 @@ public class MsgNamespaceFactory {
 		};
 	}
 
+	@SuppressWarnings("unchecked")
 	public INamespace<String, Field> createFieldsNS(msg.Class cls) {
 		return new Namespace<String, msg.Field>(cls.getMembers()) {
 

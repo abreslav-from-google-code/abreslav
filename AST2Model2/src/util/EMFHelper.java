@@ -13,6 +13,7 @@ import org.eclipse.emf.ecore.resource.impl.ResourceSetImpl;
 
 public class EMFHelper {
 
+	@SuppressWarnings("unchecked")
 	public static Resource getResource(Factory factory, EPackage p, String name) {
 		Resource resource = factory.createResource(URI.createURI(name));
 		ResourceSet resourceSet = new ResourceSetImpl();
