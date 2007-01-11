@@ -139,7 +139,8 @@ public class AST2MsgTransformation extends MsjastSwitch {
 		for (Iterator iter = members.iterator(); iter.hasNext();) {
 			MemberAS memberAS = (MemberAS) iter.next();
 			Field member = (Field) doSwitch(memberAS);
-			pClass.getMembers().add(member);
+			@SuppressWarnings({"unchecked", "unused"})
+			boolean b = pClass.getMembers().add(member);
 		}
 		
 //		pClass.pResolve();
