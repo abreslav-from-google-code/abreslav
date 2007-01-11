@@ -4,7 +4,7 @@ import java.util.List;
 
 import org.eclipse.emf.ecore.EObject;
 
-public abstract class Namespace<K, V extends EObject> {
+public abstract class Namespace<K, V extends EObject> implements INamespace<K, V> {
 	
 	private List<V> list;
 	
@@ -69,7 +69,6 @@ public abstract class Namespace<K, V extends EObject> {
 				
 				if (!proxy.pIsResolved()) {
 					proxy.pResolve(element);
-//					list.remove(proxy);
 					list.add(element);
 					
 					@SuppressWarnings("unchecked")
@@ -85,9 +84,5 @@ public abstract class Namespace<K, V extends EObject> {
 	protected abstract V createElement(K key);
 
 	protected abstract K getKey(V element);
-
-	public boolean containsValueForKey(K key) {
-		return getExisting(key) != null;
-	}
 
 }

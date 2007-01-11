@@ -6,6 +6,7 @@ import msg.Package;
 import msg.proxies.impl.ClassProxyImpl;
 import msg.proxies.impl.FieldProxyImpl;
 import msg.proxies.impl.PackageProxyImpl;
+import proxy.INamespace;
 import proxy.Namespace;
 
 public class MsgNamespaceFactory {
@@ -17,7 +18,7 @@ public class MsgNamespaceFactory {
 	}
 
 	@SuppressWarnings("unchecked")
-	public Namespace<String, msg.Package> createSubpackageNS(msg.Package pack) {
+	public INamespace<String, Package> createSubpackageNS(msg.Package pack) {
 		return new Namespace<String, msg.Package>(pack.getSubpackages()) {
 
 			@Override
@@ -34,7 +35,7 @@ public class MsgNamespaceFactory {
 		};
 	}
 
-	public Namespace<String, msg.Class> createClassesNS(msg.Package pack) {
+	public INamespace<String, Class> createClassesNS(msg.Package pack) {
 		return new Namespace<String, msg.Class>(pack.getClasses()) {
 
 			@Override
@@ -51,7 +52,7 @@ public class MsgNamespaceFactory {
 		};
 	}
 
-	public Namespace<String, msg.Field> createFieldsNS(msg.Class cls) {
+	public INamespace<String, Field> createFieldsNS(msg.Class cls) {
 		return new Namespace<String, msg.Field>(cls.getMembers()) {
 
 			@Override

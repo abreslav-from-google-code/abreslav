@@ -1,3 +1,5 @@
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
@@ -8,7 +10,9 @@ import msg.Class;
 import msg.Field;
 import msg.MsgFactory;
 import msg.Type;
+import msg.proxies.ClassProxy;
 import msg.proxies.MsgNamespaceFactory;
+import msg.proxies.impl.ClassProxyImpl;
 import msg.proxies.impl.PackageProxyImpl;
 import msg.util.BasicTypeConstants;
 import msjast.AccessModifier;
@@ -25,15 +29,23 @@ import msjast.util.MsjastSwitch;
 
 import org.eclipse.emf.common.util.EList;
 
+import proxy.Proxy;
+
 public class AST2MsgTransformation extends MsjastSwitch {
 
 	private final MsgNamespaceFactory nsFactory = MsgNamespaceFactory.INSTANCE; 
 	private final msg.Package defaultPackage = new PackageProxyImpl("");
 	private msg.Package thisPackage;
 	private final Map<String, msg.Class> importedClasses = new HashMap<String, msg.Class>();
+	private final Map<String, ClassProxy> unqualifiedClasses = new HashMap<String, ClassProxy>();
+	private final Collection<Proxy<?>> noncontainedProxies = new ArrayList<Proxy<?>>();	
 
 	public msg.Package getDefaultPackage() {
 		return defaultPackage;
+	}
+	
+	public Collection<Proxy<?>> getNoncontainedProxies() {
+		return noncontainedProxies;
 	}
 	
 	private Class internalLookupClass(FQNameAS fqn) {
@@ -55,7 +67,13 @@ public class AST2MsgTransformation extends MsjastSwitch {
 			if (proxy != null) {
 				return proxy;
 			}
-		}
+			ClassProxy ambiguousProxy = unqualifiedClasses.get(fqn.getName());
+			if (ambiguousProxy == null) {
+				ambiguousProxy = new ClassProxyImpl(fqn.getName());
+				unqualifiedClasses.put(fqn.getName(), ambiguousProxy);
+			}
+			return ambiguousProxy;
+		}		
 		return internalLookupClass(fqn);
 	}
 	
@@ -78,6 +96,7 @@ public class AST2MsgTransformation extends MsjastSwitch {
 			ClassReferenceAS imp = (ClassReferenceAS) iter.next();
 			msg.Class proxy = internalLookupClass(imp.getFqn());
 			importedClasses.put(proxy.getName(), proxy);
+			resolveUnqualifiedClass(proxy);
 		}
 		
 		EList classes = ast.getClasses();
@@ -85,8 +104,23 @@ public class AST2MsgTransformation extends MsjastSwitch {
 			ClassAS classAS = (ClassAS) iter.next();
 			Class pClass = caseClassAS(classAS);
 			nsFactory.createClassesNS(thisPackage).add(pClass);
+			resolveUnqualifiedClass(pClass);
+		}
+		
+		Collection<ClassProxy> uc = unqualifiedClasses.values();
+		for (ClassProxy proxy : uc) {
+			if (proxy.eContainer() == null || !proxy.eContainer().eContents().contains(proxy)) {
+				noncontainedProxies.add(proxy);
+			}
 		}
 		return thisPackage;
+	}
+
+	private void resolveUnqualifiedClass(Class pClass) {
+		ClassProxy proxy = unqualifiedClasses.get(pClass.getName());
+		if (proxy != null) {
+			proxy.pResolve(pClass);
+		}
 	}
 	
 	@Override

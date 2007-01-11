@@ -17,7 +17,7 @@ import util.EMFHelper;
 public class Test {
 	public static void main(String[] args) throws IOException {
 		Resource resource = EMFHelper.getResource(new MsjastResourceFactoryImpl(), MsjastPackage.eINSTANCE, "/test.xmi");
-		EMFHelper.loadResourceFromFile(resource, "tests/test11.xmi");
+		EMFHelper.loadResourceFromFile(resource, "tests/test12.xmi");
 		
 		CompilationUnitAS unitAS = (CompilationUnitAS) resource.getContents().get(0);
 		
@@ -26,8 +26,8 @@ public class Test {
 		Package defaultPackage = transformation.getDefaultPackage();
 
 		resource = EMFHelper.getResource(new XMIResourceFactoryImpl(), MsgPackage.eINSTANCE, "res.xmi");
-		resource.getContents().add(ProxyUtil.copyFilteringProxies(defaultPackage));
+		resource.getContents().add(ProxyUtil.copyFilteringProxies(defaultPackage, transformation.getNoncontainedProxies()));
 
-		resource.save(System.out, Collections.singletonMap(XMLResource.OPTION_PROCESS_DANGLING_HREF, XMLResource.OPTION_PROCESS_DANGLING_HREF_RECORD));
+		resource.save(System.out, Collections.singletonMap(XMLResource.OPTION_PROCESS_DANGLING_HREF, XMLResource.OPTION_PROCESS_DANGLING_HREF_THROW));
 	}
 }
