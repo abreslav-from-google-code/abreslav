@@ -1,0 +1,11 @@
+edge A B
+vertex A 10
+vertex B 8
+edge B C
+vertex C 5
+edge A C
+vertex D 3
+edge A X
+edge Y B
+edge Z M
+vertex K 5
