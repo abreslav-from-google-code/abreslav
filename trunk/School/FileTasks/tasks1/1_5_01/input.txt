@@ -1,0 +1,41 @@
+create circle A 10 10 50
+sleep 200
+move A 20 20
+sleep 200
+move A 30 30
+sleep 200
+move A 40 40
+sleep 200
+move A 50 50
+sleep 200
+move A 60 60
+sleep 200
+move A 70 70
+sleep 200
+move A 80 80
+sleep 200
+move A 90 90
+sleep 200
+move A 100 100
+sleep 200
+move A 110 110
+sleep 200
+move A 120 120
+sleep 200
+move A 130 130
+sleep 200
+move A 140 140
+sleep 200
+move A 150 150
+sleep 200
+move A 160 160
+sleep 200
+move A 170 170
+sleep 200
+move A 180 180
+sleep 200
+move A 190 190
+sleep 200
+move A 200 200
+sleep 400
+create square B 200 200 50
