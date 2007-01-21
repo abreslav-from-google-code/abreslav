@@ -143,7 +143,6 @@ public class AST2MsgTransformation extends MsjastSwitch {
 			boolean b = pClass.getMembers().add(member);
 		}
 		
-//		pClass.pResolve();
 		return pClass;
 	}
 	
