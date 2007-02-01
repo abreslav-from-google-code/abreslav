@@ -14,10 +14,10 @@ type
     function GetInfo(Name : String) : PPropInfo;
   public
     constructor Create(ti : PTypeInfo);
-    procedure ObjectToStringList(o : TObject; SL : TStrings);
-    procedure StringListToObject(o : TObject; SL : TStrings);
-    procedure SaveToFile(o : TObject; FName : String);
-    procedure LoadFromFile(o : TObject; FName : String);
+    procedure SaveToStrings(SL : TStrings);
+    procedure LoadFromStrings(SL : TStrings);
+    procedure SaveToFile(FName : String);
+    procedure LoadFromFile(FName : String);
   end;
 
 implementation
@@ -44,43 +44,43 @@ begin
     end;
 end;
 
-procedure TSerializable.LoadFromFile(o : TObject; FName: String);
+procedure TSerializable.LoadFromFile(FName: String);
 var
   SL : TStringList;
 begin
   SL := TStringList.Create;
   try
     SL.LoadFromFile(FName);
-    StringListToObject(o, SL);
+    LoadFromStrings(SL);
   except
 
   end;
   SL.Free;
 end;
 
-procedure TSerializable.ObjectToStringList(o: TObject; SL: TStrings);
+procedure TSerializable.SaveToStrings(SL: TStrings);
 var
   i : Integer;
 begin
-  if o.ClassName <> TInfo.Name then
+  if Self.ClassName <> TInfo.Name then
     raise Exception.Create('Wrong class');
   SL.Clear;
   for i := 0 to Count - 1 do
     case Props[i].PropType^.Kind of
-      tkInteger: SL.Add(Format('%s=%d', [Props[i].Name, GetOrdProp(o, Props[i])]));
-      tkString, tkLString : SL.Add(Format('%s=%s', [Props[i].Name, GetStrProp(o, Props[i])]));
-      tkEnumeration: SL.Add(Format('%s=%s', [Props[i].Name, GetEnumProp(o, Props[i])]));
-      tkFloat : SL.Add(Format('%s=%s', [Props[i].Name, FloatToStr(GetFloatProp(o, Props[i]))]));
+      tkInteger: SL.Add(Format('%s=%d', [Props[i].Name, GetOrdProp(Self, Props[i])]));
+      tkString, tkLString : SL.Add(Format('%s=%s', [Props[i].Name, GetStrProp(Self, Props[i])]));
+      tkEnumeration: SL.Add(Format('%s=%s', [Props[i].Name, GetEnumProp(Self, Props[i])]));
+      tkFloat : SL.Add(Format('%s=%s', [Props[i].Name, FloatToStr(GetFloatProp(Self, Props[i]))]));
     end;
 end;
 
-procedure TSerializable.SaveToFile(o : TObject; FName: String);
+procedure TSerializable.SaveToFile(FName: String);
 var
   SL : TStringList;
 begin
   SL := TStringList.Create;
   try
-    ObjectToStringList(o, SL);
+    SaveToStrings(SL);
     SL.SaveToFile(FName);
   except
 
@@ -88,12 +88,12 @@ begin
   SL.Free;
 end;
 
-procedure TSerializable.StringListToObject(o: TObject; SL: TStrings);
+procedure TSerializable.LoadFromStrings(SL: TStrings);
 var
   i : Integer;
   p : PPropInfo;
 begin
-  if o.ClassName <> TInfo.Name then
+  if Self.ClassName <> TInfo.Name then
     raise Exception.Create('Wrong class');
   for i := 0 to SL.Count - 1 do begin
     p := GetInfo(SL.Names[i]);
@@ -101,11 +101,11 @@ begin
       continue;
     try
       case p.PropType^.Kind of
-        tkInteger: SetOrdProp(o, p, StrToInt(SL.Values[SL.Names[i]]));
+        tkInteger: SetOrdProp(Self, p, StrToInt(SL.Values[SL.Names[i]]));
         tkString,
-        tkLString : SetStrProp(o, p, SL.Values[SL.Names[i]]);
-        tkEnumeration: SetEnumProp(o, p, SL.Values[SL.Names[i]]);
-        tkFloat : SetFloatProp(o, p, StrToFloat(SL.Values[SL.Names[i]]));
+        tkLString : SetStrProp(Self, p, SL.Values[SL.Names[i]]);
+        tkEnumeration: SetEnumProp(Self, p, SL.Values[SL.Names[i]]);
+        tkFloat : SetFloatProp(Self, p, StrToFloat(SL.Values[SL.Names[i]]));
       end;
     except
 

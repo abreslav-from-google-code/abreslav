@@ -106,11 +106,9 @@ begin
   Result := Round((1 - editingDistance(a, asize, b, bsize) / Min(asize, bsize)) * 100);
 end;
 
-
 function mcsMetric(a : PBytes; asize : Integer; b : PBytes; bsize : Integer) : Integer;
 begin
   Result := Round(mcs(a, asize, b, bsize) / Min(asize, bsize) * 100);
 end;
-
 
 end.
