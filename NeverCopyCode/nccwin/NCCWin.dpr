@@ -10,7 +10,11 @@ uses
   DataCommons in '..\DataCommons.pas',
   PascalLexer in '..\PascalLexer.pas',
   MetricUnit in '..\MetricUnit.pas',
-  AuthorsDialogUnit in 'AuthorsDialogUnit.pas' {AuthorsDialog};
+  AuthorsDialogUnit in 'AuthorsDialogUnit.pas' {AuthorsDialog},
+  AdvancedMetrics in '..\AdvancedMetrics.pas',
+  TokenCounts in '..\TokenCounts.pas',
+  Serializable in 'Serializable.pas',
+  Configuration in 'Configuration.pas';
 
 {$R *.RES}
 

@@ -35,6 +35,7 @@ procedure TProgressForm.Show(FileCount: Integer);
 begin
   FCancelled := false;
   SetCount(FileCount);
+  ProgressBar.Position := 0;
   inherited Show;
   Update;
 end;

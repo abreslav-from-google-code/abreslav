@@ -1,6 +1,6 @@
 object MainForm: TMainForm
-  Left = 187
-  Top = 143
+  Left = 245
+  Top = 212
   Width = 697
   Height = 408
   Caption = 'Never Copy Code'
@@ -66,6 +66,7 @@ object MainForm: TMainForm
       Checked = True
       State = cbChecked
       TabOrder = 1
+      OnClick = SkipNoAuthorCBClick
     end
     object ClearOnDropCB: TCheckBox
       Left = 5
@@ -76,6 +77,7 @@ object MainForm: TMainForm
       Checked = True
       State = cbChecked
       TabOrder = 2
+      OnClick = SkipNoAuthorCBClick
     end
     object ProcessSubdirsCB: TCheckBox
       Left = 5
@@ -86,6 +88,7 @@ object MainForm: TMainForm
       Checked = True
       State = cbChecked
       TabOrder = 3
+      OnClick = SkipNoAuthorCBClick
     end
     object FindAuthorsAutoCB: TCheckBox
       Left = 153
@@ -105,6 +108,7 @@ object MainForm: TMainForm
       Height = 17
       Caption = 'Skip files when no author found'
       TabOrder = 5
+      OnClick = SkipNoAuthorCBClick
     end
     object Button1: TButton
       Left = 153
@@ -122,6 +126,7 @@ object MainForm: TMainForm
       Height = 21
       TabOrder = 7
       Text = '"C:\Program Files\TortoiseSVN\bin\TortoiseMerge.exe"'
+      OnChange = CompareEditorCLPathEDChange
     end
     object CompareEditorCLArgsED: TEdit
       Left = 557
@@ -130,6 +135,7 @@ object MainForm: TMainForm
       Height = 21
       TabOrder = 8
       Text = '/base:":this:" /mine:":sample:"'
+      OnChange = CompareEditorCLPathEDChange
     end
     object IgnoreED: TEdit
       Left = 439
@@ -138,6 +144,7 @@ object MainForm: TMainForm
       Height = 21
       TabOrder = 9
       Text = 'DelphiGraph.pas;ReaderUnit.pas'
+      OnChange = CompareEditorCLPathEDChange
     end
   end
   object FileList: TListView

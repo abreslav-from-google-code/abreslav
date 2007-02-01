@@ -3,7 +3,7 @@ unit DataCommons;
 interface
 
 uses
-  MetricUnit, Classes;
+  MetricUnit, AdvancedMetrics, Classes;
 
 const
   DATA_DIR = '.data';
@@ -19,21 +19,27 @@ type
     id : Integer;
     data : TMetadataRecord;
   end;
+  TPrunedResults = record
+    totalFiles : Integer;
+    prunedFiles : Integer;
+    prunedBySizeFiles : Integer;
+    result : TPrunedResult;
+  end;
 
 {
-   if asc is true => the bigger is metric value the closer is match
    negative result means empty database
 }
-function FindClosestMatching(input : TStream; authorId: Integer; metric: PMetricFunction; out entry : TMetadataEntry) : Integer;
+function FindClosestMatching(input : TStream; authorId: Integer; metric: PMetricFunction; out entry : TMetadataEntry; threshold : Integer; sizeThreshold : Real) : TPrunedResults;
 function AddSample(const metadata : TMetadataRecord; pascalCode, tokenStream : TStream) : Integer;
 procedure EnsureDataExists;
 function GetPascalFileName(sId : Integer) : String;
 function GetTokenFileName(sId : Integer) : String;
+function GetFileName(sId : Integer) : String;
 
 implementation
 
 uses
-  SysUtils;
+  SysUtils, TokenCounts;
 
 const
   METADATA_FILE_NAME = DATA_DIR + '\.metadata';
@@ -55,13 +61,15 @@ end;
 
 function AddSample(const metadata : TMetadataRecord; pascalCode, tokenStream : TStream) : Integer;
 var
+  tokenCounts : TTokenCounts;
   mf : file of TMetadataRecord;
-  pasFile, tokenFile : TFileStream;
+  pasFile, tokenFile, tokenCountsFile : TFileStream;
 begin
   AssignFile(mf, METADATA_FILE_NAME);
   Reset(mf);
   pasFile := nil;
   tokenFile := nil;
+  tokenCountsFile := nil;
   try
     Result := FileSize(mf);
     pasFile := TFileStream.Create(GetPascalFileName(Result), fmCreate);
@@ -70,11 +78,15 @@ begin
     tokenFile := TFileStream.Create(GetTokenFileName(Result), fmCreate);
     tokenStream.Seek(0, soFromBeginning);
     tokenFile.CopyFrom(tokenStream, tokenStream.Size);
+    countTokens(tokenStream, tokenCounts);
+    tokenCountsFile := TFileStream.Create(GetTokenCountsFileName(Result), fmCreate);
+    tokenCountsFile.Write(tokenCounts, sizeOf(tokenCounts));
     Seek(mf, Result);
     Write(mf, metadata);
   finally
     pasFile.Free;
     tokenFile.Free;
+    tokenCountsFile.Free;
     CloseFile(mf);
   end;
 end;
@@ -97,20 +109,29 @@ begin
   end;
 end;
 
-function FindClosestMatching(input : TStream; authorId: Integer; metric: PMetricFunction; out entry : TMetadataEntry) : Integer;
+function FindClosestMatching(input : TStream; authorId: Integer; metric: PMetricFunction; out entry : TMetadataEntry; threshold : Integer; sizeThreshold : Real) : TPrunedResults;
 var
   mf : file of TMetadataRecord;
   rec : TMetadataRecord;
   idata : PBytes;
+  itc, stc : TTokenCounts;
+  tcFile : TStream;
   buffer : PBytes;
   bufsize : Integer;
   sId : Integer;
-  tokensLength, m : Integer;
+  tokensLength : Integer;
+  r : TPrunedResult;
 begin
-  Result := -1;
+  Result.result.metric := -1;
+  Result.result.pruned := false;
+  Result.totalFiles := 0;
+  Result.prunedFiles := 0;
+  Result.prunedBySizeFiles := 0;
   AssignFile(mf, METADATA_FILE_NAME);
   Reset(mf);
   GetMem(idata, input.Size);
+  input.Seek(0, soFromBeginning);
+  countTokens(input, itc);
   try
     bufsize := 4096;
     GetMem(buffer, bufsize);
@@ -124,10 +145,22 @@ begin
           if rec.authorId <> authorId then begin
 
             tokensLength := GetTokenData(buffer, bufsize, sId);
+            tcFile := nil;
+            try
+              tcFile := TFileStream.Create(GetTokenCountsFileName(sId), fmOpenRead or fmShareDenyWrite);
+              tcFile.Read(stc, sizeOf(stc));
+            finally
+              tcFile.Free;
+            end;
+            r := tokenCountPrunedMetric(sizeThreshold, itc, stc, threshold, metric, idata, input.Size, buffer, tokensLength);
+            inc(Result.totalFiles);
+            if r.pruned then
+              inc(Result.prunedFiles);
+            if r.prunedBySize then
+              inc(Result.prunedBySizeFiles);
 
-            m := metric(idata, input.Size, buffer, tokensLength);
-            if Result < m then begin
-              Result := m;
+            if (Result.result.metric < r.metric) and (not r.prunedBySize) then begin
+              Result.result := r;
               entry.id := sId;
               entry.data := rec;
             end;

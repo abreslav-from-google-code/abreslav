@@ -5,7 +5,7 @@ interface
 uses
   Windows, Messages, SysUtils, Classes, Graphics, Controls, Forms, Dialogs,
   StdCtrls, DragDrop, DropTarget, DragDropFile, ExtCtrls, ComCtrls, ImgList,
-  Gauges, ToolWin, UsersUnit, ActnList, SourceFile, Menus;
+  Gauges, ToolWin, UsersUnit, ActnList, SourceFile, Menus, Configuration;
 
 type
   TMainForm = class(TForm)
@@ -100,6 +100,8 @@ type
       var Handled: Boolean);
     procedure FileListDblClick(Sender: TObject);
     procedure About1Click(Sender: TObject);
+    procedure SkipNoAuthorCBClick(Sender: TObject);
+    procedure CompareEditorCLPathEDChange(Sender: TObject);
   private
     uf : TUserFile;
     buf : TBitmap;
@@ -109,6 +111,10 @@ type
     ForceAddStrategy : TForceAddStrategy;
     ProcessStrategy : TFindMatchStrategy;
     ReProcessStrategy : TForceFindMatchStrategy;
+    configuration : TNCCWinConfiguration;
+    noFeedBack : Boolean;
+    procedure ControlsToConfig;
+    procedure ConfigToControls;
     procedure ClearList;
     procedure SetStatusMessage(msg : String);
     procedure SetStatusFile(fname : String);
@@ -154,6 +160,13 @@ begin
 
   uf := TUserFile.Create(USERS_FILE);
   SetStatusTh(ThresholdTB.Position);
+
+  configuration := TNCCWinConfiguration.Create;
+  if FileExists(CONFIG_FILE_NAME) then
+    configuration.LoadFromFile(CONFIG_FILE_NAME);
+  noFeedBack := true;
+  ConfigToControls;
+  noFeedBack := false;
 end;
 
 procedure TMainForm.DropFileTargetDrop(Sender: TObject;
@@ -182,16 +195,21 @@ var
   sf : TSourceFile;
 begin
   ProgressForm.Show(fList.Count);
-  for i := 0 to fList.Count - 1 do begin
-    sf := TSourceFile(fList[i]);
-    if SelectedOnly and not sf.Item.Selected then
-      continue;
-    ProgressForm.StartFile(sf.path);
-    sf.Accept(str);
-    Update;
-    Application.ProcessMessages;
-    if ProgressForm.Cancelled then
-      break;
+  try
+    for i := 0 to fList.Count - 1 do begin
+      sf := TSourceFile(fList[i]);
+      if SelectedOnly and not sf.Item.Selected then
+        continue;
+      ProgressForm.StartFile(sf.path);
+      sf.Accept(str);
+      Update;
+      Application.ProcessMessages;
+      if ProgressForm.Cancelled then
+        break;
+    end;
+  except
+    on e : Exception do
+      Application.MessageBox(PChar(e.Message), PChar(ProgressForm.Caption), MB_ICONERROR or MB_OK or MB_APPLMODAL);
   end;
   ProgressForm.Hide;
 end;
@@ -202,6 +220,8 @@ begin
   buf.Free;
   fList.Free;
   usermap.Free;
+  configuration.SaveToFile(CONFIG_FILE_NAME);
+  configuration.Free;
 end;
 
 function TMainForm.findAuthorId(path: String): Integer;
@@ -262,7 +282,12 @@ begin
       end;
       FillRect(cRect);
 
-      S := IntToStr(sf.Match) + '%';
+      S := IntToStr(sf.Match.result.metric);
+      if sf.Match.result.prunedBySize then
+        S := S + '**'
+      else if sf.Match.result.pruned then
+        S := S + '*';
+      S := S + '%';
 
       DrawText(tc);
       Sender.Canvas.CopyRect(cRect, buf.Canvas, cRect);
@@ -270,9 +295,9 @@ begin
       pRect := cRect;
       pRect.Top := cRect.Top + 2;
       pRect.Bottom := cRect.Bottom - 3;
-      pRect.Right := cRect.Left + (cRect.Right - cRect.Left + 1) * sf.Match div 100;
+      pRect.Right := cRect.Left + (cRect.Right - cRect.Left + 1) * sf.Match.result.metric div 100;
 
-      if sf.Match < sf.Threshold then
+      if sf.Match.result.metric < sf.Threshold then
         Brush.Color := clGreen
       else
         Brush.Color := clRed;
@@ -291,6 +316,7 @@ begin
   for i := 0 to fList.Count - 1 do
     TSourceFile(fList[i]).Threshold := ThresholdTB.Position;
   SetStatusTh(ThresholdTB.Position);
+  ControlsToConfig;
 end;
 
 procedure TMainForm.FileListSelectItem(Sender: TObject; Item: TListItem;
@@ -368,9 +394,9 @@ begin
   for i := fList.Count - 1 downto 0 do begin
     sf := TSourceFile(fList[i]);
     if sf.Item.Selected then begin
-      if not (sf.State in [fsAdded, fsCloseMatch]) and not all then
-        case MessageDlg('The file'#13#10 + sf.path + #13#10'is not added. Do you want to remove it?',
-           mtConfirmation, [mbYes, mbAll, mbNo, mbCancel], -1) of
+      if not (sf.State in [fsAdded, fsCloseMatch, fsForcedAdded]) and not all then
+        case MessageDlg('The file'#13#10 + sf.path + #13#10'is not added. Do you want to try to add it?',
+           mtConfirmation, [mbYes, mbYesToAll, mbNo, mbNoToAll, mbCancel], -1) of
           mrNo : continue;
           mrCancel : break;
           mrAll : all := true;
@@ -521,6 +547,7 @@ end;
 procedure TMainForm.FindAuthorsAutoCBClick(Sender: TObject);
 begin
   SkipNoAuthorCB.Enabled := FindAuthorsAutoCB.Checked;
+  ControlsToConfig;
 end;
 
 function TMainForm.SkipNoAuthor: Boolean;
@@ -562,6 +589,44 @@ end;
 procedure TMainForm.About1Click(Sender: TObject);
 begin
   ShowMessage('NeverCopyCode v 2.0'#13#10'Copyright(C) 2006 by Andrey Breslav'#13#10#13#10'Distributed as is');
+end;
+
+procedure TMainForm.SkipNoAuthorCBClick(Sender: TObject);
+begin
+  ControlsToConfig;
+end;
+
+procedure TMainForm.CompareEditorCLPathEDChange(Sender: TObject);
+begin
+  ControlsToConfig;
+end;
+
+procedure TMainForm.ControlsToConfig;
+begin
+  if noFeedBack then
+    Exit;
+  configuration.Threshold := ThresholdTB.Position;
+  configuration.ProcessOnDrop := ProcessOnDropCB.Checked;
+  configuration.ClearOnDrop := ClearOnDropCB.Checked;
+  configuration.ProcessSubdirectories := ProcessSubdirsCB.Checked;
+  configuration.FindAuthorsAutomatically := FindAuthorsAutoCB.Checked;
+  configuration.SkipFilesWhenNoAuthorFound := SkipNoAuthorCB.Checked;
+  configuration.CECommandLine := CompareEditorCLPathED.Text;
+  configuration.CEArguments := CompareEditorCLArgsED.Text;
+  configuration.FilesToIgnore := IgnoreED.Text;
+end;
+
+procedure TMainForm.ConfigToControls;
+begin
+  ThresholdTB.Position := configuration.Threshold;
+  ProcessOnDropCB.Checked := configuration.ProcessOnDrop;
+  ClearOnDropCB.Checked := configuration.ClearOnDrop;
+  ProcessSubdirsCB.Checked := configuration.ProcessSubdirectories;
+  FindAuthorsAutoCB.Checked := configuration.FindAuthorsAutomatically;
+  SkipNoAuthorCB.Checked := configuration.SkipFilesWhenNoAuthorFound;
+  CompareEditorCLPathED.Text := configuration.CECommandLine;
+  CompareEditorCLArgsED.Text := configuration.CEArguments;
+  IgnoreED.Text := configuration.FilesToIgnore;
 end;
 
 end.

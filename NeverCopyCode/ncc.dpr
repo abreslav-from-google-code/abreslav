@@ -8,7 +8,8 @@ uses
   DataCommons,
   UsersUnit,
   PascalLexer,
-  MetricUnit;
+  MetricUnit,
+  AdvancedMetrics;
 
 procedure ShowUsage;
 begin
@@ -23,10 +24,10 @@ begin
   WriteLn('  -r - replace a file.');
   WriteLn('       Does the same checks as -a');
   WriteLn('Metrics:');
-  WriteLn('  -c - maximum common subsequence.');
+  WriteLn('  -c - maximum common subsequence. Used by deafult.');
   WriteLn('       Ratio of mcs length to the length of shortest sample.');
   WriteLn('       Threshold is a minimum value treated as close matching');
-  WriteLn('  -e - editing distance. Used by deafult.');
+  WriteLn('  -e - editing distance.');
   WriteLn('       Ratio of editing distance to the length of shortest sample.');
   WriteLn('       Threshold is a maximum value treated as close matching');
   WriteLn('<threshold> - an integer number of percents.');
@@ -44,11 +45,13 @@ var
   input : TFileStream = nil;
   tokenStream : TStream = nil;
   authorId : Integer;
-  match : Integer;
+  match : TPrunedResults;
   entry : TMetadataEntry;
   metadata : TMetadataRecord;
   tr : TTokenizeResult;
   respond : Char;
+  time : TDateTime;
+  i : Integer;
 begin
   if ParamCount < 4 then
     ShowUsage;
@@ -65,7 +68,7 @@ begin
   end;
 
   c := 2;
-  metricFn := editingDistanceMetric;
+  metricFn := mcsMetric;
   if ParamCount = 5 then begin
     if ParamStr(2) = '-c' then
       metricFn := mcsMetric
@@ -116,16 +119,27 @@ begin
           authorId := uf.AddUser(authorName);
       end;
 
-      match := FindClosestMatching(tokenStream, authorId, metricFn, entry);
+      time := SysUtils.Time;
+      for i := 1 to 1 do
+        match := FindClosestMatching(tokenStream, authorId, metricFn, entry, threshold, 1.85);
+      time := SysUtils.Time - time;
+      WriteLn('Time left: ', time:0:10);
 
-      WriteLn('Closest match found: ', match, '%');
+      WriteLn('Total files: ', match.totalFiles);
+      WriteLn('Pruned files: ', match.prunedFiles);
+      WriteLn('Pruned by size files: ', match.prunedBySizeFiles);
+      WriteLn('Closest match found: ', match.result.metric, '%');
+      WriteLn('Common tokens: ', match.result.commonTokens, '%');
+      if match.result.pruned then
+        WriteLn('Metric is rough');
 
-      if (match >= threshold)  then begin
+      if (match.result.metric >= threshold)  then begin
         WriteLn('Close match found:');
         WriteLn('Author: ', uf.UserNames[entry.data.authorId]);
         WriteLn('Date: ', DateTimeToStr(entry.data.lastWrite));
         WriteLn('File name: ', entry.data.fileName);
-        WriteLn('Metric: ', match, '%');
+        WriteLn('Metric: ', match.result.metric, '%');
+        WriteLn('Common tokens: ', match.result.commonTokens, '%');
       end else begin
         WriteLn('No close match found');
         if authorId < 0 then
@@ -141,8 +155,10 @@ begin
       end;
 
     except
-      on e : Exception do
+      on e : Exception do begin
         WriteLn('Fatal error: ', e.Message);
+
+      end;
     end;
   finally
     uf.Free;

@@ -3,7 +3,7 @@ unit SourceFile;
 interface
 
 uses
-  ComCtrls, DataCommons, UsersUnit, Classes;
+  ComCtrls, DataCommons, UsersUnit, Classes, AdvancedMetrics;
 
 type
   TSourceFileStrategy = class;
@@ -18,12 +18,12 @@ type
     FClosestMatch : TMetadataEntry;
     FTokens : TStream;
     FPascal : TStream;
-    FMatch : Integer;
+    FMatch : TPrunedResults;
     FThreshold: Integer;
     FUserFile : TUserFile;
     procedure SetState(s : TSourceFileState);
     function GetClosestMatch: TMetadataEntry;
-    function GetMatch: Integer;
+    function GetMatch: TPrunedResults;
     procedure SetThreshold(const Value: Integer);
     procedure CalcMatchState;
     procedure Add;
@@ -41,7 +41,7 @@ type
     property Item : TListItem read FItem;
     property State : TSourceFileState read FState;
     property ClosestMatch : TMetadataEntry read GetClosestMatch;
-    property Match : Integer read GetMatch;
+    property Match : TPrunedResults read GetMatch;
     property Threshold : Integer read FThreshold write SetThreshold;
   end;
   TSourceFileStrategy = class
@@ -68,7 +68,7 @@ type
 implementation
 
 uses
-  SysUtils, MetricUnit, PascalLexer;
+  SysUtils, MetricUnit, PascalLexer, Dialogs;
 
 const
   AUTHOR_NAME = 1;
@@ -141,6 +141,8 @@ begin
 end;
 
 procedure TSourceFile.FindMatch(force : Boolean = false);
+var
+  t : TDateTime;
 begin
   if (FState <> fsNone) and (not force) then
     Exit;
@@ -148,7 +150,11 @@ begin
     FPascal.Seek(0, soFromBeginning);
     tokenize(FPascal, FTokens);
   end;
-  FMatch := FindClosestMatching(FTokens, AuthorId, editingDistanceMetric, FClosestMatch);
+  t := Time;
+  FMatch := FindClosestMatching(FTokens, AuthorId, editingDistanceMetric, FClosestMatch, Threshold, 1.85);
+//  ShowMessage(FloatToStr(Time - t));
+//  ShowMessage('Pruned: ' + IntToStr(FMatch.prunedFiles) + #13#10 +
+//   'By size: ' + IntToStr(FMatch.prunedBySizeFiles));
   CalcMatchState;
   FItem.SubItems[SAMPLE_AUTHOR] := FUserFile.UserNames[FClosestMatch.data.authorId];
   FItem.SubItems[FILE_NAME] := FClosestMatch.data.fileName;
@@ -161,7 +167,7 @@ begin
   Result := FClosestMatch;
 end;
 
-function TSourceFile.GetMatch: Integer;
+function TSourceFile.GetMatch: TPrunedResults;
 begin
   Result := FMatch;
 end;
@@ -178,7 +184,7 @@ begin
     Item.Update;
     Exit;
   end;
-  if FMatch < FThreshold then
+  if FMatch.result.metric < FThreshold then
     SetState(fsMatchUnderThreshold)
   else SetState(fsCloseMatch);
 end;
