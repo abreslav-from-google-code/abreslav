@@ -19,17 +19,11 @@ type
     id : Integer;
     data : TMetadataRecord;
   end;
-  TPrunedResults = record
-    totalFiles : Integer;
-    prunedFiles : Integer;
-    prunedBySizeFiles : Integer;
-    result : TPrunedResult;
-  end;
 
 {
    negative result means empty database
 }
-function FindClosestMatching(input : TStream; authorId: Integer; metric: PMetricFunction; out entry : TMetadataEntry; threshold : Integer; sizeThreshold : Real) : TPrunedResults;
+function FindClosestMatching(input : TStream; authorId: Integer; metric: TMetric; out entry : TMetadataEntry; threshold : Integer; sizeThreshold : Real) : IMetricResult;
 function AddSample(const metadata : TMetadataRecord; pascalCode, tokenStream : TStream) : Integer;
 procedure EnsureDataExists;
 function GetPascalFileName(sId : Integer) : String;
@@ -109,29 +103,26 @@ begin
   end;
 end;
 
-function FindClosestMatching(input : TStream; authorId: Integer; metric: PMetricFunction; out entry : TMetadataEntry; threshold : Integer; sizeThreshold : Real) : TPrunedResults;
+function FindClosestMatching(input : TStream; authorId: Integer; metric: TMetric; out entry : TMetadataEntry; threshold : Integer; sizeThreshold : Real) : IMetricResult;
 var
   mf : file of TMetadataRecord;
   rec : TMetadataRecord;
   idata : PBytes;
-  itc, stc : TTokenCounts;
-  tcFile : TStream;
+//  itc, stc : TTokenCounts;
+//  tcFile : TStream;
   buffer : PBytes;
   bufsize : Integer;
   sId : Integer;
   tokensLength : Integer;
-  r : TPrunedResult;
+  r : IMetricResult;
 begin
-  Result.result.metric := -1;
-  Result.result.pruned := false;
-  Result.totalFiles := 0;
-  Result.prunedFiles := 0;
-  Result.prunedBySizeFiles := 0;
+  Result := nil;
+  
   AssignFile(mf, METADATA_FILE_NAME);
   Reset(mf);
   GetMem(idata, input.Size);
   input.Seek(0, soFromBeginning);
-  countTokens(input, itc);
+//  countTokens(input, itc);
   try
     bufsize := 4096;
     GetMem(buffer, bufsize);
@@ -145,25 +136,22 @@ begin
           if rec.authorId <> authorId then begin
 
             tokensLength := GetTokenData(buffer, bufsize, sId);
-            tcFile := nil;
+{            tcFile := nil;
             try
               tcFile := TFileStream.Create(GetTokenCountsFileName(sId), fmOpenRead or fmShareDenyWrite);
-              tcFile.Read(stc, sizeOf(stc));
+//              tcFile.Read(stc, sizeOf(stc));
             finally
               tcFile.Free;
-            end;
-            r := tokenCountPrunedMetric(sizeThreshold, itc, stc, threshold, metric, idata, input.Size, buffer, tokensLength);
-            inc(Result.totalFiles);
-            if r.pruned then
-              inc(Result.prunedFiles);
-            if r.prunedBySize then
-              inc(Result.prunedBySizeFiles);
+            end;}
 
-            if (Result.result.metric < r.metric) and (not r.prunedBySize) then begin
-              Result.result := r;
+            r := metric.calculate(idata, input.Size, buffer, tokensLength);
+
+            if (Result = nil) or metric.isMoreClose(r.AbsoluteValue, Result.AbsoluteValue) then begin
+              Result := r;
               entry.id := sId;
               entry.data := rec;
             end;
+
           end;
           inc(sId);
         end;

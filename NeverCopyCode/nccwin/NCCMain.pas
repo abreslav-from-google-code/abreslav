@@ -229,9 +229,10 @@ var
   i : Integer;
   name : String;
 begin
+  path := AnsiUpperCase(path);
   name := '';
   for i := 0 to usermap.Count - 1 do begin
-    if pos(usermap.Values[usermap.Names[i]], path) > 0 then begin
+    if pos(AnsiUpperCase(usermap.Values[usermap.Names[i]]), path) > 0 then begin
       name := usermap.Names[i];
       break;
     end;
@@ -282,11 +283,7 @@ begin
       end;
       FillRect(cRect);
 
-      S := IntToStr(sf.Match.result.metric);
-      if sf.Match.result.prunedBySize then
-        S := S + '**'
-      else if sf.Match.result.pruned then
-        S := S + '*';
+      S := IntToStr(sf.NormalizedMatch);
       S := S + '%';
 
       DrawText(tc);
@@ -295,9 +292,9 @@ begin
       pRect := cRect;
       pRect.Top := cRect.Top + 2;
       pRect.Bottom := cRect.Bottom - 3;
-      pRect.Right := cRect.Left + (cRect.Right - cRect.Left + 1) * sf.Match.result.metric div 100;
+      pRect.Right := cRect.Left + (cRect.Right - cRect.Left + 1) * sf.NormalizedMatch div 100;
 
-      if sf.Match.result.metric < sf.Threshold then
+      if sf.NormalizedMatch < sf.Threshold then
         Brush.Color := clGreen
       else
         Brush.Color := clRed;
@@ -388,19 +385,19 @@ procedure TMainForm.RemoveExecute(Sender: TObject);
 var
   i : Integer;
   sf : TSourceFile;
-  all : Boolean;
+//  all : Boolean;
 begin
-  all := false;
+//  all := false;
   for i := fList.Count - 1 downto 0 do begin
     sf := TSourceFile(fList[i]);
     if sf.Item.Selected then begin
-      if not (sf.State in [fsAdded, fsCloseMatch, fsForcedAdded]) and not all then
+{      if not (sf.State in [fsAdded, fsCloseMatch, fsForcedAdded]) and not all then
         case MessageDlg('The file'#13#10 + sf.path + #13#10'is not added. Do you want to try to add it?',
            mtConfirmation, [mbYes, mbYesToAll, mbNo, mbNoToAll, mbCancel], -1) of
           mrNo : continue;
           mrCancel : break;
           mrAll : all := true;
-        end;
+        end;}
       FileList.Items.Delete(sf.Item.Index);
       sf.Free;
       fList.Delete(i);
