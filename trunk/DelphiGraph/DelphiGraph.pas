@@ -1,5 +1,5 @@
 {
-   Version 1.1
+   Version 1.2.1
 
    Change history:
    01.12.2006        Sleep(1) replaced with Sleep(0) in Dispatch 
