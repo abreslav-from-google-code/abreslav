@@ -197,6 +197,9 @@ const
   VK_NONAME = Windows.VK_NONAME;
   VK_PA1 = Windows.VK_PA1;
   VK_OEM_CLEAR = Windows.VK_OEM_CLEAR;
+
+type
+  TPoint = Windows.TPoint;
   
 type
   TGForm = class(TForm)
@@ -246,6 +249,7 @@ procedure Ellipse(x1, y1, x2, y2 : Integer);
 procedure RoundRect(x1, y1, x2, y2, a, b : Integer);
 procedure MoveTo(x, y : Integer);
 procedure LineTo(x, y : Integer);
+procedure Polygon(points : array of TPoint);
 
 procedure SetPenColor(c : TColor);
 procedure SetPenWidth(w : Integer);
@@ -514,6 +518,12 @@ end;
 procedure LineTo(x, y : Integer);
 begin
   Buffer.Canvas.LineTo(x, y);
+  Repaint;
+end;
+
+procedure Polygon(points : array of TPoint);
+begin
+  Buffer.Canvas.Polygon(points);
   Repaint;
 end;
 
