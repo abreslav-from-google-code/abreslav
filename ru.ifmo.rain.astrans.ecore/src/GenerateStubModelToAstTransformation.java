@@ -28,6 +28,9 @@ public class GenerateStubModelToAstTransformation {
 		AstransInterpreter interpreter = new AstransInterpreter();
 		Collection<EClass> classes = interpreter.run(transformation);
 		EPackage ePackage = EcoreFactory.eINSTANCE.createEPackage();
+		ePackage.setName("astransast");
+		ePackage.setNsURI("http://rain.ifmo.ru/~breslav/2007/astransast");
+		ePackage.setNsPrefix("astranast");
 		ePackage.getEClassifiers().addAll(classes);
 		EMFHelper.saveEObjectToFile(ePackage, "astransast.ecore");
 	}
