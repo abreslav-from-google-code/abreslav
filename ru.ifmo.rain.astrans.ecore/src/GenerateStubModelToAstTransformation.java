@@ -11,6 +11,8 @@ import org.eclipse.emf.ecore.EcoreFactory;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.util.EcoreUtil;
 
+import ru.ifmo.rain.astrans.utils.EMFHelper;
+
 import astrans.AstransFactory;
 import astrans.AstransPackage;
 import astrans.MapClass;
