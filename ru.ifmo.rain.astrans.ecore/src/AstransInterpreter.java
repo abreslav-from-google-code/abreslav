@@ -202,6 +202,12 @@ public class AstransInterpreter {
 				feature.setUpperBound(eReference.getUpperBound());
 			}
 			
+			EList superTypes = proto.getESuperTypes();
+			for (Iterator iter = superTypes.iterator(); iter.hasNext();) {
+				EClass eClass = (EClass) iter.next();
+				image.getESuperTypes().add(mapTrace.get(eClass));
+			}
+			
 			return NULL;
 		}
 
