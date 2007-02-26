@@ -1,3 +1,4 @@
+package ru.ifmo.rain.astrans.utils;
 
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
