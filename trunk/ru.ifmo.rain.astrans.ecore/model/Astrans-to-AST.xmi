@@ -70,4 +70,7 @@
     <modelReferenceTypeProto href="http://www.eclipse.org/emf/2002/Ecore#//EClassifier"/>
     <textualReferenceType xsi:type="astrans:CreatedEClass" create="//@actions.16"/>
   </actions>
+  <actions xsi:type="astrans:SkipClass" includeDescendants="true">
+    <targetProto href="http://rain.ifmo.ru/~breslav/2007/astrans#//EClassifierReference"/>
+  </actions>
 </astrans:Transformation>

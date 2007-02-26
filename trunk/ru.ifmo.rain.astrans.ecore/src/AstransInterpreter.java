@@ -1,6 +1,7 @@
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
@@ -96,7 +97,7 @@ public class AstransInterpreter {
 		}
 		
 		private EClassifier translateReferenceType(EClass eClass) {
-			EClassifier result = eClass;
+			EClassifier result = mapTrace.get(eClass);
 			for (TranslateReferences action : translateActions) {
 				EClass modelReferenceTypeProto = action.getModelReferenceTypeProto();
 				boolean applicable;
@@ -110,6 +111,10 @@ public class AstransInterpreter {
 					result = textualReferenceType;
 					break;
 				}
+			}
+			
+			if (result == null) {
+				result = eClass;
 			}
 			
 			System.out.println(eClass.getName() + " => " + result.getName());
@@ -250,9 +255,7 @@ public class AstransInterpreter {
 		}
 
 		private EStructuralFeature createReferenceFeature(EClass resolvedType, boolean containment) {
-			EClassifier calculatedType = containment 
-				? resolvedType
-				: referenceTranslator.translateReferenceType(resolvedType);
+			EClassifier calculatedType = referenceTranslator.translateReferenceType(resolvedType);
 			assert calculatedType != null;
 			
 			EStructuralFeature result;
@@ -316,8 +319,21 @@ public class AstransInterpreter {
 	private static final Object NULL = new Object();
 	
 	private void removeSkipped() {
-		for (SkipClass class1 : skipActions) {
-			classes.remove(mapTrace.get(class1.getTargetProto()));
+		Collection<EClass> superClasses = new HashSet<EClass>();
+		for (SkipClass skipAction : skipActions) {
+			classes.remove(mapTrace.get(skipAction.getTargetProto()));
+			if (skipAction.isIncludeDescendants()) {
+				superClasses.add(skipAction.getTargetProto());
+			}
+		}
+		for (Iterator<EClass> iter = mapTrace.keySet().iterator(); iter.hasNext();) {
+			EClass eClass = iter.next();
+			for (EClass superClass : superClasses) {
+				if (superClass.isSuperTypeOf(eClass)) {
+					classes.remove(mapTrace.get(eClass));
+					break;
+				}
+			}
 		}
 	}
 	
