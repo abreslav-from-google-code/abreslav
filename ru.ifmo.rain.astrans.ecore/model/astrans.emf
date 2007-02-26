@@ -1,0 +1,73 @@
+@namespace(uri="http://rain.ifmo.ru/~breslav/2007/astrans", prefix="astrans")
+package astrans;
+
+abstract class Action {
+}
+
+abstract class EClassifierReference{
+}
+
+abstract class EClassReference extends EClassifierReference {	
+}
+
+class CreatedEClass extends EClassReference {
+	ref CreateClass[1] create;
+}
+
+class MappedEClass extends EClassReference {
+	ref MapClass[1] mapping;
+}
+
+class ExistingEClass extends EClassReference {
+	ref ecore.EClass[1] eClass;
+}
+
+class ExistingEDataType extends EClassifierReference {
+	ref ecore.EDataType[1] eDataType;
+}
+
+class MapClass extends Action {
+    ref ecore.EClass[1] proto;
+}
+
+class TranslateReferences extends Action {
+    ref ecore.EClass[1] modelReferenceTypeProto;
+    val EClassifierReference[1] textualReferenceType;
+    attr boolean includeDescendants = false;
+}
+
+class CreateClass extends Action {
+    attr String[1] name;
+    attr boolean ~abstract = false;
+    val EClassReference[*] superclasses;
+    val StructuralFeature[*] structuralFeatures;    
+}
+
+abstract class StructuralFeature {
+  attr String[1] name;
+  attr int lowerBound = 0;
+  attr int upperBound = 1;
+}
+
+class Attribute extends StructuralFeature {
+  ref ecore.EDataType[1] type;
+}
+
+class Reference extends StructuralFeature {
+  val EClassReference[1] type;
+  attr boolean containment = false;
+}
+
+class ChangeInheritance extends Action {
+    ref ecore.EClass[1] targetProto;
+    val EClassReference[*] superclasses;
+}
+
+class SkipClass extends Action {
+    ref ecore.EClass[1] targetProto;
+    attr boolean includeDescendants = false;
+}
+
+class Transformation {
+    val Action[*] actions;
+}
