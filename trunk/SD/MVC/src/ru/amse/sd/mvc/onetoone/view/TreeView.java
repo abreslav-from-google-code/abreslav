@@ -21,7 +21,6 @@ public class TreeView extends JComponent {
 	private static final int TOP_FIELD = 20;
 	private static final int RADIUS = 15;
 	private static final int DIAMETER = 2 * RADIUS;
-	private static final int WIDTH = 512;
 	private static final int ROW_HEIGHT = 50;
 
 	private final DataArray model;
@@ -90,7 +89,7 @@ public class TreeView extends JComponent {
 	}
 
 	private int getVertexX(TreeVertex vertex) {
-		return (int) (vertex.getX() * WIDTH);
+		return (int) (vertex.getX() * getWidth());
 	}
 	
 }
