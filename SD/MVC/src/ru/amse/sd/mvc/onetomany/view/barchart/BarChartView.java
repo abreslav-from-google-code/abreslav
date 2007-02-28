@@ -16,7 +16,7 @@ import ru.amse.sd.mvc.onetomany.NotifyingDataArray;
 public class BarChartView extends JComponent {
 
 	private static final long serialVersionUID = 7174862746873314457L;
-	private static final double SCALE = 30;
+	private static final double SCALE = 5;
 	
 	private final NotifyingDataArray model;
 	private final Collection<Bar> bars = new ArrayList<Bar>();
@@ -33,9 +33,9 @@ public class BarChartView extends JComponent {
 	private MouseListener mouseListener = new MouseAdapter() {
 		@Override
 		public void mouseClicked(MouseEvent e) {
-			int index = e.getY() / getBarHeight();
+			int index = e.getX() / getBarWidth();
 			assert index >= 0;
-			int value = (int) (e.getX() / SCALE);
+			int value = (int) (e.getY() / SCALE);
 			if (index >= model.size()) { 
 			    model.add(value);                        
 			} else {
@@ -67,11 +67,11 @@ public class BarChartView extends JComponent {
 	@Override
 	public void paint(Graphics g) {
 		for (Bar bar : bars) {
-			bar.paint(g, getBarHeight(), SCALE);
+			bar.paint(g, getBarWidth(), SCALE);
 		}
 	}
 
-	private int getBarHeight() {
-		return getHeight() / (model.size() + 1);
+	private int getBarWidth() {
+		return getWidth() / (model.size() + 1);
 	}
 }

@@ -12,11 +12,11 @@ import ru.amse.sd.mvc.onetoone.DataArray;
 	}
 
 	@Override
-	void paint(Graphics g, int height, double scale) {
-		int top = height * getIndex();
-		int width = (int) (getData().get(getIndex()) * scale);
+	void paint(Graphics g, int width, double scale) {
+		int left = width * getIndex();
+		int height = (int) (getData().get(getIndex()) * scale);
 		g.setColor(getColor());
-		g.fillRoundRect(0, top, width, height, 30, 30);
+		g.fillRoundRect(left, 0, width, height, 30, 30);
 	}
 
 }

@@ -29,5 +29,5 @@ import ru.amse.sd.mvc.onetoone.DataArray;
 		return color;
 	}
 	
-	/*package*/ abstract void paint(Graphics g, int height, double scale);
+	/*package*/ abstract void paint(Graphics g, int width, double scale);
 }
