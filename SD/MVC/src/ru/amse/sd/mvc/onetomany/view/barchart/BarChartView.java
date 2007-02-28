@@ -34,9 +34,13 @@ public class BarChartView extends JComponent {
 		@Override
 		public void mouseClicked(MouseEvent e) {
 			int index = e.getY() / getBarHeight();
-			assert index < model.size();
+			assert index >= 0;
 			int value = (int) (e.getX() / SCALE);
-			model.set(index, value);
+			if (index >= model.size()) { 
+			    model.add(value);                        
+			} else {
+				model.set(index, value);
+			}
 		}
 	};
 	
@@ -68,6 +72,6 @@ public class BarChartView extends JComponent {
 	}
 
 	private int getBarHeight() {
-		return getHeight() / model.size();
+		return getHeight() / (model.size() + 1);
 	}
 }
