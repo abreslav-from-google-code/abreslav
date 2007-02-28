@@ -12,7 +12,7 @@ import ru.amse.sd.mvc.onetomany.NotifyingDataArray;
 import ru.amse.sd.mvc.onetomany.view.barchart.BarChartView;
 import ru.amse.sd.mvc.onetomany.view.tree.NotifiedTreeView;
 
-public class CopyOfMainWithListAndBar {
+public class MainWithListAndBar {
 
 	@SuppressWarnings("serial")
 	public static void main(String[] args) {
