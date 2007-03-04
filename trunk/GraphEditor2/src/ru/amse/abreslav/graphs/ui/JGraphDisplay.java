@@ -246,12 +246,12 @@ public class JGraphDisplay extends JComponent {
 
 	private final GraphPresentation<?> presentation;
 
-	private final ElementCreator elementCreator;
+	private final ElementFactory elementCreator;
 	
 	private final GraphRenderer<?> renderer;
 	
 	public <D, V extends Vertex<D>> JGraphDisplay(
-			final ElementCreator<D, V> elementCreator,
+			final ElementFactory<D, V> elementCreator,
 			final GraphPresentation<D> presentation,
 			final GraphLayout<D> layout, 
 			final GraphRenderer<D> renderer,
@@ -297,7 +297,7 @@ public class JGraphDisplay extends JComponent {
 	}
 
 	public <D, V extends Vertex<D>> JGraphDisplay(
-			final ElementCreator<D, V> elementCreator, 
+			final ElementFactory<D, V> elementCreator, 
 			final GraphPresentation<D> presentation,
 			final GraphActionListener<D> gal) {
 		this(

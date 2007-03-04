@@ -9,7 +9,7 @@ import javax.swing.JToolBar;
 
 import ru.amse.abreslav.graphs.model.Vertex;
 import ru.amse.abreslav.graphs.presentation.GraphPresentation;
-import ru.amse.abreslav.graphs.ui.ElementCreator;
+import ru.amse.abreslav.graphs.ui.ElementFactory;
 import ru.amse.abreslav.graphs.ui.GraphActionListener;
 import ru.amse.abreslav.graphs.ui.JGraphDisplay;
 
@@ -20,7 +20,7 @@ public class GraphFrame extends JFrame {
 	private JPanel contentPane = new JPanel(new BorderLayout());
 	private JToolBar toolBar = new JToolBar();
 
-	public <D, V extends Vertex<D>> GraphFrame(ElementCreator<D, V> ec, GraphPresentation<D> presentation, GraphActionListener<D> gal) {
+	public <D, V extends Vertex<D>> GraphFrame(ElementFactory<D, V> ec, GraphPresentation<D> presentation, GraphActionListener<D> gal) {
 		super("Graph Editor");
 		setSize(800, 600);
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
