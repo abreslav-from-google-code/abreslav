@@ -14,11 +14,11 @@ public class ToRPNVisitor implements ValueVisitor<String, Void> {
 	}
 	
 	public String visit(Sum value, Void data) {
-		return "+ " + dispatch(value.getX()) + " " + dispatch(value.getY());
+		return dispatch(value.getY()) + " " + dispatch(value.getX()) + " +";
 	}
 
 	public String visit(Mult value, Void data) {
-		return "* " + dispatch(value.getX()) + " " + dispatch(value.getY());
+		return dispatch(value.getY()) + " " + dispatch(value.getX()) + " *";
 	}
 
 	public String visit(Number value, Void data) {
