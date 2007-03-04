@@ -8,7 +8,7 @@ import ru.amse.abreslav.graphs.model.list.ListGraph;
 import ru.amse.abreslav.graphs.model.list.ListVertex;
 import ru.amse.abreslav.graphs.presentation.PresentationFactory;
 import ru.amse.abreslav.graphs.presentation.PresentationFactory.Result;
-import ru.amse.abreslav.graphs.ui.ElementCreator;
+import ru.amse.abreslav.graphs.ui.ElementFactory;
 import ru.amse.abreslav.graphs.ui.GraphActionListener;
 
 public class Main {
@@ -19,7 +19,7 @@ public class Main {
 		Result<String, ListVertex<String>, SimpleEdge<ListVertex<String>>> result = PresentationFactory.createPresentationAndGraph(graph);
 		final IGraph<String, ListVertex<String>, SimpleEdge<ListVertex<String>>> wg = result.graph;
 		
-		ElementCreator<String, ListVertex<String>> ec = new ElementCreator<String, ListVertex<String>>() {
+		ElementFactory<String, ListVertex<String>> ec = new ElementFactory<String, ListVertex<String>>() {
 			private int n = 0;
 			
 			public Edge<ListVertex<String>> createEdge(ListVertex<String> a, ListVertex<String> b) {
