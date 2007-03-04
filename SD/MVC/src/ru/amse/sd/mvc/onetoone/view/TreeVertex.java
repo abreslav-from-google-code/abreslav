@@ -1,6 +1,6 @@
 package ru.amse.sd.mvc.onetoone.view;
 
-class TreeVertex {
+/*package*/ class TreeVertex {
 
 	private final int index;
 	private double x;
