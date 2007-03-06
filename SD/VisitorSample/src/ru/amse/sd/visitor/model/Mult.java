@@ -12,7 +12,7 @@ public class Mult extends BinaryOperation {
 
 	@Override
 	protected Integer calculateValue() {
-		return getX().getValue() + getY().getValue();
+		return getX().getValue() * getY().getValue();
 	}
 	
 }

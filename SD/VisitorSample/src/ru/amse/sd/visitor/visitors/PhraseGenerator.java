@@ -9,7 +9,7 @@ import ru.amse.sd.visitor.model.ValueVisitor;
 
 public class PhraseGenerator {
 
-	private static ValueVisitor<String, Boolean> phraser = new ValueVisitor<String, Boolean>() {
+	private static final ValueVisitor<String, Boolean> PHRASER = new ValueVisitor<String, Boolean>() {
 
 		public String visit(Sum value, Boolean first) {
 			return (first ? "Сумма " : "суммы ") 
@@ -32,6 +32,6 @@ public class PhraseGenerator {
 	};
 	
 	public static String getPhrase(Value value) {
-		return value.accept(phraser, true);
+		return value.accept(PHRASER, true);
 	}
 }
