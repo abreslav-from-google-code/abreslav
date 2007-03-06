@@ -30,7 +30,7 @@ public class Main {
 				+ "=" + b.getValue()
 		);
 		System.out.println(
-				c.accept(ToExpressionVisitor.INSTANCE, null)
+				ToExpressionVisitor.INSTANCE.dispatch(c)
 				+ "=" + c.getValue()
 		);
 
