@@ -35,7 +35,7 @@ import astrans.util.AstransSwitch;
 
 /*
  * Features to be supported:
- *   1. Translate types of containment references
+ *   1. Manage containment on reference translation
  *   2. Change inheritance
  *   3. Test everything
  */
@@ -117,8 +117,6 @@ public class AstransInterpreter {
 				result = eClass;
 			}
 			
-			System.out.println(eClass.getName() + " => " + result.getName());
-			
 			return result;
 		}
 
@@ -195,7 +193,8 @@ public class AstransInterpreter {
 				EReference eReference = (EReference) iter.next();
 				EStructuralFeature feature = createReferenceFeature(
 												(EClass) eReference.getEType(), 
-												eReference.isContainment());
+												true // AST has no croos-references in it
+												/*eReference.isContainment()*/);
 				image.getEStructuralFeatures().add(feature);
 				feature.setName(eReference.getName());
 				feature.setLowerBound(eReference.getLowerBound());
