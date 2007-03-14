@@ -1,0 +1,43 @@
+@namespace(uri="http://rain.ifmo.ru/~breslav/2007/astrans/ast", prefix="ast")
+package ast;
+
+class QualifiedName {
+    attr String name;
+    val QualifiedName subQN;
+}
+abstract class ActionAS {
+}
+class TranslateReferencesAS extends ActionAS {
+    val QualifiedName modelReferenceType;
+    val QualifiedName textualReferenceType;
+    attr boolean includeDescendants;
+}
+class CreateClassAS extends ActionAS {
+    attr String name;
+    attr boolean ~abstract;
+    val QualifiedName[*] superclasses;
+    val StructuralFeatureAS[*] structuralFeatures;    
+}
+abstract class StructuralFeatureAS {
+  attr String name;
+  attr int lowerBound;
+  attr int upperBound = 1;
+}
+class AttributeAS extends StructuralFeatureAS {
+  val QualifiedName type;
+}
+class ReferenceAS extends StructuralFeatureAS {
+  val QualifiedName type;
+  attr boolean containment;
+}
+class ChangeInheritanceAS extends ActionAS {
+    val QualifiedName target;
+    val QualifiedName[*] superclasses;
+}
+class SkipClassAS extends ActionAS {
+    val QualifiedName target;
+    attr boolean includeDescendants;
+}
+class TransformationAS {
+    val ActionAS[*] actions;
+}

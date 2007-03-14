@@ -1,0 +1,89 @@
+@namespace(uri="http://rain.ifmo.ru/~breslav/2007/astrans", prefix="astrans")
+package astrans;
+
+class InstructionSet {
+  val Instruction[*] instructions;
+}
+
+abstract class Instruction {
+}
+
+class CreateClass extends Instruction {
+  val Feature[*] features;
+  attr String name;
+  attr boolean ~abstract;
+  val ClassReference[*] superclasses;
+}
+
+abstract class Feature {
+  attr String name;
+  attr int lowerBound;
+  attr int upperBound = 1;
+}
+
+class Attribute extends Feature {
+  val PrimitiveTypeReference type;
+}
+
+class Reference extends Feature {
+  val ClassReference type;
+  attr boolean containment;
+}
+
+abstract class ClassReference {
+}
+
+class CreatedClass extends ClassReference {
+  ref CreateClass createdClass;
+}
+
+class ExistingEClass extends ClassReference, ClassExpression {
+  ref EClass eClass;
+}
+
+class PrimitiveTypeReference {
+}
+
+class BasicTypeReference extends PrimitiveTypeReference {
+  attr BasicType type;
+}
+
+class JavaClassReference extends PrimitiveTypeReference {
+  attr String name;
+}
+
+enum BasicType {
+  boolean = 0;
+  byte = 0;
+  char = 0;
+  double = 0;
+  int = 0;
+  long = 0;
+  float = 0;
+}
+
+class NeverMap extends Instruction {
+  val ClassExpression expression;
+}
+
+abstract class ClassExpression {
+}
+
+class AllDecendants extends ClassExpression {
+  val ExistingEClass superClass;
+}
+
+class ChangeSuperclasses extends Instruction {
+  val ClassImageReference source;
+  val ClassReference[*] superClasses;
+}
+
+class ReferAs extends Instruction {
+  val ClassExpression expression;
+  val ClassReference refType;
+}
+
+class ClassImageReference extends ClassReference {
+  val ExistingEClass source;
+}
+
