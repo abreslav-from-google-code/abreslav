@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="ASCII"?>
+<astranast:TransformationAS xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:astranast="http://rain.ifmo.ru/~breslav/2007/astransast" xsi:schemaLocation="http://rain.ifmo.ru/~breslav/2007/astransast ../ru.ifmo.rain.astrans.ast/model/astransast.ecore">
+  <actions xsi:type="astranast:CreateClassAS" name="AB">
+    <superclasses name="A"/>
+    <superclasses name="B"/>
+    <structuralFeatures xsi:type="astranast:AttributeAS" name="aaa">
+      <type name="ecore">
+        <subQN name="EString"/>
+      </type>
+    </structuralFeatures>
+    <structuralFeatures xsi:type="astranast:AttributeAS" name="bbb">
+      <type name="ecore">
+        <subQN name="EInt"/>
+      </type>
+    </structuralFeatures>
+    <structuralFeatures xsi:type="astranast:ReferenceAS" name="rrr1">
+      <type name="AB"/>
+    </structuralFeatures>
+    <structuralFeatures xsi:type="astranast:ReferenceAS" name="rrra">
+      <type name="A"/>
+    </structuralFeatures>
+    <structuralFeatures xsi:type="astranast:ReferenceAS" name="eClass">
+      <type name="ecore">
+        <subQN name="EClass"/>
+      </type>
+    </structuralFeatures>
+  </actions>
+  <actions xsi:type="astranast:CreateClassAS" name="A"/>
+  <actions xsi:type="astranast:CreateClassAS" name="B"/>
+</astranast:TransformationAS>
