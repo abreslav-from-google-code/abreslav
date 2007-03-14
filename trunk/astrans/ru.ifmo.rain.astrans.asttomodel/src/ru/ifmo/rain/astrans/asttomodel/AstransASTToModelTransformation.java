@@ -5,15 +5,12 @@ import java.util.Iterator;
 import java.util.List;
 
 import org.eclipse.emf.common.util.EList;
-import org.eclipse.emf.ecore.EClass;
-import org.eclipse.emf.ecore.EDataType;
 import org.eclipse.emf.ecore.EObject;
 
+import ru.ifmo.rain.astrans.asttomodel.resolver.Resolver;
 import astrans.AstransFactory;
 import astrans.Attribute;
 import astrans.CreateClass;
-import astrans.EClassReference;
-import astrans.EClassifierReference;
 import astrans.Reference;
 import astrans.SkipClass;
 import astrans.Transformation;
@@ -142,38 +139,6 @@ public class AstransASTToModelTransformation {
 		}
 	};
 	
-	private class Resolver {
-		private EClassifierReference resolveTranslateReferencesTextualReferenceType(QualifiedName textualReferenceType) {
-			// lookup classifier
-			return null;
-		}
-
-		private EClass resolveTranslateReferencesModelReferenceTypeProto(QualifiedName modelReferenceTypeProto) {
-			// lookup proto class
-			return null;
-		}
-
-		private EClass resolveSkipClassTargetProto(QualifiedName targetProto) {
-			// lookup proto class
-			return null;
-		}
-
-		private EClassReference resolveCreateClassSuperclass(QualifiedName superClassQN) {
-			// lookup EClass
-			return null;
-		}
-
-		private EClassReference resolveReferenceType(QualifiedName type) {
-			// lookup class
-			return null;
-		}
-
-		private EDataType resolveAttributeType(QualifiedName type) {
-			// lookup EDataType
-			return null;
-		}
-	}
-
 	private final Resolver resolver = new Resolver();
 	
 	private final List<Runnable> commands = new ArrayList<Runnable>();
