@@ -7,6 +7,7 @@ import java.util.List;
 import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.ecore.EObject;
 
+import ru.ifmo.rain.astrans.asttomodel.resolver.EPackageResolverTest;
 import ru.ifmo.rain.astrans.asttomodel.resolver.Resolver;
 import astrans.AstransFactory;
 import astrans.Attribute;
