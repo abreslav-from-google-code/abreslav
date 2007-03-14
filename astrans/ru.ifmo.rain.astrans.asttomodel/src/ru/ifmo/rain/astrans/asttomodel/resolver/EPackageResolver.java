@@ -9,22 +9,18 @@ import java.util.Map;
 
 import org.eclipse.emf.ecore.EClassifier;
 import org.eclipse.emf.ecore.EPackage;
-import org.eclipse.emf.ecore.EcorePackage;
 
-import astrans.AstransPackage;
-import astransast.AstransastPackage;
 import astransast.QualifiedName;
 
 class EPackageResolver {
 
-	public static final EPackageResolver INSTANCE = new EPackageResolver();
-	
 	private final Map<String, IPackage> packageMap = new HashMap<String, IPackage>();
 	
-	private EPackageResolver() {
-		packageMap.put("ecore", new MyEPackage(EcorePackage.eINSTANCE));
-		packageMap.put("astrans", new MyEPackage(AstransPackage.eINSTANCE));
-		packageMap.put("astransast", new MyEPackage(AstransastPackage.eINSTANCE));
+	public EPackageResolver(EPackage... ePackages) {
+		for (EPackage ePackage : ePackages) {
+			packageMap.put(ePackage.getName(), new MyEPackage(ePackage));
+			
+		}
 	}
 	
 	private IPackage getEPackage(Iterator<String> qn) {

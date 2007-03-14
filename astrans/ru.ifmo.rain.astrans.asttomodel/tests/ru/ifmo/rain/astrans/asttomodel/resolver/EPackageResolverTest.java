@@ -3,6 +3,7 @@ package ru.ifmo.rain.astrans.asttomodel.resolver;
 import static org.junit.Assert.assertEquals;
 
 import org.eclipse.emf.ecore.EcorePackage;
+import org.junit.Before;
 import org.junit.Test;
 
 import astrans.AstransPackage;
@@ -14,12 +15,18 @@ public class EPackageResolverTest {
 	private QualifiedName ecore;
 	private QualifiedName astrans;
 	private QualifiedName transformation;
+	private EPackageResolver resolver;
+	
+	@Before
+	public void setUp() {
+		resolver = new EPackageResolver(EcorePackage.eINSTANCE, AstransPackage.eINSTANCE);
+	}
 
 	@Test
 	public void testGetEPackage() {
 		ecore = AstransastFactory.eINSTANCE.createQualifiedName();
 		ecore.setName("ecore");
-		assertEquals(EcorePackage.eINSTANCE, EPackageResolver.INSTANCE.getEPackage(ecore));
+		assertEquals(EcorePackage.eINSTANCE, resolver.getEPackage(ecore));
 	}
 
 	@Test
@@ -30,7 +37,7 @@ public class EPackageResolverTest {
 		transformation.setName("Transformation");
 		
 		astrans.setSubQN(transformation);
-		assertEquals(AstransPackage.eINSTANCE.getTransformation(), EPackageResolver.INSTANCE.getEClassifier(astrans));
+		assertEquals(AstransPackage.eINSTANCE.getTransformation(), resolver.getEClassifier(astrans));
 	}
 
 }
