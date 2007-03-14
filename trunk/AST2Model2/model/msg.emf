@@ -25,8 +25,7 @@ class ArrayType extends Type {
 class Field extends Member {
 }
 
-class FormalParameter extends Named {
-  ref Type type;
+class FormalParameter extends Variable {
 }
 
 class Package extends Named {
@@ -57,3 +56,33 @@ abstract class Member extends Named {
   attr boolean final;
 }
 
+class Variable extends Named {
+	ref Type type;
+}
+
+abstract class Expression {	
+}
+
+abstract class LValue {
+
+}
+
+class VariableReference extends Expression, LValue {
+	ref Variable variable;
+}
+
+class Assignment extends Expression {
+	val LValue left;
+	val Expression right;
+}
+
+class MethodCall extends Expression {
+	ref Method method;
+	val Expression source;
+	val Expression[*] parameters;	
+}
+
+class FieldReference extends Expression, LValue {
+	ref Field field;
+	val Expression source;
+}
