@@ -1,0 +1,32 @@
+TransformationAS: 
+  (actions+=ActionAS ";")*;
+
+QualifiedName: name=ID ("::" subQN=QualifiedName);
+
+Abstract ActionAS: 
+  TranslateReferencesAS | CreateClassAS | ChangeInheritanceAS | SkipClassAS;
+
+TranslateReferencesAS: 
+  "refer" "img" "("modelReferenceType=QualifiedName")" (includeDescendants?"+")
+  "as" textualReferenceType=QualifiedName;
+
+CreateClassAS:
+  "create" (abstract?"abstract") "class" name=ID 
+     ("extends" superclasses+=QualifiedName ("," superclasses+=QualifiedName)*)? "{"
+    (structuralFeatures+=StructuralFeatureAS ";")*
+  "}";
+
+Abstract StructuralFeatureAS: 
+  AttributeAS | ReferenceAS;
+
+AttributeAS:
+  "attr" type=QualifiedName ("["lowerbound=INT ".." upperbound=INT "]")? name=ID;
+
+ReferenceAS:
+  (containment?"val") type=QualifiedName ("["lowerbound=INT ".." upperbound=INT "]")? name=ID;
+  
+ChangeInheritanceAS: 
+  "make" "img" "(" target=QualifiedName ")" "extend" ("nothing" | (superclasses+=QualifiedName ("," superclasses+=QualifiedName)*)?);
+
+SkipClassAS:
+  "skip" target=QualifiedName (includeDescendants?"+");

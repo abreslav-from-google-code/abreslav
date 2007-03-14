@@ -1,0 +1,23 @@
+create abstract class TypeReferenceAS {	
+}
+
+modify class BasicTypeAS { extends = TypeReferenceAS};
+modify class ArrayTypeAS { extends = TypeReferenceAS};
+
+create class QualifiedName {
+	attr String name;
+	val QualifiedName subQN;
+}
+
+create class ClassReferenceAS extends TypeReferenceAS {
+	val QualifiedName qn;
+}
+
+modify ref *::*(type == TypeAS) { type = TypeReferenceAS };
+modify ref *::*(type == PackageAS) {type = QualifiedName);
+modify ref *::*(type == ClassAS) {type = ClassReferenceAS};
+replace ref *::*(type == VariableAS) with attr{name = "name"; type = String};
+replace ref *::*(type == MethodAS) with attr{name = "name"; type = String};
+replace ref *::*(type == FieldAS) with attr{name = "name"; type = String};
+
+
