@@ -1,6 +1,13 @@
 @namespace(uri="http://rain.ifmo.ru/~breslav/2007/astrans", prefix="astrans")
 package astrans;
 
+/*
+ * Any - any class
+ * Proto - any class that existed before this transformation started
+ * Created - a class which was created by Create actions
+ * Mapped - a class created by MapClass actions
+ */
+
 abstract class Action {
 }
 
@@ -27,19 +34,19 @@ class ExistingEDataType extends EClassifierReference {
 }
 
 class MapClass extends Action {
-    ref ecore.EClass[1] proto;
+    ref ecore.EClass[1] proto; // proto
 }
 
 class TranslateReferences extends Action {
-    ref ecore.EClass[1] modelReferenceTypeProto;
-    val EClassifierReference[1] textualReferenceType;
+    ref ecore.EClass[1] modelReferenceTypeProto; // proto
+    val EClassifierReference[1] textualReferenceType; // any
     attr boolean includeDescendants = false;
 }
 
 class CreateClass extends Action {
     attr String[1] name;
     attr boolean ~abstract = false;
-    val EClassReference[*] superclasses;
+    val EClassReference[*] superclasses; // Any
     val StructuralFeature[*] structuralFeatures;    
 }
 
@@ -59,12 +66,12 @@ class Reference extends StructuralFeature {
 }
 
 class ChangeInheritance extends Action {
-    ref ecore.EClass[1] targetProto;
-    val EClassReference[*] superclasses;
+    ref ecore.EClass[1] targetProto; // Proto
+    val EClassReference[*] superclasses; // Any
 }
 
 class SkipClass extends Action {
-    ref ecore.EClass[1] targetProto;
+    ref ecore.EClass[1] targetProto; // Proto
     attr boolean includeDescendants = false;
 }
 
