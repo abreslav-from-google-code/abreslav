@@ -9,7 +9,10 @@ import org.junit.runners.Suite.SuiteClasses;
 		EPackageResolverTest.class, 
 		IterableClassQNTest.class,
 		IterableQNTest.class, 
-		MyEPackageTest.class 
+		MyEPackageTest.class,
+		CreatedClassesTest.class,
+		MappedClassesTest.class,
+		CompositeClassifierNamespaceTest.class
 })
 public class AllTests {
 

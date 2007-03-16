@@ -7,12 +7,19 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 
+import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.EClassifier;
+import org.eclipse.emf.ecore.EDataType;
 import org.eclipse.emf.ecore.EPackage;
+import org.eclipse.emf.ecore.EcorePackage;
 
+import astrans.AstransFactory;
+import astrans.EClassifierReference;
+import astrans.ExistingEClass;
+import astrans.ExistingEDataType;
 import astransast.QualifiedName;
 
-class EPackageResolver {
+class EPackageResolver implements IClassifierNamespace<EClassifierReference> {
 
 	private final Map<String, IPackage> packageMap = new HashMap<String, IPackage>();
 	
@@ -45,5 +52,25 @@ class EPackageResolver {
 		IterableClassQN iterableClassQN = new IterableClassQN(qn);
 		IPackage ePackage = getEPackage(iterableClassQN.iterator());
 		return ePackage.getEClassifier(iterableClassQN.getClassName());
+	}
+
+	
+	public EClassifierReference getEClassifierReference(QualifiedName name) {
+		EClassifier classifier = getEClassifier(name);
+		if (classifier == null) {
+			return null;
+		}
+		switch (classifier.eClass().getClassifierID()) {
+		case EcorePackage.EDATA_TYPE:
+			ExistingEDataType dataType = AstransFactory.eINSTANCE.createExistingEDataType();
+			dataType.setEDataType((EDataType) classifier);
+			return dataType;
+		case EcorePackage.ECLASS:
+			ExistingEClass eClass = AstransFactory.eINSTANCE.createExistingEClass();
+			eClass.setEClass((EClass) classifier);
+			return eClass;
+		}			
+		assert false; // impossible state
+		return null;
 	}
 }
