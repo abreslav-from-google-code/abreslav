@@ -7,7 +7,8 @@ import java.util.List;
 import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.ecore.EObject;
 
-import ru.ifmo.rain.astrans.asttomodel.resolver.EPackageResolverTest;
+import ru.ifmo.rain.astrans.asttomodel.resolver.CreatedClasses;
+import ru.ifmo.rain.astrans.asttomodel.resolver.MappedClasses;
 import ru.ifmo.rain.astrans.asttomodel.resolver.Resolver;
 import astrans.AstransFactory;
 import astrans.Attribute;
@@ -17,6 +18,7 @@ import astrans.SkipClass;
 import astrans.Transformation;
 import astrans.TranslateReferences;
 import astransast.ActionAS;
+import astransast.AstransastPackage;
 import astransast.AttributeAS;
 import astransast.ChangeInheritanceAS;
 import astransast.CreateClassAS;
@@ -29,6 +31,9 @@ import astransast.util.AstransastSwitch;
 
 public class AstransASTToModelTransformation {
 
+	private final CreatedClasses createdClasses = new CreatedClasses();
+	private final MappedClasses mappedClasses = new MappedClasses();
+	
 	private final AstransastSwitch creator = new AstransastSwitch() {
 		@Override
 		public Transformation caseTransformationAS(TransformationAS transformationAS) {
@@ -76,6 +81,7 @@ public class AstransASTToModelTransformation {
 		public CreateClass caseCreateClassAS(CreateClassAS createClassAS) {
 			final CreateClass createClass = AstransFactory.eINSTANCE.createCreateClass();
 			createClass.setName(createClassAS.getName());
+			createdClasses.add(createClass);
 			createClass.setAbstract(createClassAS.isAbstract());
 			
 			EList superclasses = createClassAS.getSuperclasses();
@@ -140,7 +146,7 @@ public class AstransASTToModelTransformation {
 		}
 	};
 	
-	private final Resolver resolver = new Resolver();
+	private final Resolver resolver = new Resolver(AstransastPackage.eINSTANCE, createdClasses, mappedClasses);
 	
 	private final List<Runnable> commands = new ArrayList<Runnable>();
 	
