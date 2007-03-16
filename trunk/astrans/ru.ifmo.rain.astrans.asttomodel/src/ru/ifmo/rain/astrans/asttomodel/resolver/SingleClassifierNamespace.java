@@ -8,12 +8,12 @@ import org.eclipse.emf.ecore.util.EcoreUtil;
 import astrans.EClassifierReference;
 import astransast.QualifiedName;
 
-public abstract class AbstractClassifierNamespace<T extends EClassifierReference, V> implements IClassifierNamespace<T> {
+public abstract class SingleClassifierNamespace<T extends EClassifierReference, V> {
 
 	private final Map<String, T> classMap = new HashMap<String, T>();
-	
+
 	@SuppressWarnings("unchecked")
-	public T getEClassifierReference(QualifiedName name) {
+	public T getReference(QualifiedName name) {
 		T ref = classMap.get(name.getName());
 		if (ref == null) {
 			return null;

@@ -4,7 +4,7 @@ import astrans.AstransFactory;
 import astrans.CreateClass;
 import astrans.CreatedEClass;
 
-public class CreatedClasses extends AbstractClassifierNamespace<CreatedEClass, CreateClass>{
+public class CreatedClasses extends SingleClassifierNamespace<CreatedEClass, CreateClass>{
 
 	@Override
 	protected CreatedEClass createReference(CreateClass value) {

@@ -32,15 +32,15 @@ public class MappedClassesTest {
 
 	@Test
 	public final void testGetEClassifierReference() {
-		MappedEClass ref1 = mappedClasses.getEClassifierReference(name);
-		MappedEClass ref2 = mappedClasses.getEClassifierReference(name);
+		MappedEClass ref1 = mappedClasses.getReference(name);
+		MappedEClass ref2 = mappedClasses.getReference(name);
 		assertTrue(ref1 != ref2);
 		assertSame(ref1.getMapping(), ref2.getMapping());
 	}
 
 	@Test
 	public final void testAdd() {
-		assertSame(mapClass, mappedClasses.getEClassifierReference(name).getMapping());
+		assertSame(mapClass, mappedClasses.getReference(name).getMapping());
 	}
 
 }
