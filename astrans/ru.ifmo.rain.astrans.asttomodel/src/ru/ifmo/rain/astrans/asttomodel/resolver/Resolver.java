@@ -12,6 +12,8 @@ import org.eclipse.emf.ecore.EcorePackage;
 import astrans.CreatedEClass;
 import astrans.EClassReference;
 import astrans.EClassifierReference;
+import astrans.ExistingEClass;
+import astrans.ExistingEDataType;
 import astrans.MappedEClass;
 import astransast.QualifiedName;
 
@@ -41,31 +43,42 @@ public class Resolver {
 	}
 
 	public EClass resolveTranslateReferencesModelReferenceTypeProto(QualifiedName modelReferenceTypeProto) {
-		// lookup proto class
+		return lookupProtoClass(modelReferenceTypeProto);
+	}
+
+	private EClass lookupProtoClass(QualifiedName modelReferenceTypeProto) {
 		EClassifierReference ref = proto.getEClassifierReference(modelReferenceTypeProto);
-		if (false == ref instanceof EClassReference) {
-			return null;
+		if (ref instanceof ExistingEClass) {
+			return ((ExistingEClass) ref).getEClass();
 		}
 		return null;
 	}
 
 	public EClass resolveSkipClassTargetProto(QualifiedName targetProto) {
-		// lookup proto class
-		return null;
+		return lookupProtoClass(targetProto);
 	}
 
 	public EClassReference resolveCreateClassSuperclass(QualifiedName superClassQN) {
-		// lookup EClass
+		return lookupClass(superClassQN);
+	}
+
+	private EClassReference lookupClass(QualifiedName superClassQN) {
+		EClassifierReference ref = all.getEClassifierReference(superClassQN);
+		if (ref instanceof EClassReference) {
+			return (EClassReference) ref;
+		}
 		return null;
 	}
 
 	public EClassReference resolveReferenceType(QualifiedName type) {
-		// lookup EClass
-		return null;
+		return lookupClass(type);
 	}
 
 	public EDataType resolveAttributeType(QualifiedName type) {
-		// lookup EDataType
+		EClassifierReference ref = all.getEClassifierReference(type);
+		if (ref instanceof ExistingEDataType) {
+			return (EDataType) ref;
+		}
 		return null;
 	}
 }
