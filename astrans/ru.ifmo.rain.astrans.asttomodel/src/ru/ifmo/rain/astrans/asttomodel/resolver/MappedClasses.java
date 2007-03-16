@@ -4,7 +4,7 @@ import astrans.AstransFactory;
 import astrans.MapClass;
 import astrans.MappedEClass;
 
-public class MappedClasses extends AbstractClassifierNamespace<MappedEClass, MapClass> {
+public class MappedClasses extends SingleClassifierNamespace<MappedEClass, MapClass> {
 
 	@Override
 	protected MappedEClass createReference(MapClass value) {

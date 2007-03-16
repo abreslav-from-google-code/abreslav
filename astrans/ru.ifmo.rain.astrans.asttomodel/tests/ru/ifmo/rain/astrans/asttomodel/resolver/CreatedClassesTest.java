@@ -32,14 +32,15 @@ public class CreatedClassesTest {
 
 	@Test
 	public final void testAdd() {
-		assertSame(createClass, classes.getEClassifierReference(name).getCreate());
+		assertSame(createClass, classes.getReference(name).getCreate());
 	}
 
 	@Test
 	public void testGetEClassifierReference() {
-		CreatedEClass ref1 = classes.getEClassifierReference(name);
-		CreatedEClass ref2 = classes.getEClassifierReference(name);
+		CreatedEClass ref1 = classes.getReference(name);
+		CreatedEClass ref2 = classes.getReference(name);
 		assertTrue(ref1 != ref2);
 		assertSame(ref1.getCreate(), ref2.getCreate());
 	}
+	
 }
