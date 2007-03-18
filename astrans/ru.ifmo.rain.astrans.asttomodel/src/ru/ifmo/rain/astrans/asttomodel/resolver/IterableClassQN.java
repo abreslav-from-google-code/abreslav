@@ -18,6 +18,9 @@ class IterableClassQN extends IterableQN  {
 		return new QNIterator(getQN()) {
 			@Override
 			public boolean hasNext() {
+				if (getCurrentQN() == null) {
+					return false;
+				}
 				return getCurrentQN().getSubQN() != null;
 			}
 		};

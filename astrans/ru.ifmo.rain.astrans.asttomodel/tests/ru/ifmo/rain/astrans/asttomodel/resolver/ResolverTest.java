@@ -2,27 +2,40 @@ package ru.ifmo.rain.astrans.asttomodel.resolver;
 
 import static org.junit.Assert.*;
 
+import org.eclipse.emf.ecore.EClass;
+import org.eclipse.emf.ecore.EDataType;
+import org.eclipse.emf.ecore.EcorePackage;
 import org.junit.Before;
 import org.junit.Test;
+
+import utils.QNUtils;
 
 import astrans.AstransFactory;
 import astrans.AstransPackage;
 import astrans.CreateClass;
+import astrans.CreatedEClass;
+import astrans.EClassReference;
+import astrans.EClassifierReference;
+import astrans.ExistingEClass;
+import astrans.ExistingEDataType;
 import astrans.MapClass;
+import astrans.MappedEClass;
+import astransast.QualifiedName;
 
 public class ResolverTest {
 
 	private Resolver resolver;
-	private MappedClasses mappedClasses;
-	private CreatedClasses createdClasses;
+	private QualifiedName actionQN;
 
 	@Before
 	public void setUp() throws Exception {
-		mappedClasses = new MappedClasses();
+		actionQN = QNUtils.createQN("astrans.Action");
+		
+		MappedClasses mappedClasses = new MappedClasses();
 		MapClass a = AstransFactory.eINSTANCE.createMapClass();
 		a.setProto(AstransPackage.eINSTANCE.getAction());
 		mappedClasses.add(a);
-		createdClasses = new CreatedClasses();
+		CreatedClasses createdClasses = new CreatedClasses();
 		CreateClass b = AstransFactory.eINSTANCE.createCreateClass();
 		b.setName("B");
 		createdClasses.add(b);
@@ -31,32 +44,44 @@ public class ResolverTest {
 
 	@Test
 	public final void testResolveTranslateReferencesTextualReferenceType() {
-//		resolver.resolveTranslateReferencesTextualReferenceType(textualReferenceType);
+		EClassifierReference reference = resolver.resolveTranslateReferencesTextualReferenceType(QNUtils.createQN("ecore.EString"));
+		assertEquals(EcorePackage.eINSTANCE.getEString(), ((ExistingEDataType) reference).getEDataType());
 	}
-
+	
 	@Test
 	public final void testResolveTranslateReferencesModelReferenceTypeProto() {
-		fail("Not yet implemented");
+		EClass eClass = resolver.resolveTranslateReferencesModelReferenceTypeProto(actionQN);
+		assertEquals(AstransPackage.eINSTANCE.getAction(), eClass);
 	}
 
 	@Test
 	public final void testResolveSkipClassTargetProto() {
-		fail("Not yet implemented");
+		EClass eClass = resolver.resolveSkipClassTargetProto(actionQN);
+		assertEquals(AstransPackage.eINSTANCE.getAction(), eClass);
 	}
 
 	@Test
 	public final void testResolveCreateClassSuperclass() {
-		fail("Not yet implemented");
+		EClassReference reference = resolver.resolveCreateClassSuperclass(QNUtils.createQN("ActionAS"));
+		assertEquals("ActionAS", ((MappedEClass) reference).getMapping().getProto().getName() + "AS");
 	}
 
 	@Test
 	public final void testResolveReferenceType() {
-		fail("Not yet implemented");
+		EClassReference reference = resolver.resolveReferenceType(QNUtils.createQN("B"));
+		assertEquals("B", ((CreatedEClass) reference).getCreate().getName());
+	}
+
+	@Test
+	public final void testResolveReferenceTypeExistringEClass() {
+		EClassReference reference = resolver.resolveReferenceType(QNUtils.createQN("ecore.EClass"));
+		assertEquals(EcorePackage.eINSTANCE.getEClass(), ((ExistingEClass) reference).getEClass());
 	}
 
 	@Test
 	public final void testResolveAttributeType() {
-		fail("Not yet implemented");
+		EDataType type = resolver.resolveAttributeType(QNUtils.createQN("ecore.EInt"));
+		assertEquals(EcorePackage.eINSTANCE.getEInt(), type);
 	}
 
 }

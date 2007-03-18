@@ -40,4 +40,19 @@ public class ORTest {
 		assertSame(b, OR.<Object>get(b).or(c).getObj());
 	}	
 	
+	@Test
+	public void testCompleteArrayOr() {
+		assertSame(c, OR.or(null, c, b, a));
+	}
+	
+	@Test
+	public void testIncompleteArrayOr() {
+		assertSame(c, OR.or(c, null, b, a));
+	}
+	
+	@Test
+	@SuppressWarnings("unchecked")
+	public void testArrayOrTypes() {
+		assertSame(c, OR.or(c, b));
+	}
 }
