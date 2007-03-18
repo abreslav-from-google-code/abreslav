@@ -10,7 +10,9 @@ import ru.ifmo.rain.astrans.asttomodel.resolver.IterableClassQNTest;
 import ru.ifmo.rain.astrans.asttomodel.resolver.IterableQNTest;
 import ru.ifmo.rain.astrans.asttomodel.resolver.MappedClassesTest;
 import ru.ifmo.rain.astrans.asttomodel.resolver.MyEPackageTest;
+import ru.ifmo.rain.astrans.asttomodel.resolver.ResolverTest;
 import utils.ORTest;
+import utils.QNUtilsTest;
 
 @RunWith(Suite.class)
 @SuiteClasses({
@@ -21,6 +23,8 @@ import utils.ORTest;
 		CreatedClassesTest.class,
 		MappedClassesTest.class,
 		ORTest.class,
+		QNUtilsTest.class,
+		ResolverTest.class
 })
 public class AllTests {
 

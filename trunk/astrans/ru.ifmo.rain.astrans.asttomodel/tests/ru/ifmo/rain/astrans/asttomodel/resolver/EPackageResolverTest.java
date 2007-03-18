@@ -1,10 +1,13 @@
 package ru.ifmo.rain.astrans.asttomodel.resolver;
 
-import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.*;
 
+import org.eclipse.emf.ecore.EClassifier;
 import org.eclipse.emf.ecore.EcorePackage;
 import org.junit.Before;
 import org.junit.Test;
+
+import utils.QNUtils;
 
 import astrans.AstransPackage;
 import astransast.AstransastFactory;
@@ -40,4 +43,9 @@ public class EPackageResolverTest {
 		assertEquals(AstransPackage.eINSTANCE.getTransformation(), resolver.getEClassifier(astrans));
 	}
 
+	@Test
+	public void testGetEClassifierNameOnUnexistentPackage() {
+		EClassifier classifier = resolver.getEClassifier(QNUtils.createQN("a.b"));
+		assertNull(classifier);
+	}
 }
