@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="ASCII"?>
+<ecore:EPackage xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:ecore="http://www.eclipse.org/emf/2002/Ecore" name="astransast" nsURI="http://rain.ifmo.ru/~breslav/2007/astransast" nsPrefix="astranast">
+  <eClassifiers xsi:type="ecore:EClass" name="ActionAS" abstract="true"/>
+  <eClassifiers xsi:type="ecore:EClass" name="TranslateReferencesAS" eSuperTypes="//ActionAS">
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="includeDescendants" defaultValueLiteral="false">
+      <eType xsi:type="ecore:EDataType" href="http://www.eclipse.org/emf/2002/Ecore#//EBoolean"/>
+    </eStructuralFeatures>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="modelReferenceTypeProto" lowerBound="1" eType="//QualifiedName" containment="true"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="textualReferenceType" lowerBound="1" eType="//QualifiedName" containment="true"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="CreateClassAS" eSuperTypes="//ActionAS">
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="name" lowerBound="1">
+      <eType xsi:type="ecore:EDataType" href="http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    </eStructuralFeatures>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="abstract" defaultValueLiteral="false">
+      <eType xsi:type="ecore:EDataType" href="http://www.eclipse.org/emf/2002/Ecore#//EBoolean"/>
+    </eStructuralFeatures>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="superclasses" upperBound="-1" eType="//QualifiedName" containment="true"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="structuralFeatures" upperBound="-1" eType="//StructuralFeatureAS" containment="true"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="StructuralFeatureAS" abstract="true">
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="name" lowerBound="1">
+      <eType xsi:type="ecore:EDataType" href="http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    </eStructuralFeatures>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="lowerBound" defaultValueLiteral="0">
+      <eType xsi:type="ecore:EDataType" href="http://www.eclipse.org/emf/2002/Ecore#//EInt"/>
+    </eStructuralFeatures>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="upperBound" defaultValueLiteral="1">
+      <eType xsi:type="ecore:EDataType" href="http://www.eclipse.org/emf/2002/Ecore#//EInt"/>
+    </eStructuralFeatures>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="AttributeAS" eSuperTypes="//StructuralFeatureAS">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="type" lowerBound="1" eType="//QualifiedName" containment="true"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="ReferenceAS" eSuperTypes="//StructuralFeatureAS">
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="containment" defaultValueLiteral="false">
+      <eType xsi:type="ecore:EDataType" href="http://www.eclipse.org/emf/2002/Ecore#//EBoolean"/>
+    </eStructuralFeatures>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="type" lowerBound="1" eType="//QualifiedName" containment="true"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="ChangeInheritanceAS" eSuperTypes="//ActionAS">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="targetProto" lowerBound="1" eType="//QualifiedName" containment="true"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="superclasses" upperBound="-1" eType="//QualifiedName" containment="true"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="SkipClassAS" eSuperTypes="//ActionAS">
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="includeDescendants" defaultValueLiteral="false">
+      <eType xsi:type="ecore:EDataType" href="http://www.eclipse.org/emf/2002/Ecore#//EBoolean"/>
+    </eStructuralFeatures>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="targetProto" lowerBound="1" eType="//QualifiedName" containment="true"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="TransformationAS">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="actions" upperBound="-1" eType="//ActionAS" containment="true"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="QualifiedName">
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="name" lowerBound="1">
+      <eType xsi:type="ecore:EDataType" href="http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    </eStructuralFeatures>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="subQN" eType="//QualifiedName" containment="true"/>
+  </eClassifiers>
+</ecore:EPackage>
