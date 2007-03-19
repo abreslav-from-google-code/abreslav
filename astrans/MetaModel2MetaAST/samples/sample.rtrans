@@ -1,6 +1,0 @@
-TypeReferenceAS --create--> Type;
-ClassReferenceAS --lookup--> Class;
-PackageAS --lookup--> Package;
-VariableReferenceAS::name --lookup--> Variable;
-MethodCallAS::name --lookup--> Method;
-FieldAccessAS::name --lookup--> Field;
