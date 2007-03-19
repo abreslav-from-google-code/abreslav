@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="ASCII"?>
+<astrans:Transformation xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:astrans="http://rain.ifmo.ru/~breslav/2007/astrans">
+  <actions xsi:type="astrans:CreateClass" name="A">
+    <superclasses xsi:type="astrans:CreatedEClass" create="//@actions.1"/>
+    <superclasses xsi:type="astrans:ExistingEClass">
+      <eClass href="http://www.eclipse.org/emf/2002/Ecore#//EClassifier"/>
+    </superclasses>
+    <structuralFeatures xsi:type="astrans:Attribute" name="a">
+      <type href="http://www.eclipse.org/emf/2002/Ecore#//EInt"/>
+    </structuralFeatures>
+    <structuralFeatures xsi:type="astrans:Reference" name="b" containment="true">
+      <type xsi:type="astrans:CreatedEClass" create="//@actions.0"/>
+    </structuralFeatures>
+  </actions>
+  <actions xsi:type="astrans:CreateClass" name="B" abstract="true"/>
+</astrans:Transformation>
