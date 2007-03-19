@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<genmodel:GenModel xmi:version="2.0"
+    xmlns:xmi="http://www.omg.org/XMI" xmlns:ecore="http://www.eclipse.org/emf/2002/Ecore"
+    xmlns:genmodel="http://www.eclipse.org/emf/2002/GenModel" modelDirectory="/ru.ifmo.rain.astrans.ast/src"
+    modelPluginID="ru.ifmo.rain.astrans.ast" modelName="Astransast" importerID="org.eclipse.emf.importer.ecore">
+  <foreignModel>astransast.ecore</foreignModel>
+  <genPackages prefix="Astransast" disposableProviderFactory="true" ecorePackage="astransast.ecore#/">
+    <genClasses image="false" ecoreClass="astransast.ecore#//ActionAS"/>
+    <genClasses ecoreClass="astransast.ecore#//TranslateReferencesAS">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute astransast.ecore#//TranslateReferencesAS/includeDescendants"/>
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference astransast.ecore#//TranslateReferencesAS/modelReferenceTypeProto"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference astransast.ecore#//TranslateReferencesAS/textualReferenceType"/>
+    </genClasses>
+    <genClasses ecoreClass="astransast.ecore#//CreateClassAS">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute astransast.ecore#//CreateClassAS/name"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute astransast.ecore#//CreateClassAS/abstract"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference astransast.ecore#//CreateClassAS/superclasses"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference astransast.ecore#//CreateClassAS/structuralFeatures"/>
+    </genClasses>
+    <genClasses image="false" ecoreClass="astransast.ecore#//StructuralFeatureAS">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute astransast.ecore#//StructuralFeatureAS/name"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute astransast.ecore#//StructuralFeatureAS/lowerBound"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute astransast.ecore#//StructuralFeatureAS/upperBound"/>
+    </genClasses>
+    <genClasses ecoreClass="astransast.ecore#//AttributeAS">
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference astransast.ecore#//AttributeAS/type"/>
+    </genClasses>
+    <genClasses ecoreClass="astransast.ecore#//ReferenceAS">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute astransast.ecore#//ReferenceAS/containment"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference astransast.ecore#//ReferenceAS/type"/>
+    </genClasses>
+    <genClasses ecoreClass="astransast.ecore#//ChangeInheritanceAS">
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference astransast.ecore#//ChangeInheritanceAS/targetProto"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference astransast.ecore#//ChangeInheritanceAS/superclasses"/>
+    </genClasses>
+    <genClasses ecoreClass="astransast.ecore#//SkipClassAS">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute astransast.ecore#//SkipClassAS/includeDescendants"/>
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference astransast.ecore#//SkipClassAS/targetProto"/>
+    </genClasses>
+    <genClasses ecoreClass="astransast.ecore#//TransformationAS">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference astransast.ecore#//TransformationAS/actions"/>
+    </genClasses>
+    <genClasses ecoreClass="astransast.ecore#//QualifiedName">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute astransast.ecore#//QualifiedName/name"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference astransast.ecore#//QualifiedName/subQN"/>
+    </genClasses>
+  </genPackages>
+</genmodel:GenModel>
