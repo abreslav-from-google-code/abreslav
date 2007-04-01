@@ -22,7 +22,7 @@ class CreatedEClass extends EClassReference {
 }
 
 class MappedEClass extends EClassReference {
-	ref MapClass[1] mapping;
+	ref ecore.EClass[1] proto;
 }
 
 class ExistingEClass extends EClassReference {
@@ -31,10 +31,6 @@ class ExistingEClass extends EClassReference {
 
 class ExistingEDataType extends EClassifierReference {
 	ref ecore.EDataType[1] eDataType;
-}
-
-class MapClass extends Action {
-    ref ecore.EClass[1] proto; // proto
 }
 
 class TranslateReferences extends Action {
@@ -76,5 +72,12 @@ class SkipClass extends Action {
 }
 
 class Transformation {
-    val Action[*] actions;
+    val CreateClass[*] createClassActions;
+    val TranslateReferences[*] translateReferencesActions;
+    val ChangeInheritance[*] changeInheritanceActions;
+    val SkipClass[*] skipClassActions;
+    
+    ref ecore.EPackage input;
+    attr String outputName;
+    attr String outputNsURI;
 }

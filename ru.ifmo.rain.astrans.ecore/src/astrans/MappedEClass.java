@@ -7,6 +7,8 @@
 package astrans;
 
 
+import org.eclipse.emf.ecore.EClass;
+
 /**
  * <!-- begin-user-doc -->
  * A representation of the model object '<em><b>Mapped EClass</b></em>'.
@@ -15,7 +17,7 @@ package astrans;
  * <p>
  * The following features are supported:
  * <ul>
- *   <li>{@link astrans.MappedEClass#getMapping <em>Mapping</em>}</li>
+ *   <li>{@link astrans.MappedEClass#getProto <em>Proto</em>}</li>
  * </ul>
  * </p>
  *
@@ -25,29 +27,29 @@ package astrans;
  */
 public interface MappedEClass extends EClassReference {
 	/**
-	 * Returns the value of the '<em><b>Mapping</b></em>' reference.
+	 * Returns the value of the '<em><b>Proto</b></em>' reference.
 	 * <!-- begin-user-doc -->
 	 * <p>
-	 * If the meaning of the '<em>Mapping</em>' reference isn't clear,
+	 * If the meaning of the '<em>Proto</em>' reference isn't clear,
 	 * there really should be more of a description here...
 	 * </p>
 	 * <!-- end-user-doc -->
-	 * @return the value of the '<em>Mapping</em>' reference.
-	 * @see #setMapping(MapClass)
-	 * @see astrans.AstransPackage#getMappedEClass_Mapping()
+	 * @return the value of the '<em>Proto</em>' reference.
+	 * @see #setProto(EClass)
+	 * @see astrans.AstransPackage#getMappedEClass_Proto()
 	 * @model required="true"
 	 * @generated
 	 */
-	MapClass getMapping();
+	EClass getProto();
 
 	/**
-	 * Sets the value of the '{@link astrans.MappedEClass#getMapping <em>Mapping</em>}' reference.
+	 * Sets the value of the '{@link astrans.MappedEClass#getProto <em>Proto</em>}' reference.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @param value the new value of the '<em>Mapping</em>' reference.
-	 * @see #getMapping()
+	 * @param value the new value of the '<em>Proto</em>' reference.
+	 * @see #getProto()
 	 * @generated
 	 */
-	void setMapping(MapClass value);
+	void setProto(EClass value);
 
 } // MappedEClass

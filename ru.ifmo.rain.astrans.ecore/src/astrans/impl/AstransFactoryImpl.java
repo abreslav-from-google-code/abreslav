@@ -63,7 +63,6 @@ public class AstransFactoryImpl extends EFactoryImpl implements AstransFactory {
 			case AstransPackage.MAPPED_ECLASS: return createMappedEClass();
 			case AstransPackage.EXISTING_ECLASS: return createExistingEClass();
 			case AstransPackage.EXISTING_EDATA_TYPE: return createExistingEDataType();
-			case AstransPackage.MAP_CLASS: return createMapClass();
 			case AstransPackage.TRANSLATE_REFERENCES: return createTranslateReferences();
 			case AstransPackage.CREATE_CLASS: return createCreateClass();
 			case AstransPackage.ATTRIBUTE: return createAttribute();
@@ -114,16 +113,6 @@ public class AstransFactoryImpl extends EFactoryImpl implements AstransFactory {
 	public ExistingEDataType createExistingEDataType() {
 		ExistingEDataTypeImpl existingEDataType = new ExistingEDataTypeImpl();
 		return existingEDataType;
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	public MapClass createMapClass() {
-		MapClassImpl mapClass = new MapClassImpl();
-		return mapClass;
 	}
 
 	/**

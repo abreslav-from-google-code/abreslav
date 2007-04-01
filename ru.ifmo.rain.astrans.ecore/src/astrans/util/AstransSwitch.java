@@ -137,13 +137,6 @@ public class AstransSwitch {
 				if (result == null) result = defaultCase(theEObject);
 				return result;
 			}
-			case AstransPackage.MAP_CLASS: {
-				MapClass mapClass = (MapClass)theEObject;
-				Object result = caseMapClass(mapClass);
-				if (result == null) result = caseAction(mapClass);
-				if (result == null) result = defaultCase(theEObject);
-				return result;
-			}
 			case AstransPackage.TRANSLATE_REFERENCES: {
 				TranslateReferences translateReferences = (TranslateReferences)theEObject;
 				Object result = caseTranslateReferences(translateReferences);
@@ -304,21 +297,6 @@ public class AstransSwitch {
 	 * @generated
 	 */
 	public Object caseExistingEDataType(ExistingEDataType object) {
-		return null;
-	}
-
-	/**
-	 * Returns the result of interpretting the object as an instance of '<em>Map Class</em>'.
-	 * <!-- begin-user-doc -->
-	 * This implementation returns null;
-	 * returning a non-null result will terminate the switch.
-	 * <!-- end-user-doc -->
-	 * @param object the target of the switch.
-	 * @return the result of interpretting the object as an instance of '<em>Map Class</em>'.
-	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
-	 * @generated
-	 */
-	public Object caseMapClass(MapClass object) {
 		return null;
 	}
 

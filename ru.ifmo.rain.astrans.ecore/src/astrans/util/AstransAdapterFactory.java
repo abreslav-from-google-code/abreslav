@@ -91,9 +91,6 @@ public class AstransAdapterFactory extends AdapterFactoryImpl {
 			public Object caseExistingEDataType(ExistingEDataType object) {
 				return createExistingEDataTypeAdapter();
 			}
-			public Object caseMapClass(MapClass object) {
-				return createMapClassAdapter();
-			}
 			public Object caseTranslateReferences(TranslateReferences object) {
 				return createTranslateReferencesAdapter();
 			}
@@ -231,20 +228,6 @@ public class AstransAdapterFactory extends AdapterFactoryImpl {
 	 * @generated
 	 */
 	public Adapter createExistingEDataTypeAdapter() {
-		return null;
-	}
-
-	/**
-	 * Creates a new adapter for an object of class '{@link astrans.MapClass <em>Map Class</em>}'.
-	 * <!-- begin-user-doc -->
-	 * This default implementation returns null so that we can easily ignore cases;
-	 * it's useful to ignore a case when inheritance will catch all the cases anyway.
-	 * <!-- end-user-doc -->
-	 * @return the new adapter.
-	 * @see astrans.MapClass
-	 * @generated
-	 */
-	public Adapter createMapClassAdapter() {
 		return null;
 	}
 
