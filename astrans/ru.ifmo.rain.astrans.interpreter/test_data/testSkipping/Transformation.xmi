@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="ASCII"?>
+<astrans:Transformation xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:astrans="http://rain.ifmo.ru/~breslav/2007/astrans" outputName="astransast" outputNsURI="http://ast.ast">
+  <skipClassActions>
+    <targetProto href="input.ecore#//Transformation"/>
+  </skipClassActions>
+  <skipClassActions includeDescendants="true">
+    <targetProto href="input.ecore#//Action"/>
+  </skipClassActions>
+  <input href="input.ecore#/"/>
+</astrans:Transformation>
