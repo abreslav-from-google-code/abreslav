@@ -62,15 +62,6 @@ public interface AstransFactory extends EFactory {
 	ExistingEDataType createExistingEDataType();
 
 	/**
-	 * Returns a new object of class '<em>Map Class</em>'.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @return a new object of class '<em>Map Class</em>'.
-	 * @generated
-	 */
-	MapClass createMapClass();
-
-	/**
 	 * Returns a new object of class '<em>Translate References</em>'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->

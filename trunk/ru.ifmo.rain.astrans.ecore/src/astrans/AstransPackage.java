@@ -155,13 +155,13 @@ public interface AstransPackage extends EPackage {
 	int MAPPED_ECLASS = 4;
 
 	/**
-	 * The feature id for the '<em><b>Mapping</b></em>' reference.
+	 * The feature id for the '<em><b>Proto</b></em>' reference.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int MAPPED_ECLASS__MAPPING = ECLASS_REFERENCE_FEATURE_COUNT + 0;
+	int MAPPED_ECLASS__PROTO = ECLASS_REFERENCE_FEATURE_COUNT + 0;
 
 	/**
 	 * The number of structural features of the '<em>Mapped EClass</em>' class.
@@ -229,34 +229,6 @@ public interface AstransPackage extends EPackage {
 	int EXISTING_EDATA_TYPE_FEATURE_COUNT = ECLASSIFIER_REFERENCE_FEATURE_COUNT + 1;
 
 	/**
-	 * The meta object id for the '{@link astrans.impl.MapClassImpl <em>Map Class</em>}' class.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @see astrans.impl.MapClassImpl
-	 * @see astrans.impl.AstransPackageImpl#getMapClass()
-	 * @generated
-	 */
-	int MAP_CLASS = 7;
-
-	/**
-	 * The feature id for the '<em><b>Proto</b></em>' reference.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int MAP_CLASS__PROTO = ACTION_FEATURE_COUNT + 0;
-
-	/**
-	 * The number of structural features of the '<em>Map Class</em>' class.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int MAP_CLASS_FEATURE_COUNT = ACTION_FEATURE_COUNT + 1;
-
-	/**
 	 * The meta object id for the '{@link astrans.impl.TranslateReferencesImpl <em>Translate References</em>}' class.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -264,7 +236,7 @@ public interface AstransPackage extends EPackage {
 	 * @see astrans.impl.AstransPackageImpl#getTranslateReferences()
 	 * @generated
 	 */
-	int TRANSLATE_REFERENCES = 8;
+	int TRANSLATE_REFERENCES = 7;
 
 	/**
 	 * The feature id for the '<em><b>Model Reference Type Proto</b></em>' reference.
@@ -310,7 +282,7 @@ public interface AstransPackage extends EPackage {
 	 * @see astrans.impl.AstransPackageImpl#getCreateClass()
 	 * @generated
 	 */
-	int CREATE_CLASS = 9;
+	int CREATE_CLASS = 8;
 
 	/**
 	 * The feature id for the '<em><b>Name</b></em>' attribute.
@@ -365,7 +337,7 @@ public interface AstransPackage extends EPackage {
 	 * @see astrans.impl.AstransPackageImpl#getStructuralFeature()
 	 * @generated
 	 */
-	int STRUCTURAL_FEATURE = 10;
+	int STRUCTURAL_FEATURE = 9;
 
 	/**
 	 * The feature id for the '<em><b>Name</b></em>' attribute.
@@ -411,7 +383,7 @@ public interface AstransPackage extends EPackage {
 	 * @see astrans.impl.AstransPackageImpl#getAttribute()
 	 * @generated
 	 */
-	int ATTRIBUTE = 11;
+	int ATTRIBUTE = 10;
 
 	/**
 	 * The feature id for the '<em><b>Name</b></em>' attribute.
@@ -466,7 +438,7 @@ public interface AstransPackage extends EPackage {
 	 * @see astrans.impl.AstransPackageImpl#getReference()
 	 * @generated
 	 */
-	int REFERENCE = 12;
+	int REFERENCE = 11;
 
 	/**
 	 * The feature id for the '<em><b>Name</b></em>' attribute.
@@ -530,7 +502,7 @@ public interface AstransPackage extends EPackage {
 	 * @see astrans.impl.AstransPackageImpl#getChangeInheritance()
 	 * @generated
 	 */
-	int CHANGE_INHERITANCE = 13;
+	int CHANGE_INHERITANCE = 12;
 
 	/**
 	 * The feature id for the '<em><b>Target Proto</b></em>' reference.
@@ -567,7 +539,7 @@ public interface AstransPackage extends EPackage {
 	 * @see astrans.impl.AstransPackageImpl#getSkipClass()
 	 * @generated
 	 */
-	int SKIP_CLASS = 14;
+	int SKIP_CLASS = 13;
 
 	/**
 	 * The feature id for the '<em><b>Target Proto</b></em>' reference.
@@ -604,16 +576,70 @@ public interface AstransPackage extends EPackage {
 	 * @see astrans.impl.AstransPackageImpl#getTransformation()
 	 * @generated
 	 */
-	int TRANSFORMATION = 15;
+	int TRANSFORMATION = 14;
 
 	/**
-	 * The feature id for the '<em><b>Actions</b></em>' containment reference list.
+	 * The feature id for the '<em><b>Create Class Actions</b></em>' containment reference list.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int TRANSFORMATION__ACTIONS = 0;
+	int TRANSFORMATION__CREATE_CLASS_ACTIONS = 0;
+
+	/**
+	 * The feature id for the '<em><b>Translate References Actions</b></em>' containment reference list.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int TRANSFORMATION__TRANSLATE_REFERENCES_ACTIONS = 1;
+
+	/**
+	 * The feature id for the '<em><b>Change Inheritance Actions</b></em>' containment reference list.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int TRANSFORMATION__CHANGE_INHERITANCE_ACTIONS = 2;
+
+	/**
+	 * The feature id for the '<em><b>Skip Class Actions</b></em>' containment reference list.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int TRANSFORMATION__SKIP_CLASS_ACTIONS = 3;
+
+	/**
+	 * The feature id for the '<em><b>Input</b></em>' reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int TRANSFORMATION__INPUT = 4;
+
+	/**
+	 * The feature id for the '<em><b>Output Name</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int TRANSFORMATION__OUTPUT_NAME = 5;
+
+	/**
+	 * The feature id for the '<em><b>Output Ns URI</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int TRANSFORMATION__OUTPUT_NS_URI = 6;
 
 	/**
 	 * The number of structural features of the '<em>Transformation</em>' class.
@@ -622,7 +648,7 @@ public interface AstransPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int TRANSFORMATION_FEATURE_COUNT = 1;
+	int TRANSFORMATION_FEATURE_COUNT = 7;
 
 
 	/**
@@ -687,15 +713,15 @@ public interface AstransPackage extends EPackage {
 	EClass getMappedEClass();
 
 	/**
-	 * Returns the meta object for the reference '{@link astrans.MappedEClass#getMapping <em>Mapping</em>}'.
+	 * Returns the meta object for the reference '{@link astrans.MappedEClass#getProto <em>Proto</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @return the meta object for the reference '<em>Mapping</em>'.
-	 * @see astrans.MappedEClass#getMapping()
+	 * @return the meta object for the reference '<em>Proto</em>'.
+	 * @see astrans.MappedEClass#getProto()
 	 * @see #getMappedEClass()
 	 * @generated
 	 */
-	EReference getMappedEClass_Mapping();
+	EReference getMappedEClass_Proto();
 
 	/**
 	 * Returns the meta object for class '{@link astrans.ExistingEClass <em>Existing EClass</em>}'.
@@ -738,27 +764,6 @@ public interface AstransPackage extends EPackage {
 	 * @generated
 	 */
 	EReference getExistingEDataType_EDataType();
-
-	/**
-	 * Returns the meta object for class '{@link astrans.MapClass <em>Map Class</em>}'.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @return the meta object for class '<em>Map Class</em>'.
-	 * @see astrans.MapClass
-	 * @generated
-	 */
-	EClass getMapClass();
-
-	/**
-	 * Returns the meta object for the reference '{@link astrans.MapClass#getProto <em>Proto</em>}'.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @return the meta object for the reference '<em>Proto</em>'.
-	 * @see astrans.MapClass#getProto()
-	 * @see #getMapClass()
-	 * @generated
-	 */
-	EReference getMapClass_Proto();
 
 	/**
 	 * Returns the meta object for class '{@link astrans.TranslateReferences <em>Translate References</em>}'.
@@ -1028,15 +1033,81 @@ public interface AstransPackage extends EPackage {
 	EClass getTransformation();
 
 	/**
-	 * Returns the meta object for the containment reference list '{@link astrans.Transformation#getActions <em>Actions</em>}'.
+	 * Returns the meta object for the containment reference list '{@link astrans.Transformation#getCreateClassActions <em>Create Class Actions</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @return the meta object for the containment reference list '<em>Actions</em>'.
-	 * @see astrans.Transformation#getActions()
+	 * @return the meta object for the containment reference list '<em>Create Class Actions</em>'.
+	 * @see astrans.Transformation#getCreateClassActions()
 	 * @see #getTransformation()
 	 * @generated
 	 */
-	EReference getTransformation_Actions();
+	EReference getTransformation_CreateClassActions();
+
+	/**
+	 * Returns the meta object for the containment reference list '{@link astrans.Transformation#getTranslateReferencesActions <em>Translate References Actions</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the containment reference list '<em>Translate References Actions</em>'.
+	 * @see astrans.Transformation#getTranslateReferencesActions()
+	 * @see #getTransformation()
+	 * @generated
+	 */
+	EReference getTransformation_TranslateReferencesActions();
+
+	/**
+	 * Returns the meta object for the containment reference list '{@link astrans.Transformation#getChangeInheritanceActions <em>Change Inheritance Actions</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the containment reference list '<em>Change Inheritance Actions</em>'.
+	 * @see astrans.Transformation#getChangeInheritanceActions()
+	 * @see #getTransformation()
+	 * @generated
+	 */
+	EReference getTransformation_ChangeInheritanceActions();
+
+	/**
+	 * Returns the meta object for the containment reference list '{@link astrans.Transformation#getSkipClassActions <em>Skip Class Actions</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the containment reference list '<em>Skip Class Actions</em>'.
+	 * @see astrans.Transformation#getSkipClassActions()
+	 * @see #getTransformation()
+	 * @generated
+	 */
+	EReference getTransformation_SkipClassActions();
+
+	/**
+	 * Returns the meta object for the reference '{@link astrans.Transformation#getInput <em>Input</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the reference '<em>Input</em>'.
+	 * @see astrans.Transformation#getInput()
+	 * @see #getTransformation()
+	 * @generated
+	 */
+	EReference getTransformation_Input();
+
+	/**
+	 * Returns the meta object for the attribute '{@link astrans.Transformation#getOutputName <em>Output Name</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the attribute '<em>Output Name</em>'.
+	 * @see astrans.Transformation#getOutputName()
+	 * @see #getTransformation()
+	 * @generated
+	 */
+	EAttribute getTransformation_OutputName();
+
+	/**
+	 * Returns the meta object for the attribute '{@link astrans.Transformation#getOutputNsURI <em>Output Ns URI</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the attribute '<em>Output Ns URI</em>'.
+	 * @see astrans.Transformation#getOutputNsURI()
+	 * @see #getTransformation()
+	 * @generated
+	 */
+	EAttribute getTransformation_OutputNsURI();
 
 	/**
 	 * Returns the factory that creates the instances of the model.
@@ -1119,12 +1190,12 @@ public interface AstransPackage extends EPackage {
 		EClass MAPPED_ECLASS = eINSTANCE.getMappedEClass();
 
 		/**
-		 * The meta object literal for the '<em><b>Mapping</b></em>' reference feature.
+		 * The meta object literal for the '<em><b>Proto</b></em>' reference feature.
 		 * <!-- begin-user-doc -->
 		 * <!-- end-user-doc -->
 		 * @generated
 		 */
-		EReference MAPPED_ECLASS__MAPPING = eINSTANCE.getMappedEClass_Mapping();
+		EReference MAPPED_ECLASS__PROTO = eINSTANCE.getMappedEClass_Proto();
 
 		/**
 		 * The meta object literal for the '{@link astrans.impl.ExistingEClassImpl <em>Existing EClass</em>}' class.
@@ -1161,24 +1232,6 @@ public interface AstransPackage extends EPackage {
 		 * @generated
 		 */
 		EReference EXISTING_EDATA_TYPE__EDATA_TYPE = eINSTANCE.getExistingEDataType_EDataType();
-
-		/**
-		 * The meta object literal for the '{@link astrans.impl.MapClassImpl <em>Map Class</em>}' class.
-		 * <!-- begin-user-doc -->
-		 * <!-- end-user-doc -->
-		 * @see astrans.impl.MapClassImpl
-		 * @see astrans.impl.AstransPackageImpl#getMapClass()
-		 * @generated
-		 */
-		EClass MAP_CLASS = eINSTANCE.getMapClass();
-
-		/**
-		 * The meta object literal for the '<em><b>Proto</b></em>' reference feature.
-		 * <!-- begin-user-doc -->
-		 * <!-- end-user-doc -->
-		 * @generated
-		 */
-		EReference MAP_CLASS__PROTO = eINSTANCE.getMapClass_Proto();
 
 		/**
 		 * The meta object literal for the '{@link astrans.impl.TranslateReferencesImpl <em>Translate References</em>}' class.
@@ -1397,12 +1450,60 @@ public interface AstransPackage extends EPackage {
 		EClass TRANSFORMATION = eINSTANCE.getTransformation();
 
 		/**
-		 * The meta object literal for the '<em><b>Actions</b></em>' containment reference list feature.
+		 * The meta object literal for the '<em><b>Create Class Actions</b></em>' containment reference list feature.
 		 * <!-- begin-user-doc -->
 		 * <!-- end-user-doc -->
 		 * @generated
 		 */
-		EReference TRANSFORMATION__ACTIONS = eINSTANCE.getTransformation_Actions();
+		EReference TRANSFORMATION__CREATE_CLASS_ACTIONS = eINSTANCE.getTransformation_CreateClassActions();
+
+		/**
+		 * The meta object literal for the '<em><b>Translate References Actions</b></em>' containment reference list feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EReference TRANSFORMATION__TRANSLATE_REFERENCES_ACTIONS = eINSTANCE.getTransformation_TranslateReferencesActions();
+
+		/**
+		 * The meta object literal for the '<em><b>Change Inheritance Actions</b></em>' containment reference list feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EReference TRANSFORMATION__CHANGE_INHERITANCE_ACTIONS = eINSTANCE.getTransformation_ChangeInheritanceActions();
+
+		/**
+		 * The meta object literal for the '<em><b>Skip Class Actions</b></em>' containment reference list feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EReference TRANSFORMATION__SKIP_CLASS_ACTIONS = eINSTANCE.getTransformation_SkipClassActions();
+
+		/**
+		 * The meta object literal for the '<em><b>Input</b></em>' reference feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EReference TRANSFORMATION__INPUT = eINSTANCE.getTransformation_Input();
+
+		/**
+		 * The meta object literal for the '<em><b>Output Name</b></em>' attribute feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EAttribute TRANSFORMATION__OUTPUT_NAME = eINSTANCE.getTransformation_OutputName();
+
+		/**
+		 * The meta object literal for the '<em><b>Output Ns URI</b></em>' attribute feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EAttribute TRANSFORMATION__OUTPUT_NS_URI = eINSTANCE.getTransformation_OutputNsURI();
 
 	}
 

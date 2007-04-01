@@ -24,7 +24,7 @@ import org.eclipse.emf.ecore.impl.ENotificationImpl;
  * <p>
  * The following features are implemented:
  * <ul>
- *   <li>{@link astrans.impl.MappedEClassImpl#getMapping <em>Mapping</em>}</li>
+ *   <li>{@link astrans.impl.MappedEClassImpl#getProto <em>Proto</em>}</li>
  * </ul>
  * </p>
  *
@@ -32,14 +32,14 @@ import org.eclipse.emf.ecore.impl.ENotificationImpl;
  */
 public class MappedEClassImpl extends EClassReferenceImpl implements MappedEClass {
 	/**
-	 * The cached value of the '{@link #getMapping() <em>Mapping</em>}' reference.
+	 * The cached value of the '{@link #getProto() <em>Proto</em>}' reference.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @see #getMapping()
+	 * @see #getProto()
 	 * @generated
 	 * @ordered
 	 */
-	protected MapClass mapping = null;
+	protected EClass proto = null;
 
 	/**
 	 * <!-- begin-user-doc -->
@@ -64,16 +64,16 @@ public class MappedEClassImpl extends EClassReferenceImpl implements MappedEClas
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public MapClass getMapping() {
-		if (mapping != null && mapping.eIsProxy()) {
-			InternalEObject oldMapping = (InternalEObject)mapping;
-			mapping = (MapClass)eResolveProxy(oldMapping);
-			if (mapping != oldMapping) {
+	public EClass getProto() {
+		if (proto != null && proto.eIsProxy()) {
+			InternalEObject oldProto = (InternalEObject)proto;
+			proto = (EClass)eResolveProxy(oldProto);
+			if (proto != oldProto) {
 				if (eNotificationRequired())
-					eNotify(new ENotificationImpl(this, Notification.RESOLVE, AstransPackage.MAPPED_ECLASS__MAPPING, oldMapping, mapping));
+					eNotify(new ENotificationImpl(this, Notification.RESOLVE, AstransPackage.MAPPED_ECLASS__PROTO, oldProto, proto));
 			}
 		}
-		return mapping;
+		return proto;
 	}
 
 	/**
@@ -81,8 +81,8 @@ public class MappedEClassImpl extends EClassReferenceImpl implements MappedEClas
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public MapClass basicGetMapping() {
-		return mapping;
+	public EClass basicGetProto() {
+		return proto;
 	}
 
 	/**
@@ -90,11 +90,11 @@ public class MappedEClassImpl extends EClassReferenceImpl implements MappedEClas
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public void setMapping(MapClass newMapping) {
-		MapClass oldMapping = mapping;
-		mapping = newMapping;
+	public void setProto(EClass newProto) {
+		EClass oldProto = proto;
+		proto = newProto;
 		if (eNotificationRequired())
-			eNotify(new ENotificationImpl(this, Notification.SET, AstransPackage.MAPPED_ECLASS__MAPPING, oldMapping, mapping));
+			eNotify(new ENotificationImpl(this, Notification.SET, AstransPackage.MAPPED_ECLASS__PROTO, oldProto, proto));
 	}
 
 	/**
@@ -104,9 +104,9 @@ public class MappedEClassImpl extends EClassReferenceImpl implements MappedEClas
 	 */
 	public Object eGet(int featureID, boolean resolve, boolean coreType) {
 		switch (featureID) {
-			case AstransPackage.MAPPED_ECLASS__MAPPING:
-				if (resolve) return getMapping();
-				return basicGetMapping();
+			case AstransPackage.MAPPED_ECLASS__PROTO:
+				if (resolve) return getProto();
+				return basicGetProto();
 		}
 		return super.eGet(featureID, resolve, coreType);
 	}
@@ -118,8 +118,8 @@ public class MappedEClassImpl extends EClassReferenceImpl implements MappedEClas
 	 */
 	public void eSet(int featureID, Object newValue) {
 		switch (featureID) {
-			case AstransPackage.MAPPED_ECLASS__MAPPING:
-				setMapping((MapClass)newValue);
+			case AstransPackage.MAPPED_ECLASS__PROTO:
+				setProto((EClass)newValue);
 				return;
 		}
 		super.eSet(featureID, newValue);
@@ -132,8 +132,8 @@ public class MappedEClassImpl extends EClassReferenceImpl implements MappedEClas
 	 */
 	public void eUnset(int featureID) {
 		switch (featureID) {
-			case AstransPackage.MAPPED_ECLASS__MAPPING:
-				setMapping((MapClass)null);
+			case AstransPackage.MAPPED_ECLASS__PROTO:
+				setProto((EClass)null);
 				return;
 		}
 		super.eUnset(featureID);
@@ -146,8 +146,8 @@ public class MappedEClassImpl extends EClassReferenceImpl implements MappedEClas
 	 */
 	public boolean eIsSet(int featureID) {
 		switch (featureID) {
-			case AstransPackage.MAPPED_ECLASS__MAPPING:
-				return mapping != null;
+			case AstransPackage.MAPPED_ECLASS__PROTO:
+				return proto != null;
 		}
 		return super.eIsSet(featureID);
 	}
