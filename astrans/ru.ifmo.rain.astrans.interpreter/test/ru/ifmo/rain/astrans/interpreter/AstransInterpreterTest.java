@@ -37,7 +37,7 @@ public class AstransInterpreterTest {
 		File testDir = new File(testDirName);
 		File[] files = testDir.listFiles();
 		for (File file : files) {
-			if (file.isDirectory()) {
+			if (file.isDirectory() && !file.isHidden()) {
 				String path = file.getPath();
 				result.add(new Object[] {
 					path + "/input.ecore",
