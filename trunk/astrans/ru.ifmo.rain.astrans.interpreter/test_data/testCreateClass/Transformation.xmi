@@ -1,6 +1,9 @@
 <?xml version="1.0" encoding="ASCII"?>
 <astrans:Transformation xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:astrans="http://rain.ifmo.ru/~breslav/2007/astrans" outputName="astransast" outputNsURI="http://ast.ast">
   <createClassActions name="NewClass" abstract="true">
+    <superclasses xsi:type="astrans:ExistingEClass">
+      <eClass href="http://www.eclipse.org/emf/2002/Ecore#//EAnnotation"/>
+    </superclasses>
     <structuralFeatures xsi:type="astrans:Attribute" name="a" lowerBound="1" upperBound="2">
       <type href="http://www.eclipse.org/emf/2002/Ecore#//EShort"/>
     </structuralFeatures>

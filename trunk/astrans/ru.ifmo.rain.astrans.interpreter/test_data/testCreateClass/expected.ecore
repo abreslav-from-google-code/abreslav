@@ -83,11 +83,10 @@
     <eStructuralFeatures xsi:type="ecore:EReference" name="input" eType="ecore:EClass http://www.eclipse.org/emf/2002/Ecore#//EPackage"
         containment="true"/>
   </eClassifiers>
-  <eClassifiers xsi:type="ecore:EClass" name="NewClass" abstract="true">
+  <eClassifiers xsi:type="ecore:EClass" name="NewClass" abstract="true" eSuperTypes="http://www.eclipse.org/emf/2002/Ecore#//EAnnotation">
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="a" lowerBound="1" upperBound="2"
         eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EShort"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="r" lowerBound="5" upperBound="8"
-        eType="ecore:EClass http://www.eclipse.org/emf/2002/Ecore#//EReference"
-        containment="true"/>
+        eType="ecore:EClass http://www.eclipse.org/emf/2002/Ecore#//EReference" containment="true"/>
   </eClassifiers>
 </ecore:EPackage>

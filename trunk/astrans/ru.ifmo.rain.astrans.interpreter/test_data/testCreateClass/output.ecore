@@ -92,6 +92,7 @@
     </eStructuralFeatures>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="NewClass" abstract="true">
+    <eSuperTypes href="http://www.eclipse.org/emf/2002/Ecore#//EAnnotation"/>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="a" lowerBound="1" upperBound="2">
       <eType xsi:type="ecore:EDataType" href="http://www.eclipse.org/emf/2002/Ecore#//EShort"/>
     </eStructuralFeatures>
