@@ -18,9 +18,9 @@ import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;
 import org.junit.runners.Parameterized.Parameters;
 
+import ru.ifmo.rain.astrans.utils.Difference;
 import ru.ifmo.rain.astrans.utils.EMFComparator;
 import ru.ifmo.rain.astrans.utils.EMFHelper;
-import ru.ifmo.rain.astrans.utils.EMFComparator.Diagnostic;
 import astrans.AstransPackage;
 import astrans.Transformation;
 
@@ -82,7 +82,7 @@ public class AstransInterpreterTest {
 		
 		EMFHelper.saveEObjectToFile(output, outputFileName);
 
-		Diagnostic diagnostic = EMFComparator.comapre(expected, output);
+		Difference diagnostic = EMFComparator.comapre(expected, output);
 		
 		assertTrue(diagnostic.toString(), diagnostic.areEqual());
 	}
