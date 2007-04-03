@@ -8,7 +8,6 @@ import ru.ifmo.rain.astrans.asttomodel.resolver.CreatedClassesTest;
 import ru.ifmo.rain.astrans.asttomodel.resolver.EPackageResolverTest;
 import ru.ifmo.rain.astrans.asttomodel.resolver.IterableClassQNTest;
 import ru.ifmo.rain.astrans.asttomodel.resolver.IterableQNTest;
-import ru.ifmo.rain.astrans.asttomodel.resolver.MappedClassesTest;
 import ru.ifmo.rain.astrans.asttomodel.resolver.MyEPackageTest;
 import ru.ifmo.rain.astrans.asttomodel.resolver.ResolverTest;
 import utils.ORTest;
@@ -21,7 +20,6 @@ import utils.QNUtilsTest;
 		IterableQNTest.class, 
 		MyEPackageTest.class,
 		CreatedClassesTest.class,
-		MappedClassesTest.class,
 		ORTest.class,
 		QNUtilsTest.class,
 		ResolverTest.class

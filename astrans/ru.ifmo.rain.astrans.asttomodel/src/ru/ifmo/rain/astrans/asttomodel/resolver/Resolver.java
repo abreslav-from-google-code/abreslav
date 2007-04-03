@@ -20,13 +20,11 @@ import astransast.QualifiedName;
 public class Resolver {		
 	
 	private final CreatedClasses createdClasses;
-	private final MappedClasses mappedClasses;	
 	private final EPackageResolver ecore = new EPackageResolver(EcorePackage.eINSTANCE);
 	private final EPackageResolver proto;
 	
-	public Resolver(EPackage sourceEPackage, CreatedClasses createdClasses, MappedClasses mappedClasses) {
+	public Resolver(EPackage sourceEPackage, CreatedClasses createdClasses) {
 		this.createdClasses = createdClasses;
-		this.mappedClasses = mappedClasses;
 		this.proto = new EPackageResolver(sourceEPackage);
 	}
 
@@ -37,7 +35,6 @@ public class Resolver {
 	private EClassifierReference getAnyFromAll(QualifiedName qn) {
 		return OR.<EClassifierReference>get(proto.getEClassifierReference(qn))
 					.or(ecore.getEClassifierReference(qn))
-					.or(mappedClasses.getReference(qn))
 					.or(createdClasses.getReference(qn))
 					.getObj();
 	}
@@ -80,7 +77,6 @@ public class Resolver {
 	private EClassReference lookupClass(QualifiedName superClassQN) {
 		return OR.<EClassReference>get(proto.getExistingEClass(superClassQN))
 			.or(ecore.getExistingEClass(superClassQN))
-			.or(mappedClasses.getReference(superClassQN))
 			.or(createdClasses.getReference(superClassQN))
 			.getObj();
 	}

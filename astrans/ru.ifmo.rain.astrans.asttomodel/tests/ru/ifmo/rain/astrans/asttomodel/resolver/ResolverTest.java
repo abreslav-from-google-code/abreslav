@@ -1,6 +1,6 @@
 package ru.ifmo.rain.astrans.asttomodel.resolver;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
 
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.EDataType;
@@ -9,7 +9,6 @@ import org.junit.Before;
 import org.junit.Test;
 
 import utils.QNUtils;
-
 import astrans.AstransFactory;
 import astrans.AstransPackage;
 import astrans.CreateClass;
@@ -18,8 +17,6 @@ import astrans.EClassReference;
 import astrans.EClassifierReference;
 import astrans.ExistingEClass;
 import astrans.ExistingEDataType;
-import astrans.MapClass;
-import astrans.MappedEClass;
 import astransast.QualifiedName;
 
 public class ResolverTest {
@@ -31,15 +28,11 @@ public class ResolverTest {
 	public void setUp() throws Exception {
 		actionQN = QNUtils.createQN("astrans.Action");
 		
-		MappedClasses mappedClasses = new MappedClasses();
-		MapClass a = AstransFactory.eINSTANCE.createMapClass();
-		a.setProto(AstransPackage.eINSTANCE.getAction());
-		mappedClasses.add(a);
 		CreatedClasses createdClasses = new CreatedClasses();
 		CreateClass b = AstransFactory.eINSTANCE.createCreateClass();
 		b.setName("B");
 		createdClasses.add(b);
-		resolver = new Resolver(AstransPackage.eINSTANCE, createdClasses, mappedClasses);
+		resolver = new Resolver(AstransPackage.eINSTANCE, createdClasses);
 	}
 
 	@Test
@@ -62,8 +55,8 @@ public class ResolverTest {
 
 	@Test
 	public final void testResolveCreateClassSuperclass() {
-		EClassReference reference = resolver.resolveCreateClassSuperclass(QNUtils.createQN("ActionAS"));
-		assertEquals("ActionAS", ((MappedEClass) reference).getMapping().getProto().getName() + "AS");
+		EClassReference reference = resolver.resolveCreateClassSuperclass(QNUtils.createQN("ecore.EClass"));
+		assertEquals(EcorePackage.eINSTANCE.getEClass(), ((ExistingEClass) reference).getEClass());
 	}
 
 	@Test
