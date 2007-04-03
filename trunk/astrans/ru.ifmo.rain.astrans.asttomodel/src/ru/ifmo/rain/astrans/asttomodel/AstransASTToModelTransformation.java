@@ -8,15 +8,16 @@ import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.ecore.EObject;
 
 import ru.ifmo.rain.astrans.asttomodel.resolver.CreatedClasses;
-import ru.ifmo.rain.astrans.asttomodel.resolver.MappedClasses;
 import ru.ifmo.rain.astrans.asttomodel.resolver.Resolver;
 import astrans.AstransFactory;
 import astrans.Attribute;
+import astrans.ChangeInheritance;
 import astrans.CreateClass;
 import astrans.Reference;
 import astrans.SkipClass;
 import astrans.Transformation;
 import astrans.TranslateReferences;
+import astrans.util.AstransSwitch;
 import astransast.ActionAS;
 import astransast.AstransastPackage;
 import astransast.AttributeAS;
@@ -32,16 +33,40 @@ import astransast.util.AstransastSwitch;
 public class AstransASTToModelTransformation {
 
 	private final CreatedClasses createdClasses = new CreatedClasses();
-	private final MappedClasses mappedClasses = new MappedClasses();
 	
 	private final AstransastSwitch creator = new AstransastSwitch() {
 		@Override
 		public Transformation caseTransformationAS(TransformationAS transformationAS) {
-			Transformation transformation = AstransFactory.eINSTANCE.createTransformation();
+			final Transformation transformation = AstransFactory.eINSTANCE.createTransformation();
+			AstransSwitch actionAdder = new AstransSwitch() {
+				@Override
+				public Object caseCreateClass(CreateClass object) {
+					transformation.getCreateClassActions().add(object);
+					return null;
+				}
+				
+				@Override
+				public Object caseChangeInheritance(ChangeInheritance object) {
+					transformation.getChangeInheritanceActions().add(object);
+					return null;
+				}
+				
+				@Override
+				public Object caseTranslateReferences(TranslateReferences object) {
+					transformation.getTranslateReferencesActions().add(object);
+					return null;
+				}
+				
+				@Override
+				public Object caseSkipClass(SkipClass object) {
+					transformation.getSkipClassActions().add(object);
+					return null;
+				}
+			};
 			EList actions = transformationAS.getActions();
 			for (Iterator iter = actions.iterator(); iter.hasNext();) {
 				ActionAS actionAS = (ActionAS) iter.next();
-				transformation.getActions().add(doSwitch(actionAS));
+				actionAdder.doSwitch((EObject) doSwitch(actionAS));
 			}
 			return transformation;
 		}
@@ -146,7 +171,7 @@ public class AstransASTToModelTransformation {
 		}
 	};
 	
-	private final Resolver resolver = new Resolver(AstransastPackage.eINSTANCE, createdClasses, mappedClasses);
+	private final Resolver resolver = new Resolver(AstransastPackage.eINSTANCE, createdClasses);
 	
 	private final List<Runnable> commands = new ArrayList<Runnable>();
 	
