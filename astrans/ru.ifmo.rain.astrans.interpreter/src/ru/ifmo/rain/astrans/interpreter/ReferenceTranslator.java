@@ -19,45 +19,49 @@ class ReferenceTranslator {
 	private final AstransInterpreterTrace trace;
 	private final Transformation transformation;
 	private final ReferenceResolver referenceResolver;
-	private final Skipper skipper;
+	private final EClassSet skipper;
+	private final EClassMap<EClassifier> translatedTypes = new EClassMap<EClassifier>();
 	private final Map<EClass, EClassifier> referenceMap = new HashMap<EClass, EClassifier>();
 	
-	public ReferenceTranslator(Transformation transformation, AstransInterpreterTrace trace, Skipper skipper) {
+	public ReferenceTranslator(Transformation transformation, AstransInterpreterTrace trace, EClassSet skipper) {
 		this.transformation = transformation;
 		this.trace = trace;
 		this.skipper = skipper;
 		this.referenceResolver = new ReferenceResolver(trace);
-		
+
 		for (Iterator iter = this.transformation.getTranslateReferencesActions().iterator(); iter.hasNext();) {
 			TranslateReferences action = (TranslateReferences) iter.next();
-
-			EClass modelReferenceTypeProto = action.getModelReferenceTypeProto();
-			EClassifierReference textualReferenceType = action.getTextualReferenceType();
-			
-			referenceMap.put(modelReferenceTypeProto, (EClassifier) referenceResolver.doSwitch(textualReferenceType));
+			translatedTypes.put(
+					action.getModelReferenceTypeProto(), 
+					(EClassifier) referenceResolver.doSwitch(action.getTextualReferenceType()), 
+					action.isIncludeDescendants());
 		}
 	}
 
 	public EClassifier translateReferenceType(EClass eClass) {
 		EClassifier result = trace.getMappedClass(eClass);
-		for (Iterator iter = transformation.getTranslateReferencesActions().iterator(); iter.hasNext();) {
-			TranslateReferences action = (TranslateReferences) iter.next();
-			EClass modelReferenceTypeProto = action.getModelReferenceTypeProto();
-			boolean applicable;
-			if (action.isIncludeDescendants()) {
-				applicable = modelReferenceTypeProto.isSuperTypeOf(eClass);
-			} else {
-				applicable = modelReferenceTypeProto == eClass;
-			}
-			if (applicable) {
-				EClassifier textualReferenceType = resolveEClassifierReference(action.getTextualReferenceType());
-				result = textualReferenceType;
-				break;
-			}
+//		for (Iterator iter = transformation.getTranslateReferencesActions().iterator(); iter.hasNext();) {
+//			TranslateReferences action = (TranslateReferences) iter.next();
+//			EClass modelReferenceTypeProto = action.getModelReferenceTypeProto();
+//			boolean applicable;
+//			if (action.isIncludeDescendants()) {
+//				applicable = modelReferenceTypeProto.isSuperTypeOf(eClass);
+//			} else {
+//				applicable = modelReferenceTypeProto == eClass;
+//			}
+//			if (applicable) {
+//				EClassifier textualReferenceType = resolveEClassifierReference(action.getTextualReferenceType());
+//				result = textualReferenceType;
+//				break;
+//			}
+//		}
+		EClassifier translatedType = translatedTypes.get(eClass);
+		if (translatedType != null) {
+			result = translatedType;
 		}
 		
 		if (result == null) {
-			if (!skipper.isSkipped(eClass)) {
+			if (!skipper.contains(eClass)) {
 				result = eClass;
 			}
 		}

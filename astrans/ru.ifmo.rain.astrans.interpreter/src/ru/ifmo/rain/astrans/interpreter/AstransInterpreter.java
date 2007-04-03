@@ -34,21 +34,21 @@ public class AstransInterpreter {
 //		this.composer = new Composer(referenceTranslator);
 //	}
 
-	public static Collection<EClass> createEClassObjects(Transformation transformation, AstransInterpreterTrace trace, Skipper skipper) {
+	public static Collection<EClass> createEClassObjects(Transformation transformation, AstransInterpreterTrace trace, EClassSet skipper) {
 		ArrayList<EClass> classes = new ArrayList<EClass>();
 		mapClasses(transformation, trace, classes, skipper);
 		createClasses(transformation, trace, classes);
 		return classes;
 	}
 
-	private static void mapClasses(Transformation transformation, AstransInterpreterTrace trace, Collection<EClass> classes, Skipper skipper) {
+	private static void mapClasses(Transformation transformation, AstransInterpreterTrace trace, Collection<EClass> classes, EClassSet skipper) {
 		EList classifiers = transformation.getInput().getEClassifiers();
 		for (Iterator iter = classifiers.iterator(); iter.hasNext();) {
 			EClassifier eClassifier = (EClassifier) iter.next();
 			if (eClassifier instanceof EClass) {
 				EClass proto = (EClass) eClassifier;
 
-				if (skipper.isSkipped(proto)) {
+				if (skipper.contains(proto)) {
 					continue;
 				}	
 				
@@ -60,11 +60,11 @@ public class AstransInterpreter {
 		}
 	}
 
-	private static Skipper createSkipper(Transformation transformation) {
-		Skipper skipper = new Skipper();
+	private static EClassSet createSkipper(Transformation transformation) {
+		EClassSet skipper = new EClassSet();
 		for (Iterator iter = transformation.getSkipClassActions().iterator(); iter.hasNext();) {
 			SkipClass action = (SkipClass) iter.next();
-			skipper.addSkippedEClass(action.getTargetProto(), action.isIncludeDescendants());
+			skipper.addEClass(action.getTargetProto(), action.isIncludeDescendants());
 		}
 		return skipper;
 	}
@@ -90,7 +90,7 @@ public class AstransInterpreter {
 	public static EPackage run(Transformation transformation) {
 		
 		AstransInterpreterTrace trace = new AstransInterpreterTrace();
-		Skipper skipper = createSkipper(transformation);
+		EClassSet skipper = createSkipper(transformation);
 		Collection<EClass> classes = createEClassObjects(transformation, trace, skipper);
 
 		ReferenceTranslator referenceTranslator = new ReferenceTranslator(transformation, trace, skipper);
