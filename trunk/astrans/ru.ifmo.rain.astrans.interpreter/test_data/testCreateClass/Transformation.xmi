@@ -1,15 +1,17 @@
 <?xml version="1.0" encoding="ASCII"?>
 <astrans:Transformation xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:astrans="http://rain.ifmo.ru/~breslav/2007/astrans" outputName="astransast" outputNsURI="http://ast.ast">
-  <createClassActions name="NewClass" abstract="true"/>
-  <translateReferencesActions>
-    <modelReferenceTypeProto href="input.ecore#//StructuralFeature"/>
-    <textualReferenceType xsi:type="astrans:CreatedEClass" create="//@createClassActions.0"/>
-  </translateReferencesActions>
-  <translateReferencesActions includeDescendants="true">
-    <modelReferenceTypeProto href="input.ecore#//Action"/>
-    <textualReferenceType xsi:type="astrans:MappedEClass">
-      <proto href="input.ecore#//SkipClass"/>
-    </textualReferenceType>
-  </translateReferencesActions>
+  <createClassActions name="NewClass" abstract="true">
+    <superclasses xsi:type="astrans:ExistingEClass">
+      <eClass href="http://www.eclipse.org/emf/2002/Ecore#//EAnnotation"/>
+    </superclasses>
+    <structuralFeatures xsi:type="astrans:Attribute" name="a" lowerBound="1" upperBound="2">
+      <type href="http://www.eclipse.org/emf/2002/Ecore#//EShort"/>
+    </structuralFeatures>
+    <structuralFeatures xsi:type="astrans:Reference" name="r" lowerBound="5" upperBound="8" containment="true">
+      <type xsi:type="astrans:ExistingEClass">
+        <eClass href="http://www.eclipse.org/emf/2002/Ecore#//EReference"/>
+      </type>
+    </structuralFeatures>
+  </createClassActions>
   <input href="input.ecore#/"/>
 </astrans:Transformation>

@@ -8,7 +8,7 @@
   <eClassifiers xsi:type="ecore:EClass" name="EClassReferenceAS" abstract="true" eSuperTypes="#//EClassifierReferenceAS"/>
   <eClassifiers xsi:type="ecore:EClass" name="CreatedEClassAS" eSuperTypes="#//EClassReferenceAS">
     <eStructuralFeatures xsi:type="ecore:EReference" name="create" lowerBound="1"
-        eType="#//SkipClassAS" containment="true"/>
+        eType="#//CreateClassAS" containment="true"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="MappedEClassAS" eSuperTypes="#//EClassReferenceAS">
     <eStructuralFeatures xsi:type="ecore:EReference" name="proto" lowerBound="1" eType="ecore:EClass http://www.eclipse.org/emf/2002/Ecore#//EClass"
@@ -38,7 +38,7 @@
     <eStructuralFeatures xsi:type="ecore:EReference" name="superclasses" upperBound="-1"
         eType="#//EClassReferenceAS" containment="true"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="structuralFeatures" upperBound="-1"
-        eType="#//NewClass" containment="true"/>
+        eType="#//StructuralFeatureAS" containment="true"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="StructuralFeatureAS" abstract="true">
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="name" lowerBound="1" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
@@ -73,15 +73,20 @@
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="outputName" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="outputNsURI" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="createClassActions" upperBound="-1"
-        eType="#//SkipClassAS" containment="true"/>
+        eType="#//CreateClassAS" containment="true"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="translateReferencesActions"
-        upperBound="-1" eType="#//SkipClassAS" containment="true"/>
+        upperBound="-1" eType="#//TranslateReferencesAS" containment="true"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="changeInheritanceActions"
-        upperBound="-1" eType="#//SkipClassAS" containment="true"/>
+        upperBound="-1" eType="#//ChangeInheritanceAS" containment="true"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="skipClassActions" upperBound="-1"
         eType="#//SkipClassAS" containment="true"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="input" eType="ecore:EClass http://www.eclipse.org/emf/2002/Ecore#//EPackage"
         containment="true"/>
   </eClassifiers>
-  <eClassifiers xsi:type="ecore:EClass" name="NewClass" abstract="true"/>
+  <eClassifiers xsi:type="ecore:EClass" name="NewClass" abstract="true" eSuperTypes="http://www.eclipse.org/emf/2002/Ecore#//EAnnotation">
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="a" lowerBound="1" upperBound="2"
+        eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EShort"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="r" lowerBound="5" upperBound="8"
+        eType="ecore:EClass http://www.eclipse.org/emf/2002/Ecore#//EReference" containment="true"/>
+  </eClassifiers>
 </ecore:EPackage>
