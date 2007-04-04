@@ -77,4 +77,9 @@ public class ResolverTest {
 		assertEquals(EcorePackage.eINSTANCE.getEInt(), type);
 	}
 
+	@Test
+	public void testResolveChangeInheritanceTargetProto() {
+		EClass eClass = resolver.resolveChangeInheritanceTargetProto(actionQN);
+		assertEquals(AstransPackage.eINSTANCE.getAction(), eClass);
+	}
 }

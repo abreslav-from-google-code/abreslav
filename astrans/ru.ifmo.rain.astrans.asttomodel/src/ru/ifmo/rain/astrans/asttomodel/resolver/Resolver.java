@@ -63,6 +63,14 @@ public class Resolver {
 		return ref == null ? null : ref.getEDataType();
 	}
 
+	public EClass resolveChangeInheritanceTargetProto(QualifiedName targetProto) {
+		return lookupProtoClass(targetProto);
+	}
+
+	public EClassReference resolveChangeInheritanceSuperclass(QualifiedName superclass) {
+		return lookupClass(superclass);
+	}
+	
 	private EClass lookupProtoClass(QualifiedName modelReferenceTypeProto) {
 		/* 
 		 * We lookup in Ecore due to problems with determinig input model 

@@ -17,6 +17,7 @@ import ru.ifmo.rain.astrans.utils.EMFHelper;
 import astrans.AstransFactory;
 import astrans.AstransPackage;
 import astrans.Attribute;
+import astrans.ChangeInheritance;
 import astrans.CreateClass;
 import astrans.Reference;
 import astrans.SkipClass;
@@ -182,8 +183,21 @@ public class AstransASTToModelTransformation {
 		}
 		
 		@Override
-		public Object caseChangeInheritanceAS(ChangeInheritanceAS object) {
-			return new UnsupportedOperationException();
+		public ChangeInheritance caseChangeInheritanceAS(final ChangeInheritanceAS changeInheritanceAS) {
+			final ChangeInheritance changeInheritance = AstransFactory.eINSTANCE.createChangeInheritance();
+			addCommand(new Runnable() {
+				public void run() {
+					changeInheritance.setTargetProto(
+							resolver.resolveChangeInheritanceTargetProto(
+									changeInheritanceAS.getTargetProto()));
+					EList superclasses = changeInheritanceAS.getSuperclasses();
+					for (Iterator iter = superclasses.iterator(); iter.hasNext();) {
+						QualifiedName superclass = (QualifiedName) iter.next();
+						changeInheritance.getSuperclasses().add(resolver.resolveChangeInheritanceSuperclass(superclass));
+					}
+				}
+			});			
+			return changeInheritance;
 		}
 	};
 	
