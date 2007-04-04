@@ -79,7 +79,8 @@ public class AstransInterpreterTest {
 		EcoreUtil.resolve(transformation.getInput(), resourceSet);
 		EPackage output = AstransInterpreter.run(transformation);
 		
-		EMFHelper.saveEObjectToFile(output, outputFileName);
+		Resource resource = EMFHelper.wrapIntoXMIResource(output, "output.ecore");
+		EMFHelper.saveResourceToFile(resource, outputFileName);
 
 		Difference diagnostic = EMFComparator.comapre(expected, output);
 		
