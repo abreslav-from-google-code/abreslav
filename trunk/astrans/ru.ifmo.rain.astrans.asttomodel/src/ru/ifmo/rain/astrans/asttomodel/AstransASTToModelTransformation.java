@@ -22,7 +22,6 @@ import astrans.Reference;
 import astrans.SkipClass;
 import astrans.Transformation;
 import astrans.TranslateReferences;
-import astransast.AstransastPackage;
 import astransast.AttributeAS;
 import astransast.ChangeInheritanceAS;
 import astransast.CreateClassAS;
@@ -80,6 +79,7 @@ public class AstransASTToModelTransformation {
 			return transformation;
 		}
 		
+		@SuppressWarnings("unchecked")
 		private void addEListImageToAnotherEList(EList source, EList dest) {
 			for (Iterator iter = source.iterator(); iter.hasNext();) {
 				EObject element = (EObject) iter.next();
