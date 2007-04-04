@@ -1,5 +1,6 @@
 package ru.ifmo.rain.astrans.utils;
 
+import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -53,9 +54,13 @@ public class EMFHelper {
 	}
 	
 	public static void loadResourceFromFile(Resource r, String fileName) throws IOException {
+		loadResourceFromFile(r, new File(fileName));
+	}
+	
+	public static void loadResourceFromFile(Resource r, File file) throws IOException {
 		FileInputStream stream = null;
 		try {
-			stream = new FileInputStream(fileName);
+			stream = new FileInputStream(file);
 			r.load(stream, Collections.EMPTY_MAP);
 		} finally {
 			if (stream != null) {
