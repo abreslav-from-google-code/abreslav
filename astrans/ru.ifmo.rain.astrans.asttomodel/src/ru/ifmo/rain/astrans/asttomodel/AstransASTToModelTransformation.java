@@ -11,14 +11,11 @@ import ru.ifmo.rain.astrans.asttomodel.resolver.CreatedClasses;
 import ru.ifmo.rain.astrans.asttomodel.resolver.Resolver;
 import astrans.AstransFactory;
 import astrans.Attribute;
-import astrans.ChangeInheritance;
 import astrans.CreateClass;
 import astrans.Reference;
 import astrans.SkipClass;
 import astrans.Transformation;
 import astrans.TranslateReferences;
-import astrans.util.AstransSwitch;
-import astransast.ActionAS;
 import astransast.AstransastPackage;
 import astransast.AttributeAS;
 import astransast.ChangeInheritanceAS;
@@ -37,38 +34,27 @@ public class AstransASTToModelTransformation {
 	private final AstransastSwitch creator = new AstransastSwitch() {
 		@Override
 		public Transformation caseTransformationAS(TransformationAS transformationAS) {
-			final Transformation transformation = AstransFactory.eINSTANCE.createTransformation();
-			AstransSwitch actionAdder = new AstransSwitch() {
-				@Override
-				public Object caseCreateClass(CreateClass object) {
-					transformation.getCreateClassActions().add(object);
-					return null;
-				}
-				
-				@Override
-				public Object caseChangeInheritance(ChangeInheritance object) {
-					transformation.getChangeInheritanceActions().add(object);
-					return null;
-				}
-				
-				@Override
-				public Object caseTranslateReferences(TranslateReferences object) {
-					transformation.getTranslateReferencesActions().add(object);
-					return null;
-				}
-				
-				@Override
-				public Object caseSkipClass(SkipClass object) {
-					transformation.getSkipClassActions().add(object);
-					return null;
-				}
-			};
-			EList actions = transformationAS.getActions();
-			for (Iterator iter = actions.iterator(); iter.hasNext();) {
-				ActionAS actionAS = (ActionAS) iter.next();
-				actionAdder.doSwitch((EObject) doSwitch(actionAS));
-			}
+			Transformation transformation = AstransFactory.eINSTANCE.createTransformation();
+			addEListImageToAnotherEList(
+					transformationAS.getCreateClassActions(), 
+					transformation.getCreateClassActions());
+			addEListImageToAnotherEList(
+					transformationAS.getSkipClassActions(), 
+					transformation.getSkipClassActions());
+			addEListImageToAnotherEList(
+					transformationAS.getTranslateReferencesActions(), 
+					transformation.getTranslateReferencesActions());
+			addEListImageToAnotherEList(
+					transformationAS.getChangeInheritanceActions(), 
+					transformation.getChangeInheritanceActions());
 			return transformation;
+		}
+		
+		private void addEListImageToAnotherEList(EList source, EList dest) {
+			for (Iterator iter = source.iterator(); iter.hasNext();) {
+				EObject element = (EObject) iter.next();
+				dest.add(doSwitch(element));
+			}
 		}
 		
 		@Override

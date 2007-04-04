@@ -100,6 +100,15 @@ public class AstransastAdapterFactory extends AdapterFactoryImpl {
 			public Object caseQualifiedName(QualifiedName object) {
 				return createQualifiedNameAdapter();
 			}
+			public Object caseEPackageReference(EPackageReference object) {
+				return createEPackageReferenceAdapter();
+			}
+			public Object caseEPackageUri(EPackageUri object) {
+				return createEPackageUriAdapter();
+			}
+			public Object caseEPackagePath(EPackagePath object) {
+				return createEPackagePathAdapter();
+			}
 			public Object defaultCase(EObject object) {
 				return createEObjectAdapter();
 			}
@@ -255,6 +264,48 @@ public class AstransastAdapterFactory extends AdapterFactoryImpl {
 	 * @generated
 	 */
 	public Adapter createQualifiedNameAdapter() {
+		return null;
+	}
+
+	/**
+	 * Creates a new adapter for an object of class '{@link astransast.EPackageReference <em>EPackage Reference</em>}'.
+	 * <!-- begin-user-doc -->
+	 * This default implementation returns null so that we can easily ignore cases;
+	 * it's useful to ignore a case when inheritance will catch all the cases anyway.
+	 * <!-- end-user-doc -->
+	 * @return the new adapter.
+	 * @see astransast.EPackageReference
+	 * @generated
+	 */
+	public Adapter createEPackageReferenceAdapter() {
+		return null;
+	}
+
+	/**
+	 * Creates a new adapter for an object of class '{@link astransast.EPackageUri <em>EPackage Uri</em>}'.
+	 * <!-- begin-user-doc -->
+	 * This default implementation returns null so that we can easily ignore cases;
+	 * it's useful to ignore a case when inheritance will catch all the cases anyway.
+	 * <!-- end-user-doc -->
+	 * @return the new adapter.
+	 * @see astransast.EPackageUri
+	 * @generated
+	 */
+	public Adapter createEPackageUriAdapter() {
+		return null;
+	}
+
+	/**
+	 * Creates a new adapter for an object of class '{@link astransast.EPackagePath <em>EPackage Path</em>}'.
+	 * <!-- begin-user-doc -->
+	 * This default implementation returns null so that we can easily ignore cases;
+	 * it's useful to ignore a case when inheritance will catch all the cases anyway.
+	 * <!-- end-user-doc -->
+	 * @return the new adapter.
+	 * @see astransast.EPackagePath
+	 * @generated
+	 */
+	public Adapter createEPackagePathAdapter() {
 		return null;
 	}
 
