@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="ASCII"?>
+<astrans:Transformation xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:astrans="http://rain.ifmo.ru/~breslav/2007/astrans" outputName="astransast" outputNsURI="http://ast.ast">
+  <createClassActions name="NewClass" abstract="true"/>
+  <translateReferencesActions>
+    <modelReferenceTypeProto href="input.ecore#//StructuralFeature"/>
+    <textualReferenceType xsi:type="astrans:CreatedEClass" create="//@createClassActions.0"/>
+  </translateReferencesActions>
+  <translateReferencesActions includeDescendants="true">
+    <modelReferenceTypeProto href="input.ecore#//Action"/>
+    <textualReferenceType xsi:type="astrans:MappedEClass">
+      <proto href="input.ecore#//SkipClass"/>
+    </textualReferenceType>
+  </translateReferencesActions>
+  <input href="input.ecore#/"/>
+</astrans:Transformation>
