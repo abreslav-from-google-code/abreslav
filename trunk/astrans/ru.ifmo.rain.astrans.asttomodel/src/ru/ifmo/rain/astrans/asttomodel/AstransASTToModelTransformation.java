@@ -191,9 +191,9 @@ public class AstransASTToModelTransformation {
 	
 	private final List<Runnable> commands = new ArrayList<Runnable>();
 	
-	private final FileResolver fileResolver; 
+	private final IFileResolver fileResolver; 
 	
-	public AstransASTToModelTransformation(final FileResolver fileResolver) {
+	public AstransASTToModelTransformation(final IFileResolver fileResolver) {
 		this.fileResolver = fileResolver;
 	}
 
