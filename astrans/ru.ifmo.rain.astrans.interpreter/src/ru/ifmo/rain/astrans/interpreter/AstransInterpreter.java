@@ -9,7 +9,9 @@ import org.eclipse.emf.ecore.EClassifier;
 import org.eclipse.emf.ecore.EPackage;
 import org.eclipse.emf.ecore.EcoreFactory;
 
+import astrans.ChangeInheritance;
 import astrans.CreateClass;
+import astrans.EClassReference;
 import astrans.SkipClass;
 import astrans.Transformation;
 
@@ -84,8 +86,26 @@ public class AstransInterpreter {
 		ReferenceTranslator referenceTranslator = new ReferenceTranslator(transformation, trace, skippedClasses);
 		Composer composer = new Composer(referenceTranslator);
 		composer.run(transformation, trace);
+
+		changeInheritace(transformation, trace, referenceTranslator);
 		
 		return createResult(transformation, classes);
+	}
+
+	private static void changeInheritace(Transformation transformation, AstransInterpreterTrace trace, ReferenceTranslator referenceTranslator) {
+		EList changeInheritanceActions = transformation.getChangeInheritanceActions();
+		for (Iterator iter = changeInheritanceActions.iterator(); iter
+				.hasNext();) {
+			ChangeInheritance action = (ChangeInheritance) iter.next();
+			EClass mappedClass = trace.getMappedClass(action.getTargetProto());
+			mappedClass.getESuperTypes().clear();
+			EList superclasses = action.getSuperclasses();
+			for (Iterator iterator = superclasses.iterator(); iterator
+					.hasNext();) {
+				EClassReference superclassReference = (EClassReference) iterator.next();
+				mappedClass.getESuperTypes().add(referenceTranslator.resolveEClassifierReference(superclassReference));
+			}
+		}
 	}
 
 }
