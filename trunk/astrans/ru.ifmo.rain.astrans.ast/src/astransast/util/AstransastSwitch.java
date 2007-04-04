@@ -153,6 +153,26 @@ public class AstransastSwitch {
 				if (result == null) result = defaultCase(theEObject);
 				return result;
 			}
+			case AstransastPackage.EPACKAGE_REFERENCE: {
+				EPackageReference ePackageReference = (EPackageReference)theEObject;
+				Object result = caseEPackageReference(ePackageReference);
+				if (result == null) result = defaultCase(theEObject);
+				return result;
+			}
+			case AstransastPackage.EPACKAGE_URI: {
+				EPackageUri ePackageUri = (EPackageUri)theEObject;
+				Object result = caseEPackageUri(ePackageUri);
+				if (result == null) result = caseEPackageReference(ePackageUri);
+				if (result == null) result = defaultCase(theEObject);
+				return result;
+			}
+			case AstransastPackage.EPACKAGE_PATH: {
+				EPackagePath ePackagePath = (EPackagePath)theEObject;
+				Object result = caseEPackagePath(ePackagePath);
+				if (result == null) result = caseEPackageReference(ePackagePath);
+				if (result == null) result = defaultCase(theEObject);
+				return result;
+			}
 			default: return defaultCase(theEObject);
 		}
 	}
@@ -304,6 +324,51 @@ public class AstransastSwitch {
 	 * @generated
 	 */
 	public Object caseQualifiedName(QualifiedName object) {
+		return null;
+	}
+
+	/**
+	 * Returns the result of interpretting the object as an instance of '<em>EPackage Reference</em>'.
+	 * <!-- begin-user-doc -->
+	 * This implementation returns null;
+	 * returning a non-null result will terminate the switch.
+	 * <!-- end-user-doc -->
+	 * @param object the target of the switch.
+	 * @return the result of interpretting the object as an instance of '<em>EPackage Reference</em>'.
+	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
+	 * @generated
+	 */
+	public Object caseEPackageReference(EPackageReference object) {
+		return null;
+	}
+
+	/**
+	 * Returns the result of interpretting the object as an instance of '<em>EPackage Uri</em>'.
+	 * <!-- begin-user-doc -->
+	 * This implementation returns null;
+	 * returning a non-null result will terminate the switch.
+	 * <!-- end-user-doc -->
+	 * @param object the target of the switch.
+	 * @return the result of interpretting the object as an instance of '<em>EPackage Uri</em>'.
+	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
+	 * @generated
+	 */
+	public Object caseEPackageUri(EPackageUri object) {
+		return null;
+	}
+
+	/**
+	 * Returns the result of interpretting the object as an instance of '<em>EPackage Path</em>'.
+	 * <!-- begin-user-doc -->
+	 * This implementation returns null;
+	 * returning a non-null result will terminate the switch.
+	 * <!-- end-user-doc -->
+	 * @param object the target of the switch.
+	 * @return the result of interpretting the object as an instance of '<em>EPackage Path</em>'.
+	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
+	 * @generated
+	 */
+	public Object caseEPackagePath(EPackagePath object) {
 		return null;
 	}
 

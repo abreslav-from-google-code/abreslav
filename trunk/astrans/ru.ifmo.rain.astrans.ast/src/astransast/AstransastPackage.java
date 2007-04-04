@@ -49,7 +49,7 @@ public interface AstransastPackage extends EPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	String eNS_PREFIX = "astranast";
+	String eNS_PREFIX = "astransast";
 
 	/**
 	 * The singleton instance of the package.
@@ -429,13 +429,67 @@ public interface AstransastPackage extends EPackage {
 	int TRANSFORMATION_AS = 8;
 
 	/**
-	 * The feature id for the '<em><b>Actions</b></em>' containment reference list.
+	 * The feature id for the '<em><b>Output Name</b></em>' attribute.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int TRANSFORMATION_AS__ACTIONS = 0;
+	int TRANSFORMATION_AS__OUTPUT_NAME = 0;
+
+	/**
+	 * The feature id for the '<em><b>Output Ns URI</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int TRANSFORMATION_AS__OUTPUT_NS_URI = 1;
+
+	/**
+	 * The feature id for the '<em><b>Create Class Actions</b></em>' containment reference list.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int TRANSFORMATION_AS__CREATE_CLASS_ACTIONS = 2;
+
+	/**
+	 * The feature id for the '<em><b>Translate References Actions</b></em>' containment reference list.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int TRANSFORMATION_AS__TRANSLATE_REFERENCES_ACTIONS = 3;
+
+	/**
+	 * The feature id for the '<em><b>Change Inheritance Actions</b></em>' containment reference list.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int TRANSFORMATION_AS__CHANGE_INHERITANCE_ACTIONS = 4;
+
+	/**
+	 * The feature id for the '<em><b>Skip Class Actions</b></em>' containment reference list.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int TRANSFORMATION_AS__SKIP_CLASS_ACTIONS = 5;
+
+	/**
+	 * The feature id for the '<em><b>Input</b></em>' containment reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int TRANSFORMATION_AS__INPUT = 6;
 
 	/**
 	 * The number of structural features of the '<em>Transformation AS</em>' class.
@@ -444,7 +498,7 @@ public interface AstransastPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int TRANSFORMATION_AS_FEATURE_COUNT = 1;
+	int TRANSFORMATION_AS_FEATURE_COUNT = 7;
 
 	/**
 	 * The meta object id for the '{@link astransast.impl.QualifiedNameImpl <em>Qualified Name</em>}' class.
@@ -482,6 +536,82 @@ public interface AstransastPackage extends EPackage {
 	 * @ordered
 	 */
 	int QUALIFIED_NAME_FEATURE_COUNT = 2;
+
+
+	/**
+	 * The meta object id for the '{@link astransast.impl.EPackageReferenceImpl <em>EPackage Reference</em>}' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see astransast.impl.EPackageReferenceImpl
+	 * @see astransast.impl.AstransastPackageImpl#getEPackageReference()
+	 * @generated
+	 */
+	int EPACKAGE_REFERENCE = 10;
+
+	/**
+	 * The number of structural features of the '<em>EPackage Reference</em>' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int EPACKAGE_REFERENCE_FEATURE_COUNT = 0;
+
+	/**
+	 * The meta object id for the '{@link astransast.impl.EPackageUriImpl <em>EPackage Uri</em>}' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see astransast.impl.EPackageUriImpl
+	 * @see astransast.impl.AstransastPackageImpl#getEPackageUri()
+	 * @generated
+	 */
+	int EPACKAGE_URI = 11;
+
+	/**
+	 * The feature id for the '<em><b>Uri</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int EPACKAGE_URI__URI = EPACKAGE_REFERENCE_FEATURE_COUNT + 0;
+
+	/**
+	 * The number of structural features of the '<em>EPackage Uri</em>' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int EPACKAGE_URI_FEATURE_COUNT = EPACKAGE_REFERENCE_FEATURE_COUNT + 1;
+
+	/**
+	 * The meta object id for the '{@link astransast.impl.EPackagePathImpl <em>EPackage Path</em>}' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see astransast.impl.EPackagePathImpl
+	 * @see astransast.impl.AstransastPackageImpl#getEPackagePath()
+	 * @generated
+	 */
+	int EPACKAGE_PATH = 12;
+
+	/**
+	 * The feature id for the '<em><b>Path</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int EPACKAGE_PATH__PATH = EPACKAGE_REFERENCE_FEATURE_COUNT + 0;
+
+	/**
+	 * The number of structural features of the '<em>EPackage Path</em>' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int EPACKAGE_PATH_FEATURE_COUNT = EPACKAGE_REFERENCE_FEATURE_COUNT + 1;
 
 
 	/**
@@ -762,15 +892,81 @@ public interface AstransastPackage extends EPackage {
 	EClass getTransformationAS();
 
 	/**
-	 * Returns the meta object for the containment reference list '{@link astransast.TransformationAS#getActions <em>Actions</em>}'.
+	 * Returns the meta object for the attribute '{@link astransast.TransformationAS#getOutputName <em>Output Name</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @return the meta object for the containment reference list '<em>Actions</em>'.
-	 * @see astransast.TransformationAS#getActions()
+	 * @return the meta object for the attribute '<em>Output Name</em>'.
+	 * @see astransast.TransformationAS#getOutputName()
 	 * @see #getTransformationAS()
 	 * @generated
 	 */
-	EReference getTransformationAS_Actions();
+	EAttribute getTransformationAS_OutputName();
+
+	/**
+	 * Returns the meta object for the attribute '{@link astransast.TransformationAS#getOutputNsURI <em>Output Ns URI</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the attribute '<em>Output Ns URI</em>'.
+	 * @see astransast.TransformationAS#getOutputNsURI()
+	 * @see #getTransformationAS()
+	 * @generated
+	 */
+	EAttribute getTransformationAS_OutputNsURI();
+
+	/**
+	 * Returns the meta object for the containment reference list '{@link astransast.TransformationAS#getCreateClassActions <em>Create Class Actions</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the containment reference list '<em>Create Class Actions</em>'.
+	 * @see astransast.TransformationAS#getCreateClassActions()
+	 * @see #getTransformationAS()
+	 * @generated
+	 */
+	EReference getTransformationAS_CreateClassActions();
+
+	/**
+	 * Returns the meta object for the containment reference list '{@link astransast.TransformationAS#getTranslateReferencesActions <em>Translate References Actions</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the containment reference list '<em>Translate References Actions</em>'.
+	 * @see astransast.TransformationAS#getTranslateReferencesActions()
+	 * @see #getTransformationAS()
+	 * @generated
+	 */
+	EReference getTransformationAS_TranslateReferencesActions();
+
+	/**
+	 * Returns the meta object for the containment reference list '{@link astransast.TransformationAS#getChangeInheritanceActions <em>Change Inheritance Actions</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the containment reference list '<em>Change Inheritance Actions</em>'.
+	 * @see astransast.TransformationAS#getChangeInheritanceActions()
+	 * @see #getTransformationAS()
+	 * @generated
+	 */
+	EReference getTransformationAS_ChangeInheritanceActions();
+
+	/**
+	 * Returns the meta object for the containment reference list '{@link astransast.TransformationAS#getSkipClassActions <em>Skip Class Actions</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the containment reference list '<em>Skip Class Actions</em>'.
+	 * @see astransast.TransformationAS#getSkipClassActions()
+	 * @see #getTransformationAS()
+	 * @generated
+	 */
+	EReference getTransformationAS_SkipClassActions();
+
+	/**
+	 * Returns the meta object for the containment reference '{@link astransast.TransformationAS#getInput <em>Input</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the containment reference '<em>Input</em>'.
+	 * @see astransast.TransformationAS#getInput()
+	 * @see #getTransformationAS()
+	 * @generated
+	 */
+	EReference getTransformationAS_Input();
 
 	/**
 	 * Returns the meta object for class '{@link astransast.QualifiedName <em>Qualified Name</em>}'.
@@ -803,6 +999,58 @@ public interface AstransastPackage extends EPackage {
 	 * @generated
 	 */
 	EReference getQualifiedName_SubQN();
+
+	/**
+	 * Returns the meta object for class '{@link astransast.EPackageReference <em>EPackage Reference</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for class '<em>EPackage Reference</em>'.
+	 * @see astransast.EPackageReference
+	 * @generated
+	 */
+	EClass getEPackageReference();
+
+	/**
+	 * Returns the meta object for class '{@link astransast.EPackageUri <em>EPackage Uri</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for class '<em>EPackage Uri</em>'.
+	 * @see astransast.EPackageUri
+	 * @generated
+	 */
+	EClass getEPackageUri();
+
+	/**
+	 * Returns the meta object for the attribute '{@link astransast.EPackageUri#getUri <em>Uri</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the attribute '<em>Uri</em>'.
+	 * @see astransast.EPackageUri#getUri()
+	 * @see #getEPackageUri()
+	 * @generated
+	 */
+	EAttribute getEPackageUri_Uri();
+
+	/**
+	 * Returns the meta object for class '{@link astransast.EPackagePath <em>EPackage Path</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for class '<em>EPackage Path</em>'.
+	 * @see astransast.EPackagePath
+	 * @generated
+	 */
+	EClass getEPackagePath();
+
+	/**
+	 * Returns the meta object for the attribute '{@link astransast.EPackagePath#getPath <em>Path</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the attribute '<em>Path</em>'.
+	 * @see astransast.EPackagePath#getPath()
+	 * @see #getEPackagePath()
+	 * @generated
+	 */
+	EAttribute getEPackagePath_Path();
 
 	/**
 	 * Returns the factory that creates the instances of the model.
@@ -1053,12 +1301,60 @@ public interface AstransastPackage extends EPackage {
 		EClass TRANSFORMATION_AS = eINSTANCE.getTransformationAS();
 
 		/**
-		 * The meta object literal for the '<em><b>Actions</b></em>' containment reference list feature.
+		 * The meta object literal for the '<em><b>Output Name</b></em>' attribute feature.
 		 * <!-- begin-user-doc -->
 		 * <!-- end-user-doc -->
 		 * @generated
 		 */
-		EReference TRANSFORMATION_AS__ACTIONS = eINSTANCE.getTransformationAS_Actions();
+		EAttribute TRANSFORMATION_AS__OUTPUT_NAME = eINSTANCE.getTransformationAS_OutputName();
+
+		/**
+		 * The meta object literal for the '<em><b>Output Ns URI</b></em>' attribute feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EAttribute TRANSFORMATION_AS__OUTPUT_NS_URI = eINSTANCE.getTransformationAS_OutputNsURI();
+
+		/**
+		 * The meta object literal for the '<em><b>Create Class Actions</b></em>' containment reference list feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EReference TRANSFORMATION_AS__CREATE_CLASS_ACTIONS = eINSTANCE.getTransformationAS_CreateClassActions();
+
+		/**
+		 * The meta object literal for the '<em><b>Translate References Actions</b></em>' containment reference list feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EReference TRANSFORMATION_AS__TRANSLATE_REFERENCES_ACTIONS = eINSTANCE.getTransformationAS_TranslateReferencesActions();
+
+		/**
+		 * The meta object literal for the '<em><b>Change Inheritance Actions</b></em>' containment reference list feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EReference TRANSFORMATION_AS__CHANGE_INHERITANCE_ACTIONS = eINSTANCE.getTransformationAS_ChangeInheritanceActions();
+
+		/**
+		 * The meta object literal for the '<em><b>Skip Class Actions</b></em>' containment reference list feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EReference TRANSFORMATION_AS__SKIP_CLASS_ACTIONS = eINSTANCE.getTransformationAS_SkipClassActions();
+
+		/**
+		 * The meta object literal for the '<em><b>Input</b></em>' containment reference feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EReference TRANSFORMATION_AS__INPUT = eINSTANCE.getTransformationAS_Input();
 
 		/**
 		 * The meta object literal for the '{@link astransast.impl.QualifiedNameImpl <em>Qualified Name</em>}' class.
@@ -1085,6 +1381,52 @@ public interface AstransastPackage extends EPackage {
 		 * @generated
 		 */
 		EReference QUALIFIED_NAME__SUB_QN = eINSTANCE.getQualifiedName_SubQN();
+
+			/**
+		 * The meta object literal for the '{@link astransast.impl.EPackageReferenceImpl <em>EPackage Reference</em>}' class.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @see astransast.impl.EPackageReferenceImpl
+		 * @see astransast.impl.AstransastPackageImpl#getEPackageReference()
+		 * @generated
+		 */
+		EClass EPACKAGE_REFERENCE = eINSTANCE.getEPackageReference();
+
+		/**
+		 * The meta object literal for the '{@link astransast.impl.EPackageUriImpl <em>EPackage Uri</em>}' class.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @see astransast.impl.EPackageUriImpl
+		 * @see astransast.impl.AstransastPackageImpl#getEPackageUri()
+		 * @generated
+		 */
+		EClass EPACKAGE_URI = eINSTANCE.getEPackageUri();
+
+		/**
+		 * The meta object literal for the '<em><b>Uri</b></em>' attribute feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EAttribute EPACKAGE_URI__URI = eINSTANCE.getEPackageUri_Uri();
+
+		/**
+		 * The meta object literal for the '{@link astransast.impl.EPackagePathImpl <em>EPackage Path</em>}' class.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @see astransast.impl.EPackagePathImpl
+		 * @see astransast.impl.AstransastPackageImpl#getEPackagePath()
+		 * @generated
+		 */
+		EClass EPACKAGE_PATH = eINSTANCE.getEPackagePath();
+
+		/**
+		 * The meta object literal for the '<em><b>Path</b></em>' attribute feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EAttribute EPACKAGE_PATH__PATH = eINSTANCE.getEPackagePath_Path();
 
 	}
 

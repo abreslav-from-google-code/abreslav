@@ -12,6 +12,9 @@ import astransast.AstransastPackage;
 import astransast.AttributeAS;
 import astransast.ChangeInheritanceAS;
 import astransast.CreateClassAS;
+import astransast.EPackagePath;
+import astransast.EPackageReference;
+import astransast.EPackageUri;
 import astransast.QualifiedName;
 import astransast.ReferenceAS;
 import astransast.SkipClassAS;
@@ -102,6 +105,27 @@ public class AstransastPackageImpl extends EPackageImpl implements AstransastPac
 	 * @generated
 	 */
 	private EClass qualifiedNameEClass = null;
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	private EClass ePackageReferenceEClass = null;
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	private EClass ePackageUriEClass = null;
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	private EClass ePackagePathEClass = null;
 
 	/**
 	 * Creates an instance of the model <b>Package</b>, registered with
@@ -410,8 +434,62 @@ public class AstransastPackageImpl extends EPackageImpl implements AstransastPac
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public EReference getTransformationAS_Actions() {
-		return (EReference)transformationASEClass.getEStructuralFeatures().get(0);
+	public EAttribute getTransformationAS_OutputName() {
+		return (EAttribute)transformationASEClass.getEStructuralFeatures().get(0);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EAttribute getTransformationAS_OutputNsURI() {
+		return (EAttribute)transformationASEClass.getEStructuralFeatures().get(1);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EReference getTransformationAS_CreateClassActions() {
+		return (EReference)transformationASEClass.getEStructuralFeatures().get(2);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EReference getTransformationAS_TranslateReferencesActions() {
+		return (EReference)transformationASEClass.getEStructuralFeatures().get(3);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EReference getTransformationAS_ChangeInheritanceActions() {
+		return (EReference)transformationASEClass.getEStructuralFeatures().get(4);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EReference getTransformationAS_SkipClassActions() {
+		return (EReference)transformationASEClass.getEStructuralFeatures().get(5);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EReference getTransformationAS_Input() {
+		return (EReference)transformationASEClass.getEStructuralFeatures().get(6);
 	}
 
 	/**
@@ -439,6 +517,51 @@ public class AstransastPackageImpl extends EPackageImpl implements AstransastPac
 	 */
 	public EReference getQualifiedName_SubQN() {
 		return (EReference)qualifiedNameEClass.getEStructuralFeatures().get(1);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EClass getEPackageReference() {
+		return ePackageReferenceEClass;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EClass getEPackageUri() {
+		return ePackageUriEClass;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EAttribute getEPackageUri_Uri() {
+		return (EAttribute)ePackageUriEClass.getEStructuralFeatures().get(0);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EClass getEPackagePath() {
+		return ePackagePathEClass;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EAttribute getEPackagePath_Path() {
+		return (EAttribute)ePackagePathEClass.getEStructuralFeatures().get(0);
 	}
 
 	/**
@@ -503,11 +626,25 @@ public class AstransastPackageImpl extends EPackageImpl implements AstransastPac
 		createEReference(skipClassASEClass, SKIP_CLASS_AS__TARGET_PROTO);
 
 		transformationASEClass = createEClass(TRANSFORMATION_AS);
-		createEReference(transformationASEClass, TRANSFORMATION_AS__ACTIONS);
+		createEAttribute(transformationASEClass, TRANSFORMATION_AS__OUTPUT_NAME);
+		createEAttribute(transformationASEClass, TRANSFORMATION_AS__OUTPUT_NS_URI);
+		createEReference(transformationASEClass, TRANSFORMATION_AS__CREATE_CLASS_ACTIONS);
+		createEReference(transformationASEClass, TRANSFORMATION_AS__TRANSLATE_REFERENCES_ACTIONS);
+		createEReference(transformationASEClass, TRANSFORMATION_AS__CHANGE_INHERITANCE_ACTIONS);
+		createEReference(transformationASEClass, TRANSFORMATION_AS__SKIP_CLASS_ACTIONS);
+		createEReference(transformationASEClass, TRANSFORMATION_AS__INPUT);
 
 		qualifiedNameEClass = createEClass(QUALIFIED_NAME);
 		createEAttribute(qualifiedNameEClass, QUALIFIED_NAME__NAME);
 		createEReference(qualifiedNameEClass, QUALIFIED_NAME__SUB_QN);
+
+		ePackageReferenceEClass = createEClass(EPACKAGE_REFERENCE);
+
+		ePackageUriEClass = createEClass(EPACKAGE_URI);
+		createEAttribute(ePackageUriEClass, EPACKAGE_URI__URI);
+
+		ePackagePathEClass = createEClass(EPACKAGE_PATH);
+		createEAttribute(ePackagePathEClass, EPACKAGE_PATH__PATH);
 	}
 
 	/**
@@ -540,6 +677,8 @@ public class AstransastPackageImpl extends EPackageImpl implements AstransastPac
 		referenceASEClass.getESuperTypes().add(this.getStructuralFeatureAS());
 		changeInheritanceASEClass.getESuperTypes().add(this.getActionAS());
 		skipClassASEClass.getESuperTypes().add(this.getActionAS());
+		ePackageUriEClass.getESuperTypes().add(this.getEPackageReference());
+		ePackagePathEClass.getESuperTypes().add(this.getEPackageReference());
 
 		// Initialize classes and features; add operations and parameters
 		initEClass(actionASEClass, ActionAS.class, "ActionAS", IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
@@ -576,11 +715,25 @@ public class AstransastPackageImpl extends EPackageImpl implements AstransastPac
 		initEReference(getSkipClassAS_TargetProto(), this.getQualifiedName(), null, "targetProto", null, 1, 1, SkipClassAS.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
 		initEClass(transformationASEClass, TransformationAS.class, "TransformationAS", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
-		initEReference(getTransformationAS_Actions(), this.getActionAS(), null, "actions", null, 0, -1, TransformationAS.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEAttribute(getTransformationAS_OutputName(), ecorePackage.getEString(), "outputName", null, 0, 1, TransformationAS.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEAttribute(getTransformationAS_OutputNsURI(), ecorePackage.getEString(), "outputNsURI", null, 0, 1, TransformationAS.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEReference(getTransformationAS_CreateClassActions(), this.getCreateClassAS(), null, "createClassActions", null, 0, -1, TransformationAS.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEReference(getTransformationAS_TranslateReferencesActions(), this.getTranslateReferencesAS(), null, "translateReferencesActions", null, 0, -1, TransformationAS.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEReference(getTransformationAS_ChangeInheritanceActions(), this.getChangeInheritanceAS(), null, "changeInheritanceActions", null, 0, -1, TransformationAS.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEReference(getTransformationAS_SkipClassActions(), this.getSkipClassAS(), null, "skipClassActions", null, 0, -1, TransformationAS.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEReference(getTransformationAS_Input(), this.getEPackageReference(), null, "input", null, 0, 1, TransformationAS.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
 		initEClass(qualifiedNameEClass, QualifiedName.class, "QualifiedName", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 		initEAttribute(getQualifiedName_Name(), ecorePackage.getEString(), "name", null, 1, 1, QualifiedName.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEReference(getQualifiedName_SubQN(), this.getQualifiedName(), null, "subQN", null, 0, 1, QualifiedName.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+
+		initEClass(ePackageReferenceEClass, EPackageReference.class, "EPackageReference", IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
+
+		initEClass(ePackageUriEClass, EPackageUri.class, "EPackageUri", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
+		initEAttribute(getEPackageUri_Uri(), ecorePackage.getEString(), "uri", null, 1, 1, EPackageUri.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+
+		initEClass(ePackagePathEClass, EPackagePath.class, "EPackagePath", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
+		initEAttribute(getEPackagePath_Path(), ecorePackage.getEString(), "path", null, 1, 1, EPackagePath.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
 		// Create resource
 		createResource(eNS_URI);

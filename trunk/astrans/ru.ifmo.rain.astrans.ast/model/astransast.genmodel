@@ -38,11 +38,24 @@
       <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference astransast.ecore#//SkipClassAS/targetProto"/>
     </genClasses>
     <genClasses ecoreClass="astransast.ecore#//TransformationAS">
-      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference astransast.ecore#//TransformationAS/actions"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute astransast.ecore#//TransformationAS/outputName"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute astransast.ecore#//TransformationAS/outputNsURI"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference astransast.ecore#//TransformationAS/createClassActions"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference astransast.ecore#//TransformationAS/translateReferencesActions"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference astransast.ecore#//TransformationAS/changeInheritanceActions"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference astransast.ecore#//TransformationAS/skipClassActions"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference astransast.ecore#//TransformationAS/input"/>
     </genClasses>
     <genClasses ecoreClass="astransast.ecore#//QualifiedName">
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute astransast.ecore#//QualifiedName/name"/>
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference astransast.ecore#//QualifiedName/subQN"/>
+    </genClasses>
+    <genClasses image="false" ecoreClass="astransast.ecore#//EPackageReference"/>
+    <genClasses ecoreClass="astransast.ecore#//EPackageUri">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute astransast.ecore#//EPackageUri/uri"/>
+    </genClasses>
+    <genClasses ecoreClass="astransast.ecore#//EPackagePath">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute astransast.ecore#//EPackagePath/path"/>
     </genClasses>
   </genPackages>
 </genmodel:GenModel>

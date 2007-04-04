@@ -98,6 +98,24 @@ public interface AstransastFactory extends EFactory {
 	QualifiedName createQualifiedName();
 
 	/**
+	 * Returns a new object of class '<em>EPackage Uri</em>'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return a new object of class '<em>EPackage Uri</em>'.
+	 * @generated
+	 */
+	EPackageUri createEPackageUri();
+
+	/**
+	 * Returns a new object of class '<em>EPackage Path</em>'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return a new object of class '<em>EPackage Path</em>'.
+	 * @generated
+	 */
+	EPackagePath createEPackagePath();
+
+	/**
 	 * Returns the package supported by this factory.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->

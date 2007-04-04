@@ -67,6 +67,8 @@ public class AstransastFactoryImpl extends EFactoryImpl implements AstransastFac
 			case AstransastPackage.SKIP_CLASS_AS: return createSkipClassAS();
 			case AstransastPackage.TRANSFORMATION_AS: return createTransformationAS();
 			case AstransastPackage.QUALIFIED_NAME: return createQualifiedName();
+			case AstransastPackage.EPACKAGE_URI: return createEPackageUri();
+			case AstransastPackage.EPACKAGE_PATH: return createEPackagePath();
 			default:
 				throw new IllegalArgumentException("The class '" + eClass.getName() + "' is not a valid classifier");
 		}
@@ -150,6 +152,26 @@ public class AstransastFactoryImpl extends EFactoryImpl implements AstransastFac
 	public QualifiedName createQualifiedName() {
 		QualifiedNameImpl qualifiedName = new QualifiedNameImpl();
 		return qualifiedName;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EPackageUri createEPackageUri() {
+		EPackageUriImpl ePackageUri = new EPackageUriImpl();
+		return ePackageUri;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EPackagePath createEPackagePath() {
+		EPackagePathImpl ePackagePath = new EPackagePathImpl();
+		return ePackagePath;
 	}
 
 	/**
