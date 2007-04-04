@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="ASCII"?>
+<astrans:Transformation xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:astrans="http://rain.ifmo.ru/~breslav/2007/astrans" outputName="astransast" outputNsURI="http://rain.ifmo.ru/~breslav/2007/astransast">
+  <createClassActions name="QualifiedName">
+    <structuralFeatures xsi:type="astrans:Attribute" name="name" lowerBound="1">
+      <type href="http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    </structuralFeatures>
+    <structuralFeatures xsi:type="astrans:Reference" name="subQN" containment="true">
+      <type xsi:type="astrans:CreatedEClass" create="//@createClassActions.0"/>
+    </structuralFeatures>
+  </createClassActions>
+  <createClassActions name="EPackageReference" abstract="true"/>
+  <createClassActions name="EPackageUri">
+    <superclasses xsi:type="astrans:CreatedEClass" create="//@createClassActions.1"/>
+    <structuralFeatures xsi:type="astrans:Attribute" name="uri" lowerBound="1">
+      <type href="http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    </structuralFeatures>
+  </createClassActions>
+  <createClassActions name="EPackagePath">
+    <superclasses xsi:type="astrans:CreatedEClass" create="//@createClassActions.1"/>
+    <structuralFeatures xsi:type="astrans:Attribute" name="path" lowerBound="1">
+      <type href="http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    </structuralFeatures>
+  </createClassActions>
+  <translateReferencesActions includeDescendants="true">
+    <modelReferenceTypeProto href="http://rain.ifmo.ru/~breslav/2007/astrans#//EClassifierReference"/>
+    <textualReferenceType xsi:type="astrans:CreatedEClass" create="//@createClassActions.0"/>
+  </translateReferencesActions>
+  <translateReferencesActions includeDescendants="true">
+    <modelReferenceTypeProto href="http://www.eclipse.org/emf/2002/Ecore#//EClassifier"/>
+    <textualReferenceType xsi:type="astrans:CreatedEClass" create="//@createClassActions.0"/>
+  </translateReferencesActions>
+  <translateReferencesActions>
+    <modelReferenceTypeProto href="http://www.eclipse.org/emf/2002/Ecore#//EPackage"/>
+    <textualReferenceType xsi:type="astrans:CreatedEClass" create="//@createClassActions.1"/>
+  </translateReferencesActions>
+  <skipClassActions includeDescendants="true">
+    <targetProto href="http://www.eclipse.org/emf/2002/Ecore#//EClassifier"/>
+  </skipClassActions>
+  <skipClassActions includeDescendants="true">
+    <targetProto href="http://rain.ifmo.ru/~breslav/2007/astrans#//EClassifierReference"/>
+  </skipClassActions>
+  <input href="http://rain.ifmo.ru/~breslav/2007/astrans#/"/>
+</astrans:Transformation>
