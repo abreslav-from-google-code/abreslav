@@ -63,8 +63,8 @@ public class AstransASTToModelTransformationTest {
 		expectedResultFileName = expectedFN;
 		resultFileName = resultFN;
 		testDir = testD;
-	}
-	
+		
+	}	
 	
 	@Before
 	public void setUp() throws Exception {
