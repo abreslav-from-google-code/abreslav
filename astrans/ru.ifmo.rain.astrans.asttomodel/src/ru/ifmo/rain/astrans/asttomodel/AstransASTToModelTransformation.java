@@ -29,7 +29,6 @@ import astransast.CreateClassAS;
 import astransast.EClassifierReferenceAS;
 import astransast.EPackagePath;
 import astransast.EPackageUri;
-import astransast.QualifiedName;
 import astransast.ReferenceAS;
 import astransast.SkipClassAS;
 import astransast.TransformationAS;
@@ -129,7 +128,7 @@ public class AstransASTToModelTransformation {
 			
 			EList superclasses = createClassAS.getSuperclasses();
 			for (Iterator iter = superclasses.iterator(); iter.hasNext();) {
-				final QualifiedName superClassQN = (QualifiedName) iter.next();
+				final EClassifierReferenceAS superClassQN = (EClassifierReferenceAS) iter.next();
 				addCommand(new Runnable() {
 					public void run() {
 						createClass.getSuperclasses().add(resolver.resolveCreateClassSuperclass(superClassQN));

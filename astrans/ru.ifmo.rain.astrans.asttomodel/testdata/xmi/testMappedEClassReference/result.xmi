@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="ASCII"?>
+<astrans:Transformation xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:astrans="http://rain.ifmo.ru/~breslav/2007/astrans" outputName="output" outputNsURI="http://uri">
+  <createClassActions name="A">
+    <superclasses xsi:type="astrans:MappedEClass">
+      <proto href="http://www.eclipse.org/emf/2002/Ecore#//EAnnotation"/>
+    </superclasses>
+    <structuralFeatures xsi:type="astrans:Reference" name="enum">
+      <type xsi:type="astrans:MappedEClass">
+        <proto href="http://www.eclipse.org/emf/2002/Ecore#//EEnum"/>
+      </type>
+    </structuralFeatures>
+  </createClassActions>
+  <translateReferencesActions>
+    <modelReferenceTypeProto href="http://www.eclipse.org/emf/2002/Ecore#//EStructuralFeature"/>
+    <textualReferenceType xsi:type="astrans:MappedEClass">
+      <proto href="http://www.eclipse.org/emf/2002/Ecore#//EEnum"/>
+    </textualReferenceType>
+  </translateReferencesActions>
+  <changeInheritanceActions>
+    <targetProto href="http://www.eclipse.org/emf/2002/Ecore#//EAnnotation"/>
+    <superclasses xsi:type="astrans:MappedEClass">
+      <proto href="http://www.eclipse.org/emf/2002/Ecore#//EEnum"/>
+    </superclasses>
+  </changeInheritanceActions>
+  <input href="http://www.eclipse.org/emf/2002/Ecore#/"/>
+</astrans:Transformation>
