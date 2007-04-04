@@ -60,18 +60,24 @@ public class Resolver {
 			.get(ecore.getExistingEDataType(type))
 			.or(proto.getExistingEDataType(type))
 			.getObj();
-		if (ref == null) {
-			return null;
-		}
-		return ref.getEDataType();
+		return ref == null ? null : ref.getEDataType();
 	}
 
 	private EClass lookupProtoClass(QualifiedName modelReferenceTypeProto) {
-		ExistingEClass ref = proto.getExistingEClass(modelReferenceTypeProto);
-		if (ref == null) {
-			return null;
-		}
-		return ref.getEClass();
+		/* 
+		 * We lookup in Ecore due to problems with determinig input model 
+		 * bounds.
+		 * To behave exactly right we must treat input package and all the
+		 * packages it depends on as input class set.
+		 * This simple hack assumes that input depends on no package
+		 * except for Ecore and that Ecore classes are always skipped
+		 * and never have AST images.
+		 */
+		ExistingEClass ref = 
+			OR.<ExistingEClass>get(proto.getExistingEClass(modelReferenceTypeProto))
+			.or(ecore.getExistingEClass(modelReferenceTypeProto))
+			.getObj();
+		return ref == null ? null : ref.getEClass();
 	}
 
 	private EClassReference lookupClass(QualifiedName superClassQN) {

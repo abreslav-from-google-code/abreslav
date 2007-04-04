@@ -15,6 +15,7 @@ import ru.ifmo.rain.astrans.asttomodel.resolver.CreatedClasses;
 import ru.ifmo.rain.astrans.asttomodel.resolver.Resolver;
 import ru.ifmo.rain.astrans.utils.EMFHelper;
 import astrans.AstransFactory;
+import astrans.AstransPackage;
 import astrans.Attribute;
 import astrans.CreateClass;
 import astrans.Reference;
@@ -186,7 +187,7 @@ public class AstransASTToModelTransformation {
 		}
 	};
 	
-	private final Resolver resolver = new Resolver(AstransastPackage.eINSTANCE, createdClasses);
+	private final Resolver resolver = new Resolver(AstransPackage.eINSTANCE, createdClasses);
 	
 	private final List<Runnable> commands = new ArrayList<Runnable>();
 	
