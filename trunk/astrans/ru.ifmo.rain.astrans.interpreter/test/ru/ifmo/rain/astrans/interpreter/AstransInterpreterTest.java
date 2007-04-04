@@ -77,7 +77,6 @@ public class AstransInterpreterTest {
 		resourceSet.getResources().add(inputResource);
 		
 		EcoreUtil.resolve(transformation.getInput(), resourceSet);
-		
 		EPackage output = AstransInterpreter.run(transformation);
 		
 		EMFHelper.saveEObjectToFile(output, outputFileName);
