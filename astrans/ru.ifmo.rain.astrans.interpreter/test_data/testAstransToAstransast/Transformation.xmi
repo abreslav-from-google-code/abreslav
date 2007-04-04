@@ -1,43 +1,59 @@
 <?xml version="1.0" encoding="ASCII"?>
 <astrans:Transformation xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:astrans="http://rain.ifmo.ru/~breslav/2007/astrans" outputName="astransast" outputNsURI="http://rain.ifmo.ru/~breslav/2007/astransast">
+  <createClassActions name="MappedEClassAS">
+    <superclasses xsi:type="astrans:MappedEClass">
+      <proto href="http://rain.ifmo.ru/~breslav/2007/astrans#//EClassifierReference"/>
+    </superclasses>
+    <structuralFeatures xsi:type="astrans:Reference" name="proto" lowerBound="1" containment="true">
+      <type xsi:type="astrans:CreatedEClass" create="//@createClassActions.1"/>
+    </structuralFeatures>
+  </createClassActions>
   <createClassActions name="QualifiedName">
+    <superclasses xsi:type="astrans:MappedEClass">
+      <proto href="http://rain.ifmo.ru/~breslav/2007/astrans#//EClassifierReference"/>
+    </superclasses>
     <structuralFeatures xsi:type="astrans:Attribute" name="name" lowerBound="1">
       <type href="http://www.eclipse.org/emf/2002/Ecore#//EString"/>
     </structuralFeatures>
     <structuralFeatures xsi:type="astrans:Reference" name="subQN" containment="true">
-      <type xsi:type="astrans:CreatedEClass" create="//@createClassActions.0"/>
+      <type xsi:type="astrans:CreatedEClass" create="//@createClassActions.1"/>
     </structuralFeatures>
   </createClassActions>
   <createClassActions name="EPackageReference" abstract="true"/>
   <createClassActions name="EPackageUri">
-    <superclasses xsi:type="astrans:CreatedEClass" create="//@createClassActions.1"/>
+    <superclasses xsi:type="astrans:CreatedEClass" create="//@createClassActions.2"/>
     <structuralFeatures xsi:type="astrans:Attribute" name="uri" lowerBound="1">
       <type href="http://www.eclipse.org/emf/2002/Ecore#//EString"/>
     </structuralFeatures>
   </createClassActions>
   <createClassActions name="EPackagePath">
-    <superclasses xsi:type="astrans:CreatedEClass" create="//@createClassActions.1"/>
+    <superclasses xsi:type="astrans:CreatedEClass" create="//@createClassActions.2"/>
     <structuralFeatures xsi:type="astrans:Attribute" name="path" lowerBound="1">
       <type href="http://www.eclipse.org/emf/2002/Ecore#//EString"/>
     </structuralFeatures>
   </createClassActions>
   <translateReferencesActions includeDescendants="true">
-    <modelReferenceTypeProto href="http://rain.ifmo.ru/~breslav/2007/astrans#//EClassifierReference"/>
-    <textualReferenceType xsi:type="astrans:CreatedEClass" create="//@createClassActions.0"/>
+    <modelReferenceTypeProto href="http://rain.ifmo.ru/~breslav/2007/astrans#//EClassReference"/>
+    <textualReferenceType xsi:type="astrans:MappedEClass">
+      <proto href="http://rain.ifmo.ru/~breslav/2007/astrans#//EClassifierReference"/>
+    </textualReferenceType>
   </translateReferencesActions>
   <translateReferencesActions includeDescendants="true">
     <modelReferenceTypeProto href="http://www.eclipse.org/emf/2002/Ecore#//EClassifier"/>
-    <textualReferenceType xsi:type="astrans:CreatedEClass" create="//@createClassActions.0"/>
+    <textualReferenceType xsi:type="astrans:CreatedEClass" create="//@createClassActions.1"/>
   </translateReferencesActions>
   <translateReferencesActions>
     <modelReferenceTypeProto href="http://www.eclipse.org/emf/2002/Ecore#//EPackage"/>
-    <textualReferenceType xsi:type="astrans:CreatedEClass" create="//@createClassActions.1"/>
+    <textualReferenceType xsi:type="astrans:CreatedEClass" create="//@createClassActions.2"/>
   </translateReferencesActions>
   <skipClassActions includeDescendants="true">
     <targetProto href="http://www.eclipse.org/emf/2002/Ecore#//EClassifier"/>
   </skipClassActions>
   <skipClassActions includeDescendants="true">
-    <targetProto href="http://rain.ifmo.ru/~breslav/2007/astrans#//EClassifierReference"/>
+    <targetProto href="http://rain.ifmo.ru/~breslav/2007/astrans#//EClassReference"/>
+  </skipClassActions>
+  <skipClassActions>
+    <targetProto href="http://rain.ifmo.ru/~breslav/2007/astrans#//ExistingEDataType"/>
   </skipClassActions>
   <input href="http://rain.ifmo.ru/~breslav/2007/astrans#/"/>
 </astrans:Transformation>
