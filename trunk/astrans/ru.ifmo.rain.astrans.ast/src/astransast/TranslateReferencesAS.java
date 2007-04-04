@@ -89,12 +89,12 @@ public interface TranslateReferencesAS extends ActionAS {
 	 * </p>
 	 * <!-- end-user-doc -->
 	 * @return the value of the '<em>Textual Reference Type</em>' containment reference.
-	 * @see #setTextualReferenceType(QualifiedName)
+	 * @see #setTextualReferenceType(EClassifierReferenceAS)
 	 * @see astransast.AstransastPackage#getTranslateReferencesAS_TextualReferenceType()
 	 * @model containment="true" required="true"
 	 * @generated
 	 */
-	QualifiedName getTextualReferenceType();
+	EClassifierReferenceAS getTextualReferenceType();
 
 	/**
 	 * Sets the value of the '{@link astransast.TranslateReferencesAS#getTextualReferenceType <em>Textual Reference Type</em>}' containment reference.
@@ -104,6 +104,6 @@ public interface TranslateReferencesAS extends ActionAS {
 	 * @see #getTextualReferenceType()
 	 * @generated
 	 */
-	void setTextualReferenceType(QualifiedName value);
+	void setTextualReferenceType(EClassifierReferenceAS value);
 
 } // TranslateReferencesAS

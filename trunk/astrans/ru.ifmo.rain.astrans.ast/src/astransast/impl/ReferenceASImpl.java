@@ -7,6 +7,7 @@
 package astransast.impl;
 
 import astransast.AstransastPackage;
+import astransast.EClassifierReferenceAS;
 import astransast.QualifiedName;
 import astransast.ReferenceAS;
 
@@ -62,7 +63,7 @@ public class ReferenceASImpl extends StructuralFeatureASImpl implements Referenc
 	 * @generated
 	 * @ordered
 	 */
-	protected QualifiedName type = null;
+	protected EClassifierReferenceAS type = null;
 
 	/**
 	 * <!-- begin-user-doc -->
@@ -108,7 +109,7 @@ public class ReferenceASImpl extends StructuralFeatureASImpl implements Referenc
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public QualifiedName getType() {
+	public EClassifierReferenceAS getType() {
 		return type;
 	}
 
@@ -117,8 +118,8 @@ public class ReferenceASImpl extends StructuralFeatureASImpl implements Referenc
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public NotificationChain basicSetType(QualifiedName newType, NotificationChain msgs) {
-		QualifiedName oldType = type;
+	public NotificationChain basicSetType(EClassifierReferenceAS newType, NotificationChain msgs) {
+		EClassifierReferenceAS oldType = type;
 		type = newType;
 		if (eNotificationRequired()) {
 			ENotificationImpl notification = new ENotificationImpl(this, Notification.SET, AstransastPackage.REFERENCE_AS__TYPE, oldType, newType);
@@ -132,7 +133,7 @@ public class ReferenceASImpl extends StructuralFeatureASImpl implements Referenc
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public void setType(QualifiedName newType) {
+	public void setType(EClassifierReferenceAS newType) {
 		if (newType != type) {
 			NotificationChain msgs = null;
 			if (type != null)
@@ -185,7 +186,7 @@ public class ReferenceASImpl extends StructuralFeatureASImpl implements Referenc
 				setContainment(((Boolean)newValue).booleanValue());
 				return;
 			case AstransastPackage.REFERENCE_AS__TYPE:
-				setType((QualifiedName)newValue);
+				setType((EClassifierReferenceAS)newValue);
 				return;
 		}
 		super.eSet(featureID, newValue);
@@ -202,7 +203,7 @@ public class ReferenceASImpl extends StructuralFeatureASImpl implements Referenc
 				setContainment(CONTAINMENT_EDEFAULT);
 				return;
 			case AstransastPackage.REFERENCE_AS__TYPE:
-				setType((QualifiedName)null);
+				setType((EClassifierReferenceAS)null);
 				return;
 		}
 		super.eUnset(featureID);

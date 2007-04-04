@@ -62,12 +62,12 @@ public interface ReferenceAS extends StructuralFeatureAS {
 	 * </p>
 	 * <!-- end-user-doc -->
 	 * @return the value of the '<em>Type</em>' containment reference.
-	 * @see #setType(QualifiedName)
+	 * @see #setType(EClassifierReferenceAS)
 	 * @see astransast.AstransastPackage#getReferenceAS_Type()
 	 * @model containment="true" required="true"
 	 * @generated
 	 */
-	QualifiedName getType();
+	EClassifierReferenceAS getType();
 
 	/**
 	 * Sets the value of the '{@link astransast.ReferenceAS#getType <em>Type</em>}' containment reference.
@@ -77,6 +77,6 @@ public interface ReferenceAS extends StructuralFeatureAS {
 	 * @see #getType()
 	 * @generated
 	 */
-	void setType(QualifiedName value);
+	void setType(EClassifierReferenceAS value);
 
 } // ReferenceAS

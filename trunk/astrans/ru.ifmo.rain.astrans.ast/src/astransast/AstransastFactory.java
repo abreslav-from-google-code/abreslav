@@ -89,6 +89,15 @@ public interface AstransastFactory extends EFactory {
 	TransformationAS createTransformationAS();
 
 	/**
+	 * Returns a new object of class '<em>Mapped EClass AS</em>'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return a new object of class '<em>Mapped EClass AS</em>'.
+	 * @generated
+	 */
+	MappedEClassAS createMappedEClassAS();
+
+	/**
 	 * Returns a new object of class '<em>Qualified Name</em>'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->

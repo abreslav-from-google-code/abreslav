@@ -66,6 +66,7 @@ public class AstransastFactoryImpl extends EFactoryImpl implements AstransastFac
 			case AstransastPackage.CHANGE_INHERITANCE_AS: return createChangeInheritanceAS();
 			case AstransastPackage.SKIP_CLASS_AS: return createSkipClassAS();
 			case AstransastPackage.TRANSFORMATION_AS: return createTransformationAS();
+			case AstransastPackage.MAPPED_ECLASS_AS: return createMappedEClassAS();
 			case AstransastPackage.QUALIFIED_NAME: return createQualifiedName();
 			case AstransastPackage.EPACKAGE_URI: return createEPackageUri();
 			case AstransastPackage.EPACKAGE_PATH: return createEPackagePath();
@@ -142,6 +143,16 @@ public class AstransastFactoryImpl extends EFactoryImpl implements AstransastFac
 	public TransformationAS createTransformationAS() {
 		TransformationASImpl transformationAS = new TransformationASImpl();
 		return transformationAS;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public MappedEClassAS createMappedEClassAS() {
+		MappedEClassASImpl mappedEClassAS = new MappedEClassASImpl();
+		return mappedEClassAS;
 	}
 
 	/**
