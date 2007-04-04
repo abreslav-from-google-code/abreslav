@@ -8,6 +8,7 @@ package astransast.impl;
 
 import astransast.AstransastPackage;
 import astransast.ChangeInheritanceAS;
+import astransast.EClassifierReferenceAS;
 import astransast.QualifiedName;
 
 import java.util.Collection;
@@ -129,7 +130,7 @@ public class ChangeInheritanceASImpl extends ActionASImpl implements ChangeInher
 	 */
 	public EList getSuperclasses() {
 		if (superclasses == null) {
-			superclasses = new EObjectContainmentEList(QualifiedName.class, this, AstransastPackage.CHANGE_INHERITANCE_AS__SUPERCLASSES);
+			superclasses = new EObjectContainmentEList(EClassifierReferenceAS.class, this, AstransastPackage.CHANGE_INHERITANCE_AS__SUPERCLASSES);
 		}
 		return superclasses;
 	}

@@ -32,7 +32,7 @@ import org.eclipse.emf.ecore.impl.EObjectImpl;
  *
  * @generated
  */
-public class QualifiedNameImpl extends EObjectImpl implements QualifiedName {
+public class QualifiedNameImpl extends EClassifierReferenceASImpl implements QualifiedName {
 	/**
 	 * The default value of the '{@link #getName() <em>Name</em>}' attribute.
 	 * <!-- begin-user-doc -->

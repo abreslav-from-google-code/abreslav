@@ -93,6 +93,12 @@ public class AstransastSwitch {
 				if (result == null) result = defaultCase(theEObject);
 				return result;
 			}
+			case AstransastPackage.ECLASSIFIER_REFERENCE_AS: {
+				EClassifierReferenceAS eClassifierReferenceAS = (EClassifierReferenceAS)theEObject;
+				Object result = caseEClassifierReferenceAS(eClassifierReferenceAS);
+				if (result == null) result = defaultCase(theEObject);
+				return result;
+			}
 			case AstransastPackage.TRANSLATE_REFERENCES_AS: {
 				TranslateReferencesAS translateReferencesAS = (TranslateReferencesAS)theEObject;
 				Object result = caseTranslateReferencesAS(translateReferencesAS);
@@ -147,9 +153,17 @@ public class AstransastSwitch {
 				if (result == null) result = defaultCase(theEObject);
 				return result;
 			}
+			case AstransastPackage.MAPPED_ECLASS_AS: {
+				MappedEClassAS mappedEClassAS = (MappedEClassAS)theEObject;
+				Object result = caseMappedEClassAS(mappedEClassAS);
+				if (result == null) result = caseEClassifierReferenceAS(mappedEClassAS);
+				if (result == null) result = defaultCase(theEObject);
+				return result;
+			}
 			case AstransastPackage.QUALIFIED_NAME: {
 				QualifiedName qualifiedName = (QualifiedName)theEObject;
 				Object result = caseQualifiedName(qualifiedName);
+				if (result == null) result = caseEClassifierReferenceAS(qualifiedName);
 				if (result == null) result = defaultCase(theEObject);
 				return result;
 			}
@@ -189,6 +203,21 @@ public class AstransastSwitch {
 	 * @generated
 	 */
 	public Object caseActionAS(ActionAS object) {
+		return null;
+	}
+
+	/**
+	 * Returns the result of interpretting the object as an instance of '<em>EClassifier Reference AS</em>'.
+	 * <!-- begin-user-doc -->
+	 * This implementation returns null;
+	 * returning a non-null result will terminate the switch.
+	 * <!-- end-user-doc -->
+	 * @param object the target of the switch.
+	 * @return the result of interpretting the object as an instance of '<em>EClassifier Reference AS</em>'.
+	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
+	 * @generated
+	 */
+	public Object caseEClassifierReferenceAS(EClassifierReferenceAS object) {
 		return null;
 	}
 
@@ -309,6 +338,21 @@ public class AstransastSwitch {
 	 * @generated
 	 */
 	public Object caseTransformationAS(TransformationAS object) {
+		return null;
+	}
+
+	/**
+	 * Returns the result of interpretting the object as an instance of '<em>Mapped EClass AS</em>'.
+	 * <!-- begin-user-doc -->
+	 * This implementation returns null;
+	 * returning a non-null result will terminate the switch.
+	 * <!-- end-user-doc -->
+	 * @param object the target of the switch.
+	 * @return the result of interpretting the object as an instance of '<em>Mapped EClass AS</em>'.
+	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
+	 * @generated
+	 */
+	public Object caseMappedEClassAS(MappedEClassAS object) {
 		return null;
 	}
 

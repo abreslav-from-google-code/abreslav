@@ -73,6 +73,9 @@ public class AstransastAdapterFactory extends AdapterFactoryImpl {
 			public Object caseActionAS(ActionAS object) {
 				return createActionASAdapter();
 			}
+			public Object caseEClassifierReferenceAS(EClassifierReferenceAS object) {
+				return createEClassifierReferenceASAdapter();
+			}
 			public Object caseTranslateReferencesAS(TranslateReferencesAS object) {
 				return createTranslateReferencesASAdapter();
 			}
@@ -96,6 +99,9 @@ public class AstransastAdapterFactory extends AdapterFactoryImpl {
 			}
 			public Object caseTransformationAS(TransformationAS object) {
 				return createTransformationASAdapter();
+			}
+			public Object caseMappedEClassAS(MappedEClassAS object) {
+				return createMappedEClassASAdapter();
 			}
 			public Object caseQualifiedName(QualifiedName object) {
 				return createQualifiedNameAdapter();
@@ -138,6 +144,20 @@ public class AstransastAdapterFactory extends AdapterFactoryImpl {
 	 * @generated
 	 */
 	public Adapter createActionASAdapter() {
+		return null;
+	}
+
+	/**
+	 * Creates a new adapter for an object of class '{@link astransast.EClassifierReferenceAS <em>EClassifier Reference AS</em>}'.
+	 * <!-- begin-user-doc -->
+	 * This default implementation returns null so that we can easily ignore cases;
+	 * it's useful to ignore a case when inheritance will catch all the cases anyway.
+	 * <!-- end-user-doc -->
+	 * @return the new adapter.
+	 * @see astransast.EClassifierReferenceAS
+	 * @generated
+	 */
+	public Adapter createEClassifierReferenceASAdapter() {
 		return null;
 	}
 
@@ -250,6 +270,20 @@ public class AstransastAdapterFactory extends AdapterFactoryImpl {
 	 * @generated
 	 */
 	public Adapter createTransformationASAdapter() {
+		return null;
+	}
+
+	/**
+	 * Creates a new adapter for an object of class '{@link astransast.MappedEClassAS <em>Mapped EClass AS</em>}'.
+	 * <!-- begin-user-doc -->
+	 * This default implementation returns null so that we can easily ignore cases;
+	 * it's useful to ignore a case when inheritance will catch all the cases anyway.
+	 * <!-- end-user-doc -->
+	 * @return the new adapter.
+	 * @see astransast.MappedEClassAS
+	 * @generated
+	 */
+	public Adapter createMappedEClassASAdapter() {
 		return null;
 	}
 

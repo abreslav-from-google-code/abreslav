@@ -12,9 +12,11 @@ import astransast.AstransastPackage;
 import astransast.AttributeAS;
 import astransast.ChangeInheritanceAS;
 import astransast.CreateClassAS;
+import astransast.EClassifierReferenceAS;
 import astransast.EPackagePath;
 import astransast.EPackageReference;
 import astransast.EPackageUri;
+import astransast.MappedEClassAS;
 import astransast.QualifiedName;
 import astransast.ReferenceAS;
 import astransast.SkipClassAS;
@@ -42,6 +44,13 @@ public class AstransastPackageImpl extends EPackageImpl implements AstransastPac
 	 * @generated
 	 */
 	private EClass actionASEClass = null;
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	private EClass eClassifierReferenceASEClass = null;
 
 	/**
 	 * <!-- begin-user-doc -->
@@ -98,6 +107,13 @@ public class AstransastPackageImpl extends EPackageImpl implements AstransastPac
 	 * @generated
 	 */
 	private EClass transformationASEClass = null;
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	private EClass mappedEClassASEClass = null;
 
 	/**
 	 * <!-- begin-user-doc -->
@@ -202,6 +218,15 @@ public class AstransastPackageImpl extends EPackageImpl implements AstransastPac
 	 */
 	public EClass getActionAS() {
 		return actionASEClass;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EClass getEClassifierReferenceAS() {
+		return eClassifierReferenceASEClass;
 	}
 
 	/**
@@ -497,6 +522,24 @@ public class AstransastPackageImpl extends EPackageImpl implements AstransastPac
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	public EClass getMappedEClassAS() {
+		return mappedEClassASEClass;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EReference getMappedEClassAS_Proto() {
+		return (EReference)mappedEClassASEClass.getEStructuralFeatures().get(0);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
 	public EClass getQualifiedName() {
 		return qualifiedNameEClass;
 	}
@@ -594,6 +637,8 @@ public class AstransastPackageImpl extends EPackageImpl implements AstransastPac
 		// Create classes and their features
 		actionASEClass = createEClass(ACTION_AS);
 
+		eClassifierReferenceASEClass = createEClass(ECLASSIFIER_REFERENCE_AS);
+
 		translateReferencesASEClass = createEClass(TRANSLATE_REFERENCES_AS);
 		createEAttribute(translateReferencesASEClass, TRANSLATE_REFERENCES_AS__INCLUDE_DESCENDANTS);
 		createEReference(translateReferencesASEClass, TRANSLATE_REFERENCES_AS__MODEL_REFERENCE_TYPE_PROTO);
@@ -633,6 +678,9 @@ public class AstransastPackageImpl extends EPackageImpl implements AstransastPac
 		createEReference(transformationASEClass, TRANSFORMATION_AS__CHANGE_INHERITANCE_ACTIONS);
 		createEReference(transformationASEClass, TRANSFORMATION_AS__SKIP_CLASS_ACTIONS);
 		createEReference(transformationASEClass, TRANSFORMATION_AS__INPUT);
+
+		mappedEClassASEClass = createEClass(MAPPED_ECLASS_AS);
+		createEReference(mappedEClassASEClass, MAPPED_ECLASS_AS__PROTO);
 
 		qualifiedNameEClass = createEClass(QUALIFIED_NAME);
 		createEAttribute(qualifiedNameEClass, QUALIFIED_NAME__NAME);
@@ -677,21 +725,25 @@ public class AstransastPackageImpl extends EPackageImpl implements AstransastPac
 		referenceASEClass.getESuperTypes().add(this.getStructuralFeatureAS());
 		changeInheritanceASEClass.getESuperTypes().add(this.getActionAS());
 		skipClassASEClass.getESuperTypes().add(this.getActionAS());
+		mappedEClassASEClass.getESuperTypes().add(this.getEClassifierReferenceAS());
+		qualifiedNameEClass.getESuperTypes().add(this.getEClassifierReferenceAS());
 		ePackageUriEClass.getESuperTypes().add(this.getEPackageReference());
 		ePackagePathEClass.getESuperTypes().add(this.getEPackageReference());
 
 		// Initialize classes and features; add operations and parameters
 		initEClass(actionASEClass, ActionAS.class, "ActionAS", IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 
+		initEClass(eClassifierReferenceASEClass, EClassifierReferenceAS.class, "EClassifierReferenceAS", IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
+
 		initEClass(translateReferencesASEClass, TranslateReferencesAS.class, "TranslateReferencesAS", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 		initEAttribute(getTranslateReferencesAS_IncludeDescendants(), ecorePackage.getEBoolean(), "includeDescendants", "false", 0, 1, TranslateReferencesAS.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEReference(getTranslateReferencesAS_ModelReferenceTypeProto(), this.getQualifiedName(), null, "modelReferenceTypeProto", null, 1, 1, TranslateReferencesAS.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-		initEReference(getTranslateReferencesAS_TextualReferenceType(), this.getQualifiedName(), null, "textualReferenceType", null, 1, 1, TranslateReferencesAS.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEReference(getTranslateReferencesAS_TextualReferenceType(), this.getEClassifierReferenceAS(), null, "textualReferenceType", null, 1, 1, TranslateReferencesAS.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
 		initEClass(createClassASEClass, CreateClassAS.class, "CreateClassAS", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 		initEAttribute(getCreateClassAS_Name(), ecorePackage.getEString(), "name", null, 1, 1, CreateClassAS.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEAttribute(getCreateClassAS_Abstract(), ecorePackage.getEBoolean(), "abstract", "false", 0, 1, CreateClassAS.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-		initEReference(getCreateClassAS_Superclasses(), this.getQualifiedName(), null, "superclasses", null, 0, -1, CreateClassAS.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEReference(getCreateClassAS_Superclasses(), this.getEClassifierReferenceAS(), null, "superclasses", null, 0, -1, CreateClassAS.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEReference(getCreateClassAS_StructuralFeatures(), this.getStructuralFeatureAS(), null, "structuralFeatures", null, 0, -1, CreateClassAS.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
 		initEClass(structuralFeatureASEClass, StructuralFeatureAS.class, "StructuralFeatureAS", IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
@@ -704,11 +756,11 @@ public class AstransastPackageImpl extends EPackageImpl implements AstransastPac
 
 		initEClass(referenceASEClass, ReferenceAS.class, "ReferenceAS", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 		initEAttribute(getReferenceAS_Containment(), ecorePackage.getEBoolean(), "containment", "false", 0, 1, ReferenceAS.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-		initEReference(getReferenceAS_Type(), this.getQualifiedName(), null, "type", null, 1, 1, ReferenceAS.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEReference(getReferenceAS_Type(), this.getEClassifierReferenceAS(), null, "type", null, 1, 1, ReferenceAS.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
 		initEClass(changeInheritanceASEClass, ChangeInheritanceAS.class, "ChangeInheritanceAS", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 		initEReference(getChangeInheritanceAS_TargetProto(), this.getQualifiedName(), null, "targetProto", null, 1, 1, ChangeInheritanceAS.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-		initEReference(getChangeInheritanceAS_Superclasses(), this.getQualifiedName(), null, "superclasses", null, 0, -1, ChangeInheritanceAS.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEReference(getChangeInheritanceAS_Superclasses(), this.getEClassifierReferenceAS(), null, "superclasses", null, 0, -1, ChangeInheritanceAS.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
 		initEClass(skipClassASEClass, SkipClassAS.class, "SkipClassAS", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 		initEAttribute(getSkipClassAS_IncludeDescendants(), ecorePackage.getEBoolean(), "includeDescendants", "false", 0, 1, SkipClassAS.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
@@ -722,6 +774,9 @@ public class AstransastPackageImpl extends EPackageImpl implements AstransastPac
 		initEReference(getTransformationAS_ChangeInheritanceActions(), this.getChangeInheritanceAS(), null, "changeInheritanceActions", null, 0, -1, TransformationAS.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEReference(getTransformationAS_SkipClassActions(), this.getSkipClassAS(), null, "skipClassActions", null, 0, -1, TransformationAS.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEReference(getTransformationAS_Input(), this.getEPackageReference(), null, "input", null, 0, 1, TransformationAS.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+
+		initEClass(mappedEClassASEClass, MappedEClassAS.class, "MappedEClassAS", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
+		initEReference(getMappedEClassAS_Proto(), this.getQualifiedName(), null, "proto", null, 1, 1, MappedEClassAS.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
 		initEClass(qualifiedNameEClass, QualifiedName.class, "QualifiedName", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 		initEAttribute(getQualifiedName_Name(), ecorePackage.getEString(), "name", null, 1, 1, QualifiedName.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);

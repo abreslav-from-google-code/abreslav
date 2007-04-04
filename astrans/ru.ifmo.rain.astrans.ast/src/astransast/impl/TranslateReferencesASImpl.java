@@ -7,6 +7,7 @@
 package astransast.impl;
 
 import astransast.AstransastPackage;
+import astransast.EClassifierReferenceAS;
 import astransast.QualifiedName;
 import astransast.TranslateReferencesAS;
 
@@ -73,7 +74,7 @@ public class TranslateReferencesASImpl extends ActionASImpl implements Translate
 	 * @generated
 	 * @ordered
 	 */
-	protected QualifiedName textualReferenceType = null;
+	protected EClassifierReferenceAS textualReferenceType = null;
 
 	/**
 	 * <!-- begin-user-doc -->
@@ -162,7 +163,7 @@ public class TranslateReferencesASImpl extends ActionASImpl implements Translate
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public QualifiedName getTextualReferenceType() {
+	public EClassifierReferenceAS getTextualReferenceType() {
 		return textualReferenceType;
 	}
 
@@ -171,8 +172,8 @@ public class TranslateReferencesASImpl extends ActionASImpl implements Translate
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public NotificationChain basicSetTextualReferenceType(QualifiedName newTextualReferenceType, NotificationChain msgs) {
-		QualifiedName oldTextualReferenceType = textualReferenceType;
+	public NotificationChain basicSetTextualReferenceType(EClassifierReferenceAS newTextualReferenceType, NotificationChain msgs) {
+		EClassifierReferenceAS oldTextualReferenceType = textualReferenceType;
 		textualReferenceType = newTextualReferenceType;
 		if (eNotificationRequired()) {
 			ENotificationImpl notification = new ENotificationImpl(this, Notification.SET, AstransastPackage.TRANSLATE_REFERENCES_AS__TEXTUAL_REFERENCE_TYPE, oldTextualReferenceType, newTextualReferenceType);
@@ -186,7 +187,7 @@ public class TranslateReferencesASImpl extends ActionASImpl implements Translate
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public void setTextualReferenceType(QualifiedName newTextualReferenceType) {
+	public void setTextualReferenceType(EClassifierReferenceAS newTextualReferenceType) {
 		if (newTextualReferenceType != textualReferenceType) {
 			NotificationChain msgs = null;
 			if (textualReferenceType != null)
@@ -246,7 +247,7 @@ public class TranslateReferencesASImpl extends ActionASImpl implements Translate
 				setModelReferenceTypeProto((QualifiedName)newValue);
 				return;
 			case AstransastPackage.TRANSLATE_REFERENCES_AS__TEXTUAL_REFERENCE_TYPE:
-				setTextualReferenceType((QualifiedName)newValue);
+				setTextualReferenceType((EClassifierReferenceAS)newValue);
 				return;
 		}
 		super.eSet(featureID, newValue);
@@ -266,7 +267,7 @@ public class TranslateReferencesASImpl extends ActionASImpl implements Translate
 				setModelReferenceTypeProto((QualifiedName)null);
 				return;
 			case AstransastPackage.TRANSLATE_REFERENCES_AS__TEXTUAL_REFERENCE_TYPE:
-				setTextualReferenceType((QualifiedName)null);
+				setTextualReferenceType((EClassifierReferenceAS)null);
 				return;
 		}
 		super.eUnset(featureID);

@@ -8,6 +8,7 @@ package astransast.impl;
 
 import astransast.AstransastPackage;
 import astransast.CreateClassAS;
+import astransast.EClassifierReferenceAS;
 import astransast.QualifiedName;
 import astransast.StructuralFeatureAS;
 
@@ -171,7 +172,7 @@ public class CreateClassASImpl extends ActionASImpl implements CreateClassAS {
 	 */
 	public EList getSuperclasses() {
 		if (superclasses == null) {
-			superclasses = new EObjectContainmentEList(QualifiedName.class, this, AstransastPackage.CREATE_CLASS_AS__SUPERCLASSES);
+			superclasses = new EObjectContainmentEList(EClassifierReferenceAS.class, this, AstransastPackage.CREATE_CLASS_AS__SUPERCLASSES);
 		}
 		return superclasses;
 	}

@@ -79,6 +79,25 @@ public interface AstransastPackage extends EPackage {
 	int ACTION_AS_FEATURE_COUNT = 0;
 
 	/**
+	 * The meta object id for the '{@link astransast.impl.EClassifierReferenceASImpl <em>EClassifier Reference AS</em>}' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see astransast.impl.EClassifierReferenceASImpl
+	 * @see astransast.impl.AstransastPackageImpl#getEClassifierReferenceAS()
+	 * @generated
+	 */
+	int ECLASSIFIER_REFERENCE_AS = 1;
+
+	/**
+	 * The number of structural features of the '<em>EClassifier Reference AS</em>' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int ECLASSIFIER_REFERENCE_AS_FEATURE_COUNT = 0;
+
+	/**
 	 * The meta object id for the '{@link astransast.impl.TranslateReferencesASImpl <em>Translate References AS</em>}' class.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -86,7 +105,7 @@ public interface AstransastPackage extends EPackage {
 	 * @see astransast.impl.AstransastPackageImpl#getTranslateReferencesAS()
 	 * @generated
 	 */
-	int TRANSLATE_REFERENCES_AS = 1;
+	int TRANSLATE_REFERENCES_AS = 2;
 
 	/**
 	 * The feature id for the '<em><b>Include Descendants</b></em>' attribute.
@@ -132,7 +151,7 @@ public interface AstransastPackage extends EPackage {
 	 * @see astransast.impl.AstransastPackageImpl#getCreateClassAS()
 	 * @generated
 	 */
-	int CREATE_CLASS_AS = 2;
+	int CREATE_CLASS_AS = 3;
 
 	/**
 	 * The feature id for the '<em><b>Name</b></em>' attribute.
@@ -187,7 +206,7 @@ public interface AstransastPackage extends EPackage {
 	 * @see astransast.impl.AstransastPackageImpl#getStructuralFeatureAS()
 	 * @generated
 	 */
-	int STRUCTURAL_FEATURE_AS = 3;
+	int STRUCTURAL_FEATURE_AS = 4;
 
 	/**
 	 * The feature id for the '<em><b>Name</b></em>' attribute.
@@ -233,7 +252,7 @@ public interface AstransastPackage extends EPackage {
 	 * @see astransast.impl.AstransastPackageImpl#getAttributeAS()
 	 * @generated
 	 */
-	int ATTRIBUTE_AS = 4;
+	int ATTRIBUTE_AS = 5;
 
 	/**
 	 * The feature id for the '<em><b>Name</b></em>' attribute.
@@ -288,7 +307,7 @@ public interface AstransastPackage extends EPackage {
 	 * @see astransast.impl.AstransastPackageImpl#getReferenceAS()
 	 * @generated
 	 */
-	int REFERENCE_AS = 5;
+	int REFERENCE_AS = 6;
 
 	/**
 	 * The feature id for the '<em><b>Name</b></em>' attribute.
@@ -352,7 +371,7 @@ public interface AstransastPackage extends EPackage {
 	 * @see astransast.impl.AstransastPackageImpl#getChangeInheritanceAS()
 	 * @generated
 	 */
-	int CHANGE_INHERITANCE_AS = 6;
+	int CHANGE_INHERITANCE_AS = 7;
 
 	/**
 	 * The feature id for the '<em><b>Target Proto</b></em>' containment reference.
@@ -389,7 +408,7 @@ public interface AstransastPackage extends EPackage {
 	 * @see astransast.impl.AstransastPackageImpl#getSkipClassAS()
 	 * @generated
 	 */
-	int SKIP_CLASS_AS = 7;
+	int SKIP_CLASS_AS = 8;
 
 	/**
 	 * The feature id for the '<em><b>Include Descendants</b></em>' attribute.
@@ -426,7 +445,7 @@ public interface AstransastPackage extends EPackage {
 	 * @see astransast.impl.AstransastPackageImpl#getTransformationAS()
 	 * @generated
 	 */
-	int TRANSFORMATION_AS = 8;
+	int TRANSFORMATION_AS = 9;
 
 	/**
 	 * The feature id for the '<em><b>Output Name</b></em>' attribute.
@@ -501,6 +520,34 @@ public interface AstransastPackage extends EPackage {
 	int TRANSFORMATION_AS_FEATURE_COUNT = 7;
 
 	/**
+	 * The meta object id for the '{@link astransast.impl.MappedEClassASImpl <em>Mapped EClass AS</em>}' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see astransast.impl.MappedEClassASImpl
+	 * @see astransast.impl.AstransastPackageImpl#getMappedEClassAS()
+	 * @generated
+	 */
+	int MAPPED_ECLASS_AS = 10;
+
+	/**
+	 * The feature id for the '<em><b>Proto</b></em>' containment reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int MAPPED_ECLASS_AS__PROTO = ECLASSIFIER_REFERENCE_AS_FEATURE_COUNT + 0;
+
+	/**
+	 * The number of structural features of the '<em>Mapped EClass AS</em>' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int MAPPED_ECLASS_AS_FEATURE_COUNT = ECLASSIFIER_REFERENCE_AS_FEATURE_COUNT + 1;
+
+	/**
 	 * The meta object id for the '{@link astransast.impl.QualifiedNameImpl <em>Qualified Name</em>}' class.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -508,7 +555,7 @@ public interface AstransastPackage extends EPackage {
 	 * @see astransast.impl.AstransastPackageImpl#getQualifiedName()
 	 * @generated
 	 */
-	int QUALIFIED_NAME = 9;
+	int QUALIFIED_NAME = 11;
 
 	/**
 	 * The feature id for the '<em><b>Name</b></em>' attribute.
@@ -517,7 +564,7 @@ public interface AstransastPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int QUALIFIED_NAME__NAME = 0;
+	int QUALIFIED_NAME__NAME = ECLASSIFIER_REFERENCE_AS_FEATURE_COUNT + 0;
 
 	/**
 	 * The feature id for the '<em><b>Sub QN</b></em>' containment reference.
@@ -526,7 +573,7 @@ public interface AstransastPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int QUALIFIED_NAME__SUB_QN = 1;
+	int QUALIFIED_NAME__SUB_QN = ECLASSIFIER_REFERENCE_AS_FEATURE_COUNT + 1;
 
 	/**
 	 * The number of structural features of the '<em>Qualified Name</em>' class.
@@ -535,7 +582,7 @@ public interface AstransastPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int QUALIFIED_NAME_FEATURE_COUNT = 2;
+	int QUALIFIED_NAME_FEATURE_COUNT = ECLASSIFIER_REFERENCE_AS_FEATURE_COUNT + 2;
 
 
 	/**
@@ -546,7 +593,7 @@ public interface AstransastPackage extends EPackage {
 	 * @see astransast.impl.AstransastPackageImpl#getEPackageReference()
 	 * @generated
 	 */
-	int EPACKAGE_REFERENCE = 10;
+	int EPACKAGE_REFERENCE = 12;
 
 	/**
 	 * The number of structural features of the '<em>EPackage Reference</em>' class.
@@ -565,7 +612,7 @@ public interface AstransastPackage extends EPackage {
 	 * @see astransast.impl.AstransastPackageImpl#getEPackageUri()
 	 * @generated
 	 */
-	int EPACKAGE_URI = 11;
+	int EPACKAGE_URI = 13;
 
 	/**
 	 * The feature id for the '<em><b>Uri</b></em>' attribute.
@@ -593,7 +640,7 @@ public interface AstransastPackage extends EPackage {
 	 * @see astransast.impl.AstransastPackageImpl#getEPackagePath()
 	 * @generated
 	 */
-	int EPACKAGE_PATH = 12;
+	int EPACKAGE_PATH = 14;
 
 	/**
 	 * The feature id for the '<em><b>Path</b></em>' attribute.
@@ -623,6 +670,16 @@ public interface AstransastPackage extends EPackage {
 	 * @generated
 	 */
 	EClass getActionAS();
+
+	/**
+	 * Returns the meta object for class '{@link astransast.EClassifierReferenceAS <em>EClassifier Reference AS</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for class '<em>EClassifier Reference AS</em>'.
+	 * @see astransast.EClassifierReferenceAS
+	 * @generated
+	 */
+	EClass getEClassifierReferenceAS();
 
 	/**
 	 * Returns the meta object for class '{@link astransast.TranslateReferencesAS <em>Translate References AS</em>}'.
@@ -969,6 +1026,27 @@ public interface AstransastPackage extends EPackage {
 	EReference getTransformationAS_Input();
 
 	/**
+	 * Returns the meta object for class '{@link astransast.MappedEClassAS <em>Mapped EClass AS</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for class '<em>Mapped EClass AS</em>'.
+	 * @see astransast.MappedEClassAS
+	 * @generated
+	 */
+	EClass getMappedEClassAS();
+
+	/**
+	 * Returns the meta object for the containment reference '{@link astransast.MappedEClassAS#getProto <em>Proto</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the containment reference '<em>Proto</em>'.
+	 * @see astransast.MappedEClassAS#getProto()
+	 * @see #getMappedEClassAS()
+	 * @generated
+	 */
+	EReference getMappedEClassAS_Proto();
+
+	/**
 	 * Returns the meta object for class '{@link astransast.QualifiedName <em>Qualified Name</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -1083,6 +1161,16 @@ public interface AstransastPackage extends EPackage {
 		 * @generated
 		 */
 		EClass ACTION_AS = eINSTANCE.getActionAS();
+
+		/**
+		 * The meta object literal for the '{@link astransast.impl.EClassifierReferenceASImpl <em>EClassifier Reference AS</em>}' class.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @see astransast.impl.EClassifierReferenceASImpl
+		 * @see astransast.impl.AstransastPackageImpl#getEClassifierReferenceAS()
+		 * @generated
+		 */
+		EClass ECLASSIFIER_REFERENCE_AS = eINSTANCE.getEClassifierReferenceAS();
 
 		/**
 		 * The meta object literal for the '{@link astransast.impl.TranslateReferencesASImpl <em>Translate References AS</em>}' class.
@@ -1357,6 +1445,24 @@ public interface AstransastPackage extends EPackage {
 		EReference TRANSFORMATION_AS__INPUT = eINSTANCE.getTransformationAS_Input();
 
 		/**
+		 * The meta object literal for the '{@link astransast.impl.MappedEClassASImpl <em>Mapped EClass AS</em>}' class.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @see astransast.impl.MappedEClassASImpl
+		 * @see astransast.impl.AstransastPackageImpl#getMappedEClassAS()
+		 * @generated
+		 */
+		EClass MAPPED_ECLASS_AS = eINSTANCE.getMappedEClassAS();
+
+		/**
+		 * The meta object literal for the '<em><b>Proto</b></em>' containment reference feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EReference MAPPED_ECLASS_AS__PROTO = eINSTANCE.getMappedEClassAS_Proto();
+
+		/**
 		 * The meta object literal for the '{@link astransast.impl.QualifiedNameImpl <em>Qualified Name</em>}' class.
 		 * <!-- begin-user-doc -->
 		 * <!-- end-user-doc -->
@@ -1382,7 +1488,7 @@ public interface AstransastPackage extends EPackage {
 		 */
 		EReference QUALIFIED_NAME__SUB_QN = eINSTANCE.getQualifiedName_SubQN();
 
-			/**
+		/**
 		 * The meta object literal for the '{@link astransast.impl.EPackageReferenceImpl <em>EPackage Reference</em>}' class.
 		 * <!-- begin-user-doc -->
 		 * <!-- end-user-doc -->

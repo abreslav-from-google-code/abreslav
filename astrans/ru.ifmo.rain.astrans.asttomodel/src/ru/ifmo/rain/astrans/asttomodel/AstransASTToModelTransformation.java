@@ -26,6 +26,7 @@ import astrans.TranslateReferences;
 import astransast.AttributeAS;
 import astransast.ChangeInheritanceAS;
 import astransast.CreateClassAS;
+import astransast.EClassifierReferenceAS;
 import astransast.EPackagePath;
 import astransast.EPackageUri;
 import astransast.QualifiedName;
@@ -192,7 +193,7 @@ public class AstransASTToModelTransformation {
 									changeInheritanceAS.getTargetProto()));
 					EList superclasses = changeInheritanceAS.getSuperclasses();
 					for (Iterator iter = superclasses.iterator(); iter.hasNext();) {
-						QualifiedName superclass = (QualifiedName) iter.next();
+						EClassifierReferenceAS superclass = (EClassifierReferenceAS) iter.next();
 						changeInheritance.getSuperclasses().add(resolver.resolveChangeInheritanceSuperclass(superclass));
 					}
 				}

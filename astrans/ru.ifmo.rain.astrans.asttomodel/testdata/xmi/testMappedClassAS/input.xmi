@@ -5,10 +5,15 @@
     <targetProto name="ecore">
       <subQN name="EAnnotation"/>
     </targetProto>
-    <superclasses name="ecore">
+    <superclasses xsi:type="astransast:QualifiedName" name="ecore">
       <subQN name="EDataType"/>
     </superclasses>
-    <superclasses name="EEnumAS"/>
+    <superclasses xsi:type="astransast:QualifiedName" name="A"/>
+    <superclasses xsi:type="astransast:MappedEClassAS">
+      <proto name="ecore">
+        <subQN name="EEnum"/>
+      </proto>
+    </superclasses>
   </changeInheritanceActions>
   <input xsi:type="astransast:EPackageUri" uri="http://www.eclipse.org/emf/2002/Ecore"/>
 </astransast:TransformationAS>

@@ -85,7 +85,7 @@ public interface CreateClassAS extends ActionAS {
 
 	/**
 	 * Returns the value of the '<em><b>Superclasses</b></em>' containment reference list.
-	 * The list contents are of type {@link astransast.QualifiedName}.
+	 * The list contents are of type {@link astransast.EClassifierReferenceAS}.
 	 * <!-- begin-user-doc -->
 	 * <p>
 	 * If the meaning of the '<em>Superclasses</em>' containment reference list isn't clear,
@@ -94,7 +94,7 @@ public interface CreateClassAS extends ActionAS {
 	 * <!-- end-user-doc -->
 	 * @return the value of the '<em>Superclasses</em>' containment reference list.
 	 * @see astransast.AstransastPackage#getCreateClassAS_Superclasses()
-	 * @model type="astransast.QualifiedName" containment="true"
+	 * @model type="astransast.EClassifierReferenceAS" containment="true"
 	 * @generated
 	 */
 	EList getSuperclasses();
