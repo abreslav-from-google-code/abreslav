@@ -22,18 +22,6 @@ import astrans.Transformation;
  */
 public class AstransInterpreter {
 
-//	private final AstransInterpreterTrace trace;
-//	
-//	private final ReferenceTranslator referenceTranslator;
-//	
-//	private final Composer composer;
-//	
-//	private AstransInterpreter(final Transformation transformation) {
-//		this.trace = new AstransInterpreterTrace();
-//		this.referenceTranslator = new ReferenceTranslator(transformation, trace);
-//		this.composer = new Composer(referenceTranslator);
-//	}
-
 	public static Collection<EClass> createEClassObjects(Transformation transformation, AstransInterpreterTrace trace, EClassSet skipper) {
 		ArrayList<EClass> classes = new ArrayList<EClass>();
 		mapClasses(transformation, trace, classes, skipper);
@@ -60,7 +48,7 @@ public class AstransInterpreter {
 		}
 	}
 
-	private static EClassSet createSkipper(Transformation transformation) {
+	private static EClassSet enumerateSkippedClasses(Transformation transformation) {
 		EClassSet skipper = new EClassSet();
 		for (Iterator iter = transformation.getSkipClassActions().iterator(); iter.hasNext();) {
 			SkipClass action = (SkipClass) iter.next();
@@ -90,10 +78,10 @@ public class AstransInterpreter {
 	public static EPackage run(Transformation transformation) {
 		
 		AstransInterpreterTrace trace = new AstransInterpreterTrace();
-		EClassSet skipper = createSkipper(transformation);
-		Collection<EClass> classes = createEClassObjects(transformation, trace, skipper);
+		EClassSet skippedClasses = enumerateSkippedClasses(transformation);
+		Collection<EClass> classes = createEClassObjects(transformation, trace, skippedClasses);
 
-		ReferenceTranslator referenceTranslator = new ReferenceTranslator(transformation, trace, skipper);
+		ReferenceTranslator referenceTranslator = new ReferenceTranslator(transformation, trace, skippedClasses);
 		Composer composer = new Composer(referenceTranslator);
 		composer.run(transformation, trace);
 		
