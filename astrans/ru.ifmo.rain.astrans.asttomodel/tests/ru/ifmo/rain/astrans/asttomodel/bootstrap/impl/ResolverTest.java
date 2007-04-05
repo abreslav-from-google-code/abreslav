@@ -1,4 +1,4 @@
-package ru.ifmo.rain.astrans.asttomodel.resolver;
+package ru.ifmo.rain.astrans.asttomodel.bootstrap.impl;
 
 import static org.junit.Assert.assertEquals;
 
@@ -9,7 +9,10 @@ import org.eclipse.emf.ecore.EcorePackage;
 import org.junit.Before;
 import org.junit.Test;
 
-import ru.ifmo.rain.astrans.asttomodel.FileResolver;
+import ru.ifmo.rain.astrans.asttomodel.IResolver;
+import ru.ifmo.rain.astrans.asttomodel.bootstrap.impl.FileResolver;
+import ru.ifmo.rain.astrans.asttomodel.bootstrap.impl.ResolverImpl;
+import ru.ifmo.rain.astrans.asttomodel.bootstrap.impl.TraceImpl;
 import utils.QNUtils;
 import astrans.AstransFactory;
 import astrans.AstransPackage;
@@ -26,18 +29,18 @@ import astransast.QualifiedName;
 
 public class ResolverTest {
 
-	private Resolver resolver;
+	private IResolver resolver;
 	private QualifiedName actionQN;
 
 	@Before
 	public void setUp() throws Exception {
 		actionQN = QNUtils.createQN("astrans.Action");
 		
-		CreatedClasses createdClasses = new CreatedClasses();
+		TraceImpl trace = new TraceImpl();
 		CreateClass b = AstransFactory.eINSTANCE.createCreateClass();
 		b.setName("B");
-		createdClasses.add(b);
-		resolver = new Resolver(AstransPackage.eINSTANCE, createdClasses, new FileResolver("."));
+		trace.createClassCreated(null, b);
+		resolver = new ResolverImpl(AstransPackage.eINSTANCE, trace, new FileResolver("."));
 	}
 
 	@Test

@@ -1,4 +1,4 @@
-package ru.ifmo.rain.astrans.asttomodel.resolver;
+package ru.ifmo.rain.astrans.asttomodel.bootstrap.impl;
 
 import static org.junit.Assert.assertEquals;
 
@@ -7,6 +7,8 @@ import org.eclipse.emf.ecore.EPackage;
 import org.eclipse.emf.ecore.EcoreFactory;
 import org.junit.Before;
 import org.junit.Test;
+
+import ru.ifmo.rain.astrans.asttomodel.bootstrap.impl.MyEPackage;
 
 public class MyEPackageTest {
 
