@@ -4,10 +4,12 @@ import static org.junit.Assert.assertEquals;
 
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.EDataType;
+import org.eclipse.emf.ecore.EPackage;
 import org.eclipse.emf.ecore.EcorePackage;
 import org.junit.Before;
 import org.junit.Test;
 
+import ru.ifmo.rain.astrans.asttomodel.FileResolver;
 import utils.QNUtils;
 import astrans.AstransFactory;
 import astrans.AstransPackage;
@@ -17,6 +19,9 @@ import astrans.EClassReference;
 import astrans.EClassifierReference;
 import astrans.ExistingEClass;
 import astrans.ExistingEDataType;
+import astransast.AstransastFactory;
+import astransast.EPackagePath;
+import astransast.EPackageUri;
 import astransast.QualifiedName;
 
 public class ResolverTest {
@@ -32,7 +37,7 @@ public class ResolverTest {
 		CreateClass b = AstransFactory.eINSTANCE.createCreateClass();
 		b.setName("B");
 		createdClasses.add(b);
-		resolver = new Resolver(AstransPackage.eINSTANCE, createdClasses);
+		resolver = new Resolver(AstransPackage.eINSTANCE, createdClasses, new FileResolver("."));
 	}
 
 	@Test
@@ -81,5 +86,21 @@ public class ResolverTest {
 	public void testResolveChangeInheritanceTargetProto() {
 		EClass eClass = resolver.resolveChangeInheritanceTargetProto(actionQN);
 		assertEquals(AstransPackage.eINSTANCE.getAction(), eClass);
+	}
+
+	@Test
+	public void testResolveTransformationInputUri() {
+		EPackageUri uri = AstransastFactory.eINSTANCE.createEPackageUri();
+		uri.setUri("http://www.eclipse.org/emf/2002/Ecore");
+		EPackage input = resolver.resolveTransformationInput(uri);
+		assertEquals(EcorePackage.eINSTANCE, input);
+	}
+
+	@Test
+	public void testResolveTransformationInputPath() {
+		EPackagePath path = AstransastFactory.eINSTANCE.createEPackagePath();
+		path.setPath("testdata/test.ecore");
+		EPackage input = resolver.resolveTransformationInput(path);
+		assertEquals(input.getNsURI(), "http:///test");
 	}
 }
