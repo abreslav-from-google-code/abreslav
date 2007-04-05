@@ -1,4 +1,4 @@
-package ru.ifmo.rain.astrans.asttomodel.resolver;
+package ru.ifmo.rain.astrans.asttomodel.bootstrap.impl;
 
 import static org.junit.Assert.*;
 
@@ -6,6 +6,8 @@ import java.util.Iterator;
 
 import org.junit.Before;
 import org.junit.Test;
+
+import ru.ifmo.rain.astrans.asttomodel.bootstrap.impl.IterableQN;
 
 import astransast.AstransastFactory;
 import astransast.QualifiedName;

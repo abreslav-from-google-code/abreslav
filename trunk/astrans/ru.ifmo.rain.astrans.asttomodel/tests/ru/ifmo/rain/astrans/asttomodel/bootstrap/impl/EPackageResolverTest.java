@@ -1,4 +1,4 @@
-package ru.ifmo.rain.astrans.asttomodel.resolver;
+package ru.ifmo.rain.astrans.asttomodel.bootstrap.impl;
 
 import static org.junit.Assert.*;
 
@@ -6,6 +6,8 @@ import org.eclipse.emf.ecore.EClassifier;
 import org.eclipse.emf.ecore.EcorePackage;
 import org.junit.Before;
 import org.junit.Test;
+
+import ru.ifmo.rain.astrans.asttomodel.bootstrap.impl.EPackageResolver;
 
 import utils.QNUtils;
 

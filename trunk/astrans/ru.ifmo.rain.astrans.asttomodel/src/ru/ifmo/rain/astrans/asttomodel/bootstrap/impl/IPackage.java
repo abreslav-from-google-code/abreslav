@@ -1,7 +1,7 @@
 /**
  * 
  */
-package ru.ifmo.rain.astrans.asttomodel.resolver;
+package ru.ifmo.rain.astrans.asttomodel.bootstrap.impl;
 
 import org.eclipse.emf.ecore.EClassifier;
 import org.eclipse.emf.ecore.EPackage;

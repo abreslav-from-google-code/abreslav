@@ -1,4 +1,4 @@
-package ru.ifmo.rain.astrans.asttomodel.resolver;
+package ru.ifmo.rain.astrans.asttomodel.bootstrap.impl;
 
 import java.util.HashMap;
 import java.util.Map;

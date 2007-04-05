@@ -1,4 +1,4 @@
-package ru.ifmo.rain.astrans.asttomodel.resolver;
+package ru.ifmo.rain.astrans.asttomodel.bootstrap.impl;
 
 
 import java.io.IOException;
@@ -9,9 +9,8 @@ import org.eclipse.emf.ecore.EPackage;
 import org.eclipse.emf.ecore.EcorePackage;
 import org.eclipse.emf.ecore.resource.Resource;
 
-import ru.ifmo.rain.astrans.asttomodel.IFileResolver;
+import ru.ifmo.rain.astrans.asttomodel.IResolver;
 import ru.ifmo.rain.astrans.utils.EMFHelper;
-
 import utils.OR;
 import astrans.AstransFactory;
 import astrans.EClassReference;
@@ -27,7 +26,7 @@ import astransast.MappedEClassAS;
 import astransast.QualifiedName;
 import astransast.util.AstransastSwitch;
 
-public class Resolver {		
+public class ResolverImpl implements IResolver {		
 	
 	private class ClassifierReferenceResolver extends AstransastSwitch {
 		@Override
@@ -63,7 +62,7 @@ public class Resolver {
 	private final CreatedClasses createdClasses;
 	private final EPackageResolver ecore = new EPackageResolver(EcorePackage.eINSTANCE);
 	private final EPackageResolver proto;
-	private final IFileResolver fileResolver;
+	private final FileResolver fileResolver;
 	private final AstransastSwitch inputEPackageResolver = new AstransastSwitch() {
 		@Override
 		public Object caseEPackageUri(EPackageUri object) {
@@ -83,8 +82,8 @@ public class Resolver {
 	};			
 
 	
-	public Resolver(EPackage sourceEPackage, CreatedClasses createdClasses, IFileResolver fileResolver) {
-		this.createdClasses = createdClasses;
+	public ResolverImpl(EPackage sourceEPackage, TraceImpl trace, FileResolver fileResolver) {
+		this.createdClasses = trace.getCreatedClasses();
 		this.proto = new EPackageResolver(sourceEPackage);
 		this.fileResolver = fileResolver;
 	}

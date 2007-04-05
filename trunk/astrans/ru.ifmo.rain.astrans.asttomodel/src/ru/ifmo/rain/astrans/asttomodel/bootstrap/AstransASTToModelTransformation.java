@@ -1,17 +1,14 @@
-package ru.ifmo.rain.astrans.asttomodel;
+package ru.ifmo.rain.astrans.asttomodel.bootstrap;
 
-import java.util.ArrayList;
 import java.util.Iterator;
-import java.util.List;
 
 import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.ecore.EObject;
-import org.eclipse.emf.ecore.EPackage;
 
-import ru.ifmo.rain.astrans.asttomodel.resolver.CreatedClasses;
-import ru.ifmo.rain.astrans.asttomodel.resolver.Resolver;
+import ru.ifmo.rain.astrans.asttomodel.ASTToModelTransformation;
+import ru.ifmo.rain.astrans.asttomodel.ITransformationContextFactory;
+
 import astrans.AstransFactory;
-import astrans.AstransPackage;
 import astrans.Attribute;
 import astrans.ChangeInheritance;
 import astrans.CreateClass;
@@ -23,27 +20,20 @@ import astransast.AttributeAS;
 import astransast.ChangeInheritanceAS;
 import astransast.CreateClassAS;
 import astransast.EClassifierReferenceAS;
-import astransast.EPackageReference;
 import astransast.ReferenceAS;
 import astransast.SkipClassAS;
 import astransast.TransformationAS;
 import astransast.TranslateReferencesAS;
 import astransast.util.AstransastSwitch;
 
-public class AstransASTToModelTransformation {
+public class AstransASTToModelTransformation extends ASTToModelTransformation {
 
-	private final CreatedClasses createdClasses = new CreatedClasses();
-	
 	private final AstransastSwitch creator = new AstransastSwitch() {
 		@Override
-		public Transformation caseTransformationAS(TransformationAS transformationAS) {
-			Transformation transformation = AstransFactory.eINSTANCE.createTransformation();
+		public Transformation caseTransformationAS(final TransformationAS transformationAS) {
+			final Transformation transformation = AstransFactory.eINSTANCE.createTransformation();
 			transformation.setOutputName(transformationAS.getOutputName());
 			transformation.setOutputNsURI(transformationAS.getOutputNsURI());
-			
-			EPackageReference inputAS = transformationAS.getInput();
-			EPackage input = resolver.resolveTransformationInput(inputAS);
-			transformation.setInput(input);
 			
 			addEListImageToAnotherEList(
 					transformationAS.getCreateClassActions(), 
@@ -57,6 +47,16 @@ public class AstransASTToModelTransformation {
 			addEListImageToAnotherEList(
 					transformationAS.getChangeInheritanceActions(), 
 					transformation.getChangeInheritanceActions());
+
+			getTrace().transformationCreated(transformationAS, transformation);
+			
+			addCommand(new Runnable() {
+				public void run() {
+					transformation.setInput(getResolver()
+							.resolveTransformationInput(transformationAS
+									.getInput()));
+				}
+			});
 			return transformation;
 		}
 		
@@ -74,9 +74,10 @@ public class AstransASTToModelTransformation {
 			attribute.setLowerBound(attributeAS.getLowerBound());
 			attribute.setUpperBound(attributeAS.getUpperBound());
 			attribute.setName(attributeAS.getName());
+			getTrace().attributeCreated(attributeAS, attribute);
 			addCommand(new Runnable() {
 				public void run() {
-					attribute.setType(resolver.resolveAttributeType(attributeAS
+					attribute.setType(getResolver().resolveAttributeType(attributeAS
 							.getType()));
 				}
 			});
@@ -89,32 +90,24 @@ public class AstransASTToModelTransformation {
 			reference.setLowerBound(referenceAS.getLowerBound());
 			reference.setUpperBound(referenceAS.getUpperBound());
 			reference.setName(referenceAS.getName());
+			reference.setContainment(referenceAS.isContainment());
+
+			getTrace().referenceCreated(referenceAS, reference);
+			
 			addCommand(new Runnable() {
 				public void run() {
-					reference.setType(resolver.resolveReferenceType(referenceAS
+					reference.setType(getResolver().resolveReferenceType(referenceAS
 							.getType()));
 				}
 			});			
-			reference.setContainment(referenceAS.isContainment());
 			return reference;
 		}
 		
 		@Override
-		public CreateClass caseCreateClassAS(CreateClassAS createClassAS) {
+		public CreateClass caseCreateClassAS(final CreateClassAS createClassAS) {
 			final CreateClass createClass = AstransFactory.eINSTANCE.createCreateClass();
 			createClass.setName(createClassAS.getName());
-			createdClasses.add(createClass);
 			createClass.setAbstract(createClassAS.isAbstract());
-			
-			EList superclasses = createClassAS.getSuperclasses();
-			for (Iterator iter = superclasses.iterator(); iter.hasNext();) {
-				final EClassifierReferenceAS superClassQN = (EClassifierReferenceAS) iter.next();
-				addCommand(new Runnable() {
-					public void run() {
-						createClass.getSuperclasses().add(resolver.resolveCreateClassSuperclass(superClassQN));
-					}
-				});				
-			}
 			
 			EList structuralFeatures = createClassAS.getStructuralFeatures();
 			for (Iterator iter = structuralFeatures.iterator(); iter
@@ -122,6 +115,17 @@ public class AstransASTToModelTransformation {
 				createClass.getStructuralFeatures().add(doSwitch((EObject) iter.next()));
 			}
 			
+			getTrace().createClassCreated(createClassAS, createClass);
+
+			addCommand(new Runnable() {
+				public void run() {
+					EList superclasses = createClassAS.getSuperclasses();
+					for (Iterator iter = superclasses.iterator(); iter.hasNext();) {
+						EClassifierReferenceAS superClassQN = (EClassifierReferenceAS) iter.next();
+						createClass.getSuperclasses().add(getResolver().resolveCreateClassSuperclass(superClassQN));
+					}
+				}
+			});				
 			return createClass;
 		}
 		
@@ -129,9 +133,10 @@ public class AstransASTToModelTransformation {
 		public SkipClass caseSkipClassAS(final SkipClassAS skipClassAS) {
 			final SkipClass skipClass = AstransFactory.eINSTANCE.createSkipClass();
 			skipClass.setIncludeDescendants(skipClassAS.isIncludeDescendants());
+			getTrace().skipClassCreated(skipClassAS, skipClass);
 			addCommand(new Runnable() {
 				public void run() {
-					skipClass.setTargetProto(resolver
+					skipClass.setTargetProto(getResolver()
 							.resolveSkipClassTargetProto(skipClassAS
 									.getTargetProto()));
 				}
@@ -143,10 +148,13 @@ public class AstransASTToModelTransformation {
 		public TranslateReferences caseTranslateReferencesAS(final TranslateReferencesAS translateReferencesAS) {
 			final TranslateReferences translateReferences = AstransFactory.eINSTANCE.createTranslateReferences();
 			translateReferences.setIncludeDescendants(translateReferencesAS.isIncludeDescendants());
+			
+			getTrace().translateReferencesCreated(translateReferencesAS, translateReferences);
+			
 			addCommand(new Runnable() {
 				public void run() {
 					translateReferences
-							.setModelReferenceTypeProto(resolver
+							.setModelReferenceTypeProto(getResolver()
 									.resolveTranslateReferencesModelReferenceTypeProto(translateReferencesAS
 											.getModelReferenceTypeProto()));
 				}
@@ -154,7 +162,7 @@ public class AstransASTToModelTransformation {
 			addCommand(new Runnable() {
 				public void run() {
 					translateReferences
-							.setTextualReferenceType(resolver
+							.setTextualReferenceType(getResolver()
 									.resolveTranslateReferencesTextualReferenceType(translateReferencesAS
 											.getTextualReferenceType()));
 				}
@@ -165,15 +173,16 @@ public class AstransASTToModelTransformation {
 		@Override
 		public ChangeInheritance caseChangeInheritanceAS(final ChangeInheritanceAS changeInheritanceAS) {
 			final ChangeInheritance changeInheritance = AstransFactory.eINSTANCE.createChangeInheritance();
+			getTrace().changeInheritanceCreated(changeInheritanceAS, changeInheritance);			
 			addCommand(new Runnable() {
 				public void run() {
 					changeInheritance.setTargetProto(
-							resolver.resolveChangeInheritanceTargetProto(
+							getResolver().resolveChangeInheritanceTargetProto(
 									changeInheritanceAS.getTargetProto()));
 					EList superclasses = changeInheritanceAS.getSuperclasses();
 					for (Iterator iter = superclasses.iterator(); iter.hasNext();) {
 						EClassifierReferenceAS superclass = (EClassifierReferenceAS) iter.next();
-						changeInheritance.getSuperclasses().add(resolver.resolveChangeInheritanceSuperclass(superclass));
+						changeInheritance.getSuperclasses().add(getResolver().resolveChangeInheritanceSuperclass(superclass));
 					}
 				}
 			});			
@@ -181,28 +190,13 @@ public class AstransASTToModelTransformation {
 		}
 	};
 	
-	private final Resolver resolver;
-	
-	private final List<Runnable> commands = new ArrayList<Runnable>();
-	
-	public AstransASTToModelTransformation(final IFileResolver fileResolver) {
-		 resolver = new Resolver(AstransPackage.eINSTANCE, createdClasses, fileResolver);
+	public AstransASTToModelTransformation(ITransformationContextFactory contextFactory) {
+		super(contextFactory);
 	}
 
-	private void addCommand(Runnable command) {
-		commands.add(command);
-	}
-	
-	private void performAllCommands() {
-		for (Runnable command : commands) {
-			command.run();			
-		}
-	}
-	
 	public Transformation run(TransformationAS transformationAS) {
 		Transformation transformation = (Transformation) creator.doSwitch(transformationAS);
 		performAllCommands();
 		return transformation;
 	}
-
 }
