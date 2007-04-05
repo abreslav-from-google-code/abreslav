@@ -3,13 +3,13 @@ package ru.ifmo.rain.astrans.asttomodel;
 import java.util.ArrayList;
 import java.util.List;
 
-public class ASTToModelTransformation {
-	private final IResolver resolver;
-	private final ITrace trace;
+public class ASTToModelTransformation<R, T> {
+	private final R resolver;
+	private final T trace;
 	
 	private final List<Runnable> commands = new ArrayList<Runnable>();
 	
-	public ASTToModelTransformation(ITransformationContextFactory contextFactory) {
+	public ASTToModelTransformation(ITransformationContextFactory<R, T> contextFactory) {
 		trace = contextFactory.createTrace(); 
 		resolver = contextFactory.createResolver();
 	}
@@ -24,11 +24,11 @@ public class ASTToModelTransformation {
 		}
 	}
 	
-	protected IResolver getResolver() {
+	protected R getResolver() {
 		return resolver;
 	}
 	
-	protected ITrace getTrace() {
+	protected T getTrace() {
 		return trace;
 	}
 }

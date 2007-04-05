@@ -1,6 +1,6 @@
 package ru.ifmo.rain.astrans.asttomodel.bootstrap.impl;
 
-import ru.ifmo.rain.astrans.asttomodel.ITrace;
+import ru.ifmo.rain.astrans.asttomodel.bootstrap.ITrace;
 import astrans.Attribute;
 import astrans.ChangeInheritance;
 import astrans.CreateClass;

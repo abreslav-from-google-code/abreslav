@@ -1,8 +1,8 @@
 package ru.ifmo.rain.astrans.asttomodel.bootstrap.impl;
 
-import ru.ifmo.rain.astrans.asttomodel.IResolver;
-import ru.ifmo.rain.astrans.asttomodel.ITrace;
 import ru.ifmo.rain.astrans.asttomodel.ITransformationContextFactory;
+import ru.ifmo.rain.astrans.asttomodel.bootstrap.IResolver;
+import ru.ifmo.rain.astrans.asttomodel.bootstrap.ITrace;
 import astrans.AstransPackage;
 
 public class ContextFactoryImpl implements ITransformationContextFactory {
