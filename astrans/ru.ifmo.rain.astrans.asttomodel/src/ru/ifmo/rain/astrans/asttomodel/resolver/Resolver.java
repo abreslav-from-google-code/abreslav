@@ -1,10 +1,16 @@
 package ru.ifmo.rain.astrans.asttomodel.resolver;
 
 
+import java.io.IOException;
+
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.EDataType;
 import org.eclipse.emf.ecore.EPackage;
 import org.eclipse.emf.ecore.EcorePackage;
+import org.eclipse.emf.ecore.resource.Resource;
+
+import ru.ifmo.rain.astrans.asttomodel.IFileResolver;
+import ru.ifmo.rain.astrans.utils.EMFHelper;
 
 import utils.OR;
 import astrans.AstransFactory;
@@ -14,6 +20,9 @@ import astrans.ExistingEClass;
 import astrans.ExistingEDataType;
 import astrans.MappedEClass;
 import astransast.EClassifierReferenceAS;
+import astransast.EPackagePath;
+import astransast.EPackageReference;
+import astransast.EPackageUri;
 import astransast.MappedEClassAS;
 import astransast.QualifiedName;
 import astransast.util.AstransastSwitch;
@@ -54,10 +63,30 @@ public class Resolver {
 	private final CreatedClasses createdClasses;
 	private final EPackageResolver ecore = new EPackageResolver(EcorePackage.eINSTANCE);
 	private final EPackageResolver proto;
+	private final IFileResolver fileResolver;
+	private final AstransastSwitch inputEPackageResolver = new AstransastSwitch() {
+		@Override
+		public Object caseEPackageUri(EPackageUri object) {
+			return EPackage.Registry.INSTANCE.getEPackage(object.getUri());
+		}
+		
+		@Override
+		public Object caseEPackagePath(EPackagePath object) {
+			Resource resource = EMFHelper.getXMIResource(EcorePackage.eINSTANCE, object.getPath());
+			try {
+				EMFHelper.loadResourceFromFile(resource, fileResolver.getFile(object.getPath()));
+			} catch (IOException e) {
+				throw new IllegalArgumentException(e);
+			}
+			return resource.getContents().get(0);
+		}
+	};			
+
 	
-	public Resolver(EPackage sourceEPackage, CreatedClasses createdClasses) {
+	public Resolver(EPackage sourceEPackage, CreatedClasses createdClasses, IFileResolver fileResolver) {
 		this.createdClasses = createdClasses;
 		this.proto = new EPackageResolver(sourceEPackage);
+		this.fileResolver = fileResolver;
 	}
 
 	public EClassifierReference resolveTranslateReferencesTextualReferenceType(EClassifierReferenceAS textualReferenceType) {
@@ -117,4 +146,8 @@ public class Resolver {
 		return (EClassReference) classReferenceResolver.doSwitch(classifierReferenceAS);
 	}
 
+	public EPackage resolveTransformationInput(EPackageReference inputAS) {
+		return (EPackage) inputEPackageResolver.doSwitch(inputAS);
+	}
+	
 }

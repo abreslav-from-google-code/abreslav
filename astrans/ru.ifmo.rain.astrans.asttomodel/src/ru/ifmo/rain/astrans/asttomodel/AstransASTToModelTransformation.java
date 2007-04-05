@@ -1,6 +1,5 @@
 package ru.ifmo.rain.astrans.asttomodel;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
@@ -8,12 +7,9 @@ import java.util.List;
 import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EPackage;
-import org.eclipse.emf.ecore.EcorePackage;
-import org.eclipse.emf.ecore.resource.Resource;
 
 import ru.ifmo.rain.astrans.asttomodel.resolver.CreatedClasses;
 import ru.ifmo.rain.astrans.asttomodel.resolver.Resolver;
-import ru.ifmo.rain.astrans.utils.EMFHelper;
 import astrans.AstransFactory;
 import astrans.AstransPackage;
 import astrans.Attribute;
@@ -27,8 +23,7 @@ import astransast.AttributeAS;
 import astransast.ChangeInheritanceAS;
 import astransast.CreateClassAS;
 import astransast.EClassifierReferenceAS;
-import astransast.EPackagePath;
-import astransast.EPackageUri;
+import astransast.EPackageReference;
 import astransast.ReferenceAS;
 import astransast.SkipClassAS;
 import astransast.TransformationAS;
@@ -46,24 +41,9 @@ public class AstransASTToModelTransformation {
 			transformation.setOutputName(transformationAS.getOutputName());
 			transformation.setOutputNsURI(transformationAS.getOutputNsURI());
 			
-			AstransastSwitch ePackageResolver = new AstransastSwitch() {
-				@Override
-				public Object caseEPackageUri(EPackageUri object) {
-					return EPackage.Registry.INSTANCE.getEPackage(object.getUri());
-				}
-				
-				@Override
-				public Object caseEPackagePath(EPackagePath object) {
-					Resource resource = EMFHelper.getXMIResource(EcorePackage.eINSTANCE, object.getPath());
-					try {
-						EMFHelper.loadResourceFromFile(resource, fileResolver.getFile(object.getPath()));
-					} catch (IOException e) {
-						throw new IllegalArgumentException(e);
-					}
-					return resource.getContents().get(0);
-				}
-			};			
-			transformation.setInput((EPackage) ePackageResolver.doSwitch(transformationAS.getInput()));
+			EPackageReference inputAS = transformationAS.getInput();
+			EPackage input = resolver.resolveTransformationInput(inputAS);
+			transformation.setInput(input);
 			
 			addEListImageToAnotherEList(
 					transformationAS.getCreateClassActions(), 
@@ -201,14 +181,12 @@ public class AstransASTToModelTransformation {
 		}
 	};
 	
-	private final Resolver resolver = new Resolver(AstransPackage.eINSTANCE, createdClasses);
+	private final Resolver resolver;
 	
 	private final List<Runnable> commands = new ArrayList<Runnable>();
 	
-	private final IFileResolver fileResolver; 
-	
 	public AstransASTToModelTransformation(final IFileResolver fileResolver) {
-		this.fileResolver = fileResolver;
+		 resolver = new Resolver(AstransPackage.eINSTANCE, createdClasses, fileResolver);
 	}
 
 	private void addCommand(Runnable command) {
@@ -226,5 +204,5 @@ public class AstransASTToModelTransformation {
 		performAllCommands();
 		return transformation;
 	}
-	
+
 }
