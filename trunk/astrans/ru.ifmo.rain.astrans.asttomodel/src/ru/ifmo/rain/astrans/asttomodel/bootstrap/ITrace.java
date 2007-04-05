@@ -1,4 +1,4 @@
-package ru.ifmo.rain.astrans.asttomodel;
+package ru.ifmo.rain.astrans.asttomodel.bootstrap;
 
 import astrans.Attribute;
 import astrans.ChangeInheritance;

@@ -26,7 +26,7 @@ import astransast.TransformationAS;
 import astransast.TranslateReferencesAS;
 import astransast.util.AstransastSwitch;
 
-public class AstransASTToModelTransformation extends ASTToModelTransformation {
+public class AstransASTToModelTransformation extends ASTToModelTransformation<IResolver, ITrace> {
 
 	private final AstransastSwitch creator = new AstransastSwitch() {
 		@Override
@@ -190,7 +190,7 @@ public class AstransASTToModelTransformation extends ASTToModelTransformation {
 		}
 	};
 	
-	public AstransASTToModelTransformation(ITransformationContextFactory contextFactory) {
+	public AstransASTToModelTransformation(ITransformationContextFactory<IResolver, ITrace> contextFactory) {
 		super(contextFactory);
 	}
 

@@ -9,7 +9,7 @@ import org.eclipse.emf.ecore.EPackage;
 import org.eclipse.emf.ecore.EcorePackage;
 import org.eclipse.emf.ecore.resource.Resource;
 
-import ru.ifmo.rain.astrans.asttomodel.IResolver;
+import ru.ifmo.rain.astrans.asttomodel.bootstrap.IResolver;
 import ru.ifmo.rain.astrans.utils.EMFHelper;
 import utils.OR;
 import astrans.AstransFactory;

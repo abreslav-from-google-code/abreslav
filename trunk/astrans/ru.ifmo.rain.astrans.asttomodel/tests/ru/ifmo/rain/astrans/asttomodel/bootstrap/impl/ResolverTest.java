@@ -9,7 +9,7 @@ import org.eclipse.emf.ecore.EcorePackage;
 import org.junit.Before;
 import org.junit.Test;
 
-import ru.ifmo.rain.astrans.asttomodel.IResolver;
+import ru.ifmo.rain.astrans.asttomodel.bootstrap.IResolver;
 import ru.ifmo.rain.astrans.asttomodel.bootstrap.impl.FileResolver;
 import ru.ifmo.rain.astrans.asttomodel.bootstrap.impl.ResolverImpl;
 import ru.ifmo.rain.astrans.asttomodel.bootstrap.impl.TraceImpl;
