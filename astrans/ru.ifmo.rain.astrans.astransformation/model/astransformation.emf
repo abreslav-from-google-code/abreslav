@@ -1,0 +1,51 @@
+@namespace(uri="http://rain.ifmo.ru/~breslav/2007/astransformation", prefix="astransformation")
+package astransformation;
+
+interface Named {
+  attr String[1] name;
+}
+
+class Transformation extends Named {
+  val MappingRule[*] mappingRules;
+  ref MappingRule[1] main; // the mapping rule that is started first
+  attr String[1] resolverClassName;
+  attr String[1] traceClassName;
+}
+
+class Parameter extends Named {
+  ref EClass[1] type;
+}
+
+class MappingRule extends Named {
+  val Parameter[1] parameter;
+  val Parameter[1] result;
+  val AssignAttribute[*]#mappingRule assignAttributeStatements;
+  val AssignReference[*]#mappingRule assignReferenceStatements;
+  val WriteTrace[1]#mappingRule writeTraceStatement;
+  val ResolveObject[*]#mappingRule resolveObjectStatements;
+}
+
+class AssignAttribute {
+  ref MappingRule[1]#assignAttributeStatements mappingRule;
+  ref ecore.EAttribute[1] source; // what to read from mapping's parameter
+  ref ecore.EAttribute[1] dest; // where to write in mapping's result
+}
+
+class AssignReference {
+  ref MappingRule[1]#assignReferenceStatements mappingRule;
+  ref ecore.EReference[1] source; // what to read from mapping's parameter
+  ref ecore.EReference[1] dest; // where to write in mapping's result
+  attr boolean mappingNeeded = true; // set to false if the type was not translated and was skipped during meta-transformation
+}
+
+class WriteTrace {
+  ref MappingRule[1]#writeTraceStatement mappingRule;
+  attr String[1] traceMethodName;
+}
+
+class ResolveObject {
+  ref MappingRule[1]#resolveObjectStatements mappingRule;
+  ref ecore.EStructuralFeature[1] source; // what to read from mapping's parameter
+  ref ecore.EReference[1] dest; // where to write in mapping's result
+  attr String[1] resolverMethodName;
+}
