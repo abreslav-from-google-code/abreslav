@@ -4,7 +4,7 @@ import java.util.Map;
 
 import org.eclipse.emf.ecore.EClass;
 
-class EClassMap<V> {
+public class EClassMap<V> {
 
 	private Map<EClass, V> singleClasses = new HashMap<EClass, V>();	
 	private Map<EClass, V> classesWithChildren = new HashMap<EClass, V>();

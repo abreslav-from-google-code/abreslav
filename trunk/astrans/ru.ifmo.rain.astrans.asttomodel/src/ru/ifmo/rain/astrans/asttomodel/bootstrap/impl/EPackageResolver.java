@@ -42,8 +42,7 @@ class EPackageResolver extends ClassifierNamespace {
 
 	public EPackage getEPackage(QualifiedName qn) {
 		IterableQN iterableQN = new IterableQN(qn);
-		Iterator<String> iterator = iterableQN.iterator();
-		IPackage iPackage = getEPackage(iterator);
+		IPackage iPackage = getEPackage(iterableQN.iterator());
 		return iPackage.getEPackage();
 	}
 

@@ -1,7 +1,7 @@
 package ru.ifmo.rain.astrans.interpreter;
 import org.eclipse.emf.ecore.EClass;
 
-class EClassSet {
+public class EClassSet {
 
 	private static final Object VALUE = new Object();
 	

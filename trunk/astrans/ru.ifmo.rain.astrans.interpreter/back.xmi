@@ -1,0 +1,195 @@
+<?xml version="1.0" encoding="ASCII"?>
+<astransformation:Transformation xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:astransformation="http://rain.ifmo.ru/~breslav/2007/astransformation" name="back" resolverClassName="IResolver" traceClassName="ITracer">
+  <mappingRules name="caseActionAS">
+    <parameter name="actionAS" type="/"/>
+    <result name="action">
+      <type href="input.ecore#//Action"/>
+    </result>
+  </mappingRules>
+  <mappingRules name="caseMappedEClassAS">
+    <parameter name="mappedEClassAS" type="/"/>
+    <result name="mappedEClass">
+      <type href="input.ecore#//MappedEClass"/>
+    </result>
+    <assignReferenceStatements source="//proto">
+      <dest href="input.ecore#//MappedEClass/proto"/>
+    </assignReferenceStatements>
+  </mappingRules>
+  <mappingRules name="caseSkipClassAS">
+    <parameter name="skipClassAS" type="/"/>
+    <result name="skipClass">
+      <type href="input.ecore#//SkipClass"/>
+    </result>
+    <assignAttributeStatements source="//includeDescendants">
+      <dest href="input.ecore#//SkipClass/includeDescendants"/>
+    </assignAttributeStatements>
+    <assignReferenceStatements source="//targetProto">
+      <dest href="input.ecore#//SkipClass/targetProto"/>
+    </assignReferenceStatements>
+  </mappingRules>
+  <mappingRules name="caseStructuralFeatureAS">
+    <parameter name="structuralFeatureAS" type="/"/>
+    <result name="structuralFeature">
+      <type href="input.ecore#//StructuralFeature"/>
+    </result>
+    <assignAttributeStatements source="//name">
+      <dest href="input.ecore#//StructuralFeature/name"/>
+    </assignAttributeStatements>
+    <assignAttributeStatements source="//lowerBound">
+      <dest href="input.ecore#//StructuralFeature/lowerBound"/>
+    </assignAttributeStatements>
+    <assignAttributeStatements source="//upperBound">
+      <dest href="input.ecore#//StructuralFeature/upperBound"/>
+    </assignAttributeStatements>
+  </mappingRules>
+  <mappingRules name="caseChangeInheritanceAS">
+    <parameter name="changeInheritanceAS" type="/"/>
+    <result name="changeInheritance">
+      <type href="input.ecore#//ChangeInheritance"/>
+    </result>
+    <assignReferenceStatements source="//targetProto">
+      <dest href="input.ecore#//ChangeInheritance/targetProto"/>
+    </assignReferenceStatements>
+    <assignReferenceStatements source="//superclasses">
+      <dest href="input.ecore#//ChangeInheritance/superclasses"/>
+    </assignReferenceStatements>
+  </mappingRules>
+  <mappingRules name="caseEClassifierReferenceAS">
+    <parameter name="eClassifierReferenceAS" type="/"/>
+    <result name="eClassifierReference">
+      <type href="input.ecore#//EClassifierReference"/>
+    </result>
+  </mappingRules>
+  <mappingRules name="caseExistingEClassAS">
+    <parameter name="existingEClassAS" type="/"/>
+    <result name="existingEClass">
+      <type href="input.ecore#//ExistingEClass"/>
+    </result>
+    <assignReferenceStatements source="//eClass">
+      <dest href="input.ecore#//ExistingEClass/eClass"/>
+    </assignReferenceStatements>
+  </mappingRules>
+  <mappingRules name="caseTranslateReferencesAS">
+    <parameter name="translateReferencesAS" type="/"/>
+    <result name="translateReferences">
+      <type href="input.ecore#//TranslateReferences"/>
+    </result>
+    <assignAttributeStatements source="//includeDescendants">
+      <dest href="input.ecore#//TranslateReferences/includeDescendants"/>
+    </assignAttributeStatements>
+    <assignReferenceStatements source="//modelReferenceTypeProto">
+      <dest href="input.ecore#//TranslateReferences/modelReferenceTypeProto"/>
+    </assignReferenceStatements>
+    <assignReferenceStatements source="//textualReferenceType">
+      <dest href="input.ecore#//TranslateReferences/textualReferenceType"/>
+    </assignReferenceStatements>
+  </mappingRules>
+  <mappingRules name="caseTransformationAS">
+    <parameter name="transformationAS" type="/"/>
+    <result name="transformation">
+      <type href="input.ecore#//Transformation"/>
+    </result>
+    <assignAttributeStatements source="//outputName">
+      <dest href="input.ecore#//Transformation/outputName"/>
+    </assignAttributeStatements>
+    <assignAttributeStatements source="//outputNsURI">
+      <dest href="input.ecore#//Transformation/outputNsURI"/>
+    </assignAttributeStatements>
+    <assignReferenceStatements source="//input">
+      <dest href="input.ecore#//Transformation/input"/>
+    </assignReferenceStatements>
+    <resolveObjectStatements source="//createClassActions" resolverMethodName="resolveTransformationCreateClassActions">
+      <dest href="input.ecore#//Transformation/createClassActions"/>
+    </resolveObjectStatements>
+    <resolveObjectStatements source="//translateReferencesActions" resolverMethodName="resolveTransformationTranslateReferencesActions">
+      <dest href="input.ecore#//Transformation/translateReferencesActions"/>
+    </resolveObjectStatements>
+    <resolveObjectStatements source="//changeInheritanceActions" resolverMethodName="resolveTransformationChangeInheritanceActions">
+      <dest href="input.ecore#//Transformation/changeInheritanceActions"/>
+    </resolveObjectStatements>
+    <resolveObjectStatements source="//skipClassActions" resolverMethodName="resolveTransformationSkipClassActions">
+      <dest href="input.ecore#//Transformation/skipClassActions"/>
+    </resolveObjectStatements>
+  </mappingRules>
+  <mappingRules name="caseReferenceAS">
+    <parameter name="referenceAS" type="/"/>
+    <result name="reference">
+      <type href="input.ecore#//Reference"/>
+    </result>
+    <assignAttributeStatements source="//name">
+      <dest href="input.ecore#//StructuralFeature/name"/>
+    </assignAttributeStatements>
+    <assignAttributeStatements source="//lowerBound">
+      <dest href="input.ecore#//StructuralFeature/lowerBound"/>
+    </assignAttributeStatements>
+    <assignAttributeStatements source="//upperBound">
+      <dest href="input.ecore#//StructuralFeature/upperBound"/>
+    </assignAttributeStatements>
+    <assignAttributeStatements source="//containment">
+      <dest href="input.ecore#//Reference/containment"/>
+    </assignAttributeStatements>
+    <assignReferenceStatements source="//type">
+      <dest href="input.ecore#//Reference/type"/>
+    </assignReferenceStatements>
+  </mappingRules>
+  <mappingRules name="caseAttributeAS">
+    <parameter name="attributeAS" type="/"/>
+    <result name="attribute">
+      <type href="input.ecore#//Attribute"/>
+    </result>
+    <assignAttributeStatements source="//name">
+      <dest href="input.ecore#//StructuralFeature/name"/>
+    </assignAttributeStatements>
+    <assignAttributeStatements source="//lowerBound">
+      <dest href="input.ecore#//StructuralFeature/lowerBound"/>
+    </assignAttributeStatements>
+    <assignAttributeStatements source="//upperBound">
+      <dest href="input.ecore#//StructuralFeature/upperBound"/>
+    </assignAttributeStatements>
+    <assignReferenceStatements source="//type">
+      <dest href="input.ecore#//Attribute/type"/>
+    </assignReferenceStatements>
+  </mappingRules>
+  <mappingRules name="caseEClassReferenceAS">
+    <parameter name="eClassReferenceAS" type="/"/>
+    <result name="eClassReference">
+      <type href="input.ecore#//EClassReference"/>
+    </result>
+  </mappingRules>
+  <mappingRules name="caseCreateClassAS">
+    <parameter name="createClassAS" type="/"/>
+    <result name="createClass">
+      <type href="input.ecore#//CreateClass"/>
+    </result>
+    <assignAttributeStatements source="//name">
+      <dest href="input.ecore#//CreateClass/name"/>
+    </assignAttributeStatements>
+    <assignAttributeStatements source="//abstract">
+      <dest href="input.ecore#//CreateClass/abstract"/>
+    </assignAttributeStatements>
+    <assignReferenceStatements source="//superclasses">
+      <dest href="input.ecore#//CreateClass/superclasses"/>
+    </assignReferenceStatements>
+    <resolveObjectStatements source="//structuralFeatures" resolverMethodName="resolveCreateClassStructuralFeatures">
+      <dest href="input.ecore#//CreateClass/structuralFeatures"/>
+    </resolveObjectStatements>
+  </mappingRules>
+  <mappingRules name="caseExistingEDataTypeAS">
+    <parameter name="existingEDataTypeAS" type="/"/>
+    <result name="existingEDataType">
+      <type href="input.ecore#//ExistingEDataType"/>
+    </result>
+    <assignReferenceStatements source="//eDataType">
+      <dest href="input.ecore#//ExistingEDataType/eDataType"/>
+    </assignReferenceStatements>
+  </mappingRules>
+  <mappingRules name="caseCreatedEClassAS">
+    <parameter name="createdEClassAS" type="/"/>
+    <result name="createdEClass">
+      <type href="input.ecore#//CreatedEClass"/>
+    </result>
+    <resolveObjectStatements source="//create" resolverMethodName="resolveCreatedEClassCreate">
+      <dest href="input.ecore#//CreatedEClass/create"/>
+    </resolveObjectStatements>
+  </mappingRules>
+</astransformation:Transformation>

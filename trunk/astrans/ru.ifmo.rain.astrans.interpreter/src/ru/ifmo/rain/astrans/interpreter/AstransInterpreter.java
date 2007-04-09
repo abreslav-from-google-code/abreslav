@@ -1,4 +1,5 @@
 package ru.ifmo.rain.astrans.interpreter;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Iterator;
@@ -8,6 +9,9 @@ import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.EClassifier;
 import org.eclipse.emf.ecore.EPackage;
 import org.eclipse.emf.ecore.EcoreFactory;
+
+import ru.ifmo.rain.astrans.interpreter.backtrans.BacktransCreator;
+import ru.ifmo.rain.astrans.utils.EMFHelper;
 
 import astrans.ChangeInheritance;
 import astrans.CreateClass;
@@ -24,7 +28,7 @@ import astrans.Transformation;
  */
 public class AstransInterpreter {
 
-	public static Collection<EClass> createEClassObjects(Transformation transformation, AstransInterpreterTrace trace, EClassSet skipper) {
+	private static Collection<EClass> createEClassObjects(Transformation transformation, AstransInterpreterTrace trace, EClassSet skipper) {
 		ArrayList<EClass> classes = new ArrayList<EClass>();
 		mapClasses(transformation, trace, classes, skipper);
 		createClasses(transformation, trace, classes);
@@ -77,21 +81,6 @@ public class AstransInterpreter {
 		return result;
 	}
 
-	public static EPackage run(Transformation transformation) {
-		
-		AstransInterpreterTrace trace = new AstransInterpreterTrace();
-		EClassSet skippedClasses = enumerateSkippedClasses(transformation);
-		Collection<EClass> classes = createEClassObjects(transformation, trace, skippedClasses);
-
-		ReferenceTranslator referenceTranslator = new ReferenceTranslator(transformation, trace, skippedClasses);
-		Composer composer = new Composer(referenceTranslator);
-		composer.run(transformation, trace);
-
-		changeInheritace(transformation, trace, referenceTranslator);
-		
-		return createResult(transformation, classes);
-	}
-
 	private static void changeInheritace(Transformation transformation, AstransInterpreterTrace trace, ReferenceTranslator referenceTranslator) {
 		EList changeInheritanceActions = transformation.getChangeInheritanceActions();
 		for (Iterator iter = changeInheritanceActions.iterator(); iter
@@ -106,6 +95,30 @@ public class AstransInterpreter {
 				mappedClass.getESuperTypes().add(referenceTranslator.resolveEClassifierReference(superclassReference));
 			}
 		}
+	}
+
+	public static EPackage run(Transformation transformation) {
+		
+		
+		AstransInterpreterTrace trace = new AstransInterpreterTrace();
+		EClassSet skippedClasses = enumerateSkippedClasses(transformation);
+		Collection<EClass> classes = createEClassObjects(transformation, trace, skippedClasses);
+
+		ReferenceTranslator referenceTranslator = new ReferenceTranslator(transformation, trace, skippedClasses);
+		Composer composer = new Composer(referenceTranslator);
+		composer.run(transformation, trace);
+
+		changeInheritace(transformation, trace, referenceTranslator);
+		
+		astransformation.Transformation backTransformation = BacktransCreator.createBackTransformation(trace, skippedClasses, referenceTranslator);
+		try {
+			EMFHelper.saveEObjectToFile(backTransformation, "back.xmi");
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		return createResult(transformation, classes);
 	}
 
 }
