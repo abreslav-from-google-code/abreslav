@@ -98,8 +98,6 @@ public class AstransInterpreter {
 	}
 
 	public static EPackage run(Transformation transformation) {
-		
-		
 		AstransInterpreterTrace trace = new AstransInterpreterTrace();
 		EClassSet skippedClasses = enumerateSkippedClasses(transformation);
 		Collection<EClass> classes = createEClassObjects(transformation, trace, skippedClasses);
@@ -109,14 +107,6 @@ public class AstransInterpreter {
 		composer.run(transformation, trace);
 
 		changeInheritace(transformation, trace, referenceTranslator);
-		
-		astransformation.Transformation backTransformation = BacktransCreator.createBackTransformation(trace, skippedClasses, referenceTranslator);
-		try {
-			EMFHelper.saveEObjectToFile(backTransformation, "back.xmi");
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
 		
 		return createResult(transformation, classes);
 	}
