@@ -12,7 +12,7 @@ import astrans.EClassifierReference;
 import astrans.Transformation;
 import astrans.TranslateReferences;
 
-class ReferenceTranslator {
+public class ReferenceTranslator {
 	
 	private final AstransInterpreterTrace trace;
 	private final ReferenceResolver referenceResolver;
@@ -34,12 +34,12 @@ class ReferenceTranslator {
 	}
 
 	public EClassifier translateReferenceType(EClass eClass) {
-		EClassifier result = trace.getMappedClass(eClass);
 		EClassifier translatedType = translatedTypes.get(eClass);
 		if (translatedType != null) {
-			result = translatedType;
+			return translatedType;
 		}
 		
+		EClassifier result = trace.getMappedClass(eClass);
 		if (result == null) {
 			if (!skippedClasses.contains(eClass)) {
 				result = eClass;
@@ -47,6 +47,10 @@ class ReferenceTranslator {
 		}
 		
 		return result;
+	}
+	
+	public boolean isTranslated(EClass eClass) {
+		return translatedTypes.get(eClass) != null;
 	}
 	
 	public EClassifier resolveEClassifierReference(EClassifierReference reference) {

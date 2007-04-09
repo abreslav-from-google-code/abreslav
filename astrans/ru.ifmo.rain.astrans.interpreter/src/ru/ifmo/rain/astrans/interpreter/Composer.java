@@ -4,11 +4,14 @@
 package ru.ifmo.rain.astrans.interpreter;
 
 import java.util.Iterator;
+import java.util.Set;
+import java.util.Map.Entry;
 
 import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.ecore.EAttribute;
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.EClassifier;
+import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EReference;
 import org.eclipse.emf.ecore.EStructuralFeature;
 import org.eclipse.emf.ecore.EcoreFactory;
@@ -35,16 +38,8 @@ class Composer extends AstransSwitch {
 			CreateClass action = (CreateClass) iter.next();
 			composeCreatedClass(action, trace);
 		}
-		for (Iterator iter = transformation.getInput().getEClassifiers().iterator(); iter.hasNext();) {
-			EClassifier eClassifier = (EClassifier) iter.next();
-		
-			if (eClassifier instanceof EClass) {
-				EClass eClass = (EClass) eClassifier;
-				EClass mappedClass = trace.getMappedClass(eClass);
-				if (mappedClass != null) {
-					composeMappedClass(eClass, trace);
-				}
-			}
+		for (Entry<EClass, EClass> mapping : trace.getMappings()) {
+			composeMappedClass(mapping.getKey(), trace);
 		}
 	}
 	
@@ -56,19 +51,27 @@ class Composer extends AstransSwitch {
 		
 		image.setName(proto.getName() + "AS");
 		image.setAbstract(proto.isAbstract());
-		image.getEStructuralFeatures().addAll(EcoreUtil.copyAll(proto.getEAttributes()));
+
+		EList attributes = proto.getEAttributes();
+		for (Iterator iter = attributes.iterator(); iter.hasNext();) {
+			EAttribute attribute = (EAttribute) iter.next();
+			EAttribute copy = (EAttribute) EcoreUtil.copy(attribute);
+			image.getEStructuralFeatures().add(copy);
+			trace.registerAttribute(attribute, copy);
+		}
 		
 		EList references = proto.getEReferences();
 		for (Iterator iter = references.iterator(); iter.hasNext();) {
 			EReference eReference = (EReference) iter.next();
 			EStructuralFeature feature = createReferenceFeature(
 											(EClass) eReference.getEType(), 
-											true // AST has no croos-references in it
+											true // AST has no cross-references in it
 											/*eReference.isContainment()*/);
 			image.getEStructuralFeatures().add(feature);
 			feature.setName(eReference.getName());
 			feature.setLowerBound(eReference.getLowerBound());
 			feature.setUpperBound(eReference.getUpperBound());
+			trace.registerReference(eReference, feature);
 		}
 		
 		EList superTypes = proto.getESuperTypes();
@@ -125,8 +128,8 @@ class Composer extends AstransSwitch {
 		return result;
 	}
 
-	private EStructuralFeature createReferenceFeature(EClass resolvedType, boolean containment) {
-		EClassifier calculatedType = referenceTranslator.translateReferenceType(resolvedType);
+	private EStructuralFeature createReferenceFeature(EClass type, boolean containment) {
+		EClassifier calculatedType = referenceTranslator.translateReferenceType(type);
 		
 		EStructuralFeature result;
 		if (calculatedType instanceof EClass || calculatedType == null) {
