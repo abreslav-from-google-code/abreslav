@@ -1,0 +1,175 @@
+<?xml version="1.0" encoding="ASCII"?>
+<trace:Trace xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:ecore="http://www.eclipse.org/emf/2002/Ecore" xmlns:trace="http://rain.ifmo.ru/~breslav/2007/astrans/interperter/trace">
+  <classMappings>
+    <proto href="input.ecore#//Action"/>
+    <image href="output.ecore#//ActionAS"/>
+  </classMappings>
+  <classMappings>
+    <proto href="input.ecore#//EClassifierReference"/>
+    <image href="output.ecore#//EClassifierReferenceAS"/>
+  </classMappings>
+  <classMappings>
+    <proto href="input.ecore#//EClassReference"/>
+    <image href="output.ecore#//EClassReferenceAS"/>
+  </classMappings>
+  <classMappings>
+    <proto href="input.ecore#//CreatedEClass"/>
+    <image href="output.ecore#//CreatedEClassAS"/>
+  </classMappings>
+  <classMappings>
+    <proto href="input.ecore#//MappedEClass"/>
+    <image href="output.ecore#//MappedEClassAS"/>
+  </classMappings>
+  <classMappings>
+    <proto href="input.ecore#//ExistingEClass"/>
+    <image href="output.ecore#//ExistingEClassAS"/>
+  </classMappings>
+  <classMappings>
+    <proto href="input.ecore#//ExistingEDataType"/>
+    <image href="output.ecore#//ExistingEDataTypeAS"/>
+  </classMappings>
+  <classMappings>
+    <proto href="input.ecore#//TranslateReferences"/>
+    <image href="output.ecore#//TranslateReferencesAS"/>
+  </classMappings>
+  <classMappings>
+    <proto href="input.ecore#//CreateClass"/>
+    <image href="output.ecore#//CreateClassAS"/>
+  </classMappings>
+  <classMappings>
+    <proto href="input.ecore#//StructuralFeature"/>
+    <image href="output.ecore#//StructuralFeatureAS"/>
+  </classMappings>
+  <classMappings>
+    <proto href="input.ecore#//Attribute"/>
+    <image href="output.ecore#//AttributeAS"/>
+  </classMappings>
+  <classMappings>
+    <proto href="input.ecore#//Reference"/>
+    <image href="output.ecore#//ReferenceAS"/>
+  </classMappings>
+  <classMappings>
+    <proto href="input.ecore#//ChangeInheritance"/>
+    <image href="output.ecore#//ChangeInheritanceAS"/>
+  </classMappings>
+  <classMappings>
+    <proto href="input.ecore#//SkipClass"/>
+    <image href="output.ecore#//SkipClassAS"/>
+  </classMappings>
+  <classMappings>
+    <proto href="input.ecore#//Transformation"/>
+    <image href="output.ecore#//TransformationAS"/>
+  </classMappings>
+  <attributeMappings>
+    <proto href="input.ecore#//StructuralFeature/name"/>
+    <image href="output.ecore#//StructuralFeatureAS/name"/>
+  </attributeMappings>
+  <attributeMappings>
+    <proto href="input.ecore#//StructuralFeature/lowerBound"/>
+    <image href="output.ecore#//StructuralFeatureAS/lowerBound"/>
+  </attributeMappings>
+  <attributeMappings>
+    <proto href="input.ecore#//StructuralFeature/upperBound"/>
+    <image href="output.ecore#//StructuralFeatureAS/upperBound"/>
+  </attributeMappings>
+  <attributeMappings>
+    <proto href="input.ecore#//Transformation/outputName"/>
+    <image href="output.ecore#//TransformationAS/outputName"/>
+  </attributeMappings>
+  <attributeMappings>
+    <proto href="input.ecore#//Transformation/outputNsURI"/>
+    <image href="output.ecore#//TransformationAS/outputNsURI"/>
+  </attributeMappings>
+  <attributeMappings>
+    <proto href="input.ecore#//CreateClass/name"/>
+    <image href="output.ecore#//CreateClassAS/name"/>
+  </attributeMappings>
+  <attributeMappings>
+    <proto href="input.ecore#//CreateClass/abstract"/>
+    <image href="output.ecore#//CreateClassAS/abstract"/>
+  </attributeMappings>
+  <attributeMappings>
+    <proto href="input.ecore#//Reference/containment"/>
+    <image href="output.ecore#//ReferenceAS/containment"/>
+  </attributeMappings>
+  <attributeMappings>
+    <proto href="input.ecore#//TranslateReferences/includeDescendants"/>
+    <image href="output.ecore#//TranslateReferencesAS/includeDescendants"/>
+  </attributeMappings>
+  <attributeMappings>
+    <proto href="input.ecore#//SkipClass/includeDescendants"/>
+    <image href="output.ecore#//SkipClassAS/includeDescendants"/>
+  </attributeMappings>
+  <referenceMappings type="MAPPED">
+    <proto href="input.ecore#//ExistingEClass/eClass"/>
+    <image xsi:type="ecore:EReference" href="output.ecore#//ExistingEClassAS/eClass"/>
+  </referenceMappings>
+  <referenceMappings type="TRANSLATED">
+    <proto href="input.ecore#//Transformation/createClassActions"/>
+    <image xsi:type="ecore:EReference" href="output.ecore#//TransformationAS/createClassActions"/>
+  </referenceMappings>
+  <referenceMappings type="TRANSLATED">
+    <proto href="input.ecore#//Transformation/translateReferencesActions"/>
+    <image xsi:type="ecore:EReference" href="output.ecore#//TransformationAS/translateReferencesActions"/>
+  </referenceMappings>
+  <referenceMappings type="TRANSLATED">
+    <proto href="input.ecore#//Transformation/changeInheritanceActions"/>
+    <image xsi:type="ecore:EReference" href="output.ecore#//TransformationAS/changeInheritanceActions"/>
+  </referenceMappings>
+  <referenceMappings type="TRANSLATED">
+    <proto href="input.ecore#//Transformation/skipClassActions"/>
+    <image xsi:type="ecore:EReference" href="output.ecore#//TransformationAS/skipClassActions"/>
+  </referenceMappings>
+  <referenceMappings type="MAPPED">
+    <proto href="input.ecore#//Transformation/input"/>
+    <image xsi:type="ecore:EReference" href="output.ecore#//TransformationAS/input"/>
+  </referenceMappings>
+  <referenceMappings type="MAPPED">
+    <proto href="input.ecore#//CreateClass/superclasses"/>
+    <image xsi:type="ecore:EReference" href="output.ecore#//CreateClassAS/superclasses"/>
+  </referenceMappings>
+  <referenceMappings type="TRANSLATED">
+    <proto href="input.ecore#//CreateClass/structuralFeatures"/>
+    <image xsi:type="ecore:EReference" href="output.ecore#//CreateClassAS/structuralFeatures"/>
+  </referenceMappings>
+  <referenceMappings type="MAPPED">
+    <proto href="input.ecore#//ExistingEDataType/eDataType"/>
+    <image xsi:type="ecore:EReference" href="output.ecore#//ExistingEDataTypeAS/eDataType"/>
+  </referenceMappings>
+  <referenceMappings type="MAPPED">
+    <proto href="input.ecore#//MappedEClass/proto"/>
+    <image xsi:type="ecore:EReference" href="output.ecore#//MappedEClassAS/proto"/>
+  </referenceMappings>
+  <referenceMappings type="MAPPED">
+    <proto href="input.ecore#//Reference/type"/>
+    <image xsi:type="ecore:EReference" href="output.ecore#//ReferenceAS/type"/>
+  </referenceMappings>
+  <referenceMappings type="MAPPED">
+    <proto href="input.ecore#//TranslateReferences/modelReferenceTypeProto"/>
+    <image xsi:type="ecore:EReference" href="output.ecore#//TranslateReferencesAS/modelReferenceTypeProto"/>
+  </referenceMappings>
+  <referenceMappings type="MAPPED">
+    <proto href="input.ecore#//TranslateReferences/textualReferenceType"/>
+    <image xsi:type="ecore:EReference" href="output.ecore#//TranslateReferencesAS/textualReferenceType"/>
+  </referenceMappings>
+  <referenceMappings type="MAPPED">
+    <proto href="input.ecore#//Attribute/type"/>
+    <image xsi:type="ecore:EReference" href="output.ecore#//AttributeAS/type"/>
+  </referenceMappings>
+  <referenceMappings type="MAPPED">
+    <proto href="input.ecore#//ChangeInheritance/targetProto"/>
+    <image xsi:type="ecore:EReference" href="output.ecore#//ChangeInheritanceAS/targetProto"/>
+  </referenceMappings>
+  <referenceMappings type="MAPPED">
+    <proto href="input.ecore#//ChangeInheritance/superclasses"/>
+    <image xsi:type="ecore:EReference" href="output.ecore#//ChangeInheritanceAS/superclasses"/>
+  </referenceMappings>
+  <referenceMappings type="MAPPED">
+    <proto href="input.ecore#//SkipClass/targetProto"/>
+    <image xsi:type="ecore:EReference" href="output.ecore#//SkipClassAS/targetProto"/>
+  </referenceMappings>
+  <referenceMappings type="TRANSLATED">
+    <proto href="input.ecore#//CreatedEClass/create"/>
+    <image xsi:type="ecore:EReference" href="output.ecore#//CreatedEClassAS/create"/>
+  </referenceMappings>
+</trace:Trace>

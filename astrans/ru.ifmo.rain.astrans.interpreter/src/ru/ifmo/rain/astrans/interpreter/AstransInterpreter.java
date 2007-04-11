@@ -1,5 +1,4 @@
 package ru.ifmo.rain.astrans.interpreter;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Iterator;
@@ -10,14 +9,14 @@ import org.eclipse.emf.ecore.EClassifier;
 import org.eclipse.emf.ecore.EPackage;
 import org.eclipse.emf.ecore.EcoreFactory;
 
-import ru.ifmo.rain.astrans.interpreter.backtrans.BacktransCreator;
-import ru.ifmo.rain.astrans.utils.EMFHelper;
+import trace.Trace;
 
 import astrans.ChangeInheritance;
 import astrans.CreateClass;
 import astrans.EClassReference;
 import astrans.SkipClass;
 import astrans.Transformation;
+import astrans.TranslateReferences;
 
 
 /*
@@ -81,7 +80,7 @@ public class AstransInterpreter {
 		return result;
 	}
 
-	private static void changeInheritace(Transformation transformation, AstransInterpreterTrace trace, ReferenceTranslator referenceTranslator) {
+	private static void changeInheritace(Transformation transformation, AstransInterpreterTrace trace, ReferenceResolver referenceResolver) {
 		EList changeInheritanceActions = transformation.getChangeInheritanceActions();
 		for (Iterator iter = changeInheritanceActions.iterator(); iter
 				.hasNext();) {
@@ -92,21 +91,36 @@ public class AstransInterpreter {
 			for (Iterator iterator = superclasses.iterator(); iterator
 					.hasNext();) {
 				EClassReference superclassReference = (EClassReference) iterator.next();
-				mappedClass.getESuperTypes().add(referenceTranslator.resolveEClassifierReference(superclassReference));
+				mappedClass.getESuperTypes().add(referenceResolver.resolveEClassifierReference(superclassReference));
 			}
 		}
 	}
 
-	public static EPackage run(Transformation transformation) {
-		AstransInterpreterTrace trace = new AstransInterpreterTrace();
+	private static EClassMap<EClassifier> createTranslatedTypesMap(Transformation transformation, ReferenceResolver referenceResolver) {
+		EClassMap<EClassifier> translatedTypes = new EClassMap<EClassifier>();
+		for (Iterator iter = transformation.getTranslateReferencesActions().iterator(); iter.hasNext();) {
+			TranslateReferences action = (TranslateReferences) iter.next();
+			translatedTypes.put(
+					action.getModelReferenceTypeProto(), 
+					(EClassifier) referenceResolver.doSwitch(action.getTextualReferenceType()), 
+					action.isIncludeDescendants());
+		}
+		return translatedTypes;
+	}
+
+	public static EPackage run(Transformation transformation, Trace traceModel) {
+		AstransInterpreterTrace trace = new AstransInterpreterTrace(traceModel);
 		EClassSet skippedClasses = enumerateSkippedClasses(transformation);
+
 		Collection<EClass> classes = createEClassObjects(transformation, trace, skippedClasses);
 
-		ReferenceTranslator referenceTranslator = new ReferenceTranslator(transformation, trace, skippedClasses);
-		Composer composer = new Composer(referenceTranslator);
-		composer.run(transformation, trace);
+		ReferenceResolver referenceResolver = new ReferenceResolver(trace);
+		EClassMap<EClassifier> translatedTypes = createTranslatedTypesMap(transformation, referenceResolver);
+		
+		Composer composer = new Composer(translatedTypes, trace, skippedClasses, referenceResolver);
+		composer.run(transformation);
 
-		changeInheritace(transformation, trace, referenceTranslator);
+		changeInheritace(transformation, trace, referenceResolver);
 		
 		return createResult(transformation, classes);
 	}

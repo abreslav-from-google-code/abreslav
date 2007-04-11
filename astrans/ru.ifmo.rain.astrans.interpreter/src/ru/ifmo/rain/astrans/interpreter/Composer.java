@@ -4,18 +4,18 @@
 package ru.ifmo.rain.astrans.interpreter;
 
 import java.util.Iterator;
-import java.util.Set;
 import java.util.Map.Entry;
 
 import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.ecore.EAttribute;
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.EClassifier;
-import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EReference;
 import org.eclipse.emf.ecore.EStructuralFeature;
 import org.eclipse.emf.ecore.EcoreFactory;
 import org.eclipse.emf.ecore.util.EcoreUtil;
+
+import trace.ReferenceMappingType;
 
 import astrans.Attribute;
 import astrans.CreateClass;
@@ -27,13 +27,35 @@ import astrans.util.AstransSwitch;
 
 class Composer extends AstransSwitch {
 
-	private final ReferenceTranslator referenceTranslator;
-	
-	public Composer(final ReferenceTranslator referenceTranslator) {
-		this.referenceTranslator = referenceTranslator;
+	private final EClassMap<EClassifier> translatedTypes;
+	private final AstransInterpreterTrace trace;
+	private final EClassSet skippedClasses;
+	private final ReferenceResolver referenceResolver;
+
+	public Composer(final EClassMap<EClassifier> translatedTypes, final AstransInterpreterTrace trace, final EClassSet skippedClasses, final ReferenceResolver referenceResolver) {
+		this.translatedTypes = translatedTypes;
+		this.trace = trace;
+		this.skippedClasses = skippedClasses;
+		this.referenceResolver = referenceResolver;
 	}
 
-	public void run(Transformation transformation, AstransInterpreterTrace trace) {
+	private EClassifier translateReferenceType(EClass eClass) {
+		EClassifier translatedType = translatedTypes.get(eClass);
+		if (translatedType != null) {
+			return translatedType;
+		}
+		
+		EClassifier result = trace.getMappedClass(eClass);
+		if (result == null) {
+			if (!skippedClasses.contains(eClass)) {
+				result = eClass;
+			}
+		}
+		
+		return result;
+	}
+	
+	public void run(Transformation transformation) {
 		for (Iterator iter = transformation.getCreateClassActions().iterator(); iter.hasNext();) {
 			CreateClass action = (CreateClass) iter.next();
 			composeCreatedClass(action, trace);
@@ -64,14 +86,15 @@ class Composer extends AstransSwitch {
 		for (Iterator iter = references.iterator(); iter.hasNext();) {
 			EReference eReference = (EReference) iter.next();
 			EStructuralFeature feature = createReferenceFeature(
-											(EClass) eReference.getEType(), 
+											eReference.getEReferenceType(), 
 											true // AST has no cross-references in it
 											/*eReference.isContainment()*/);
 			image.getEStructuralFeatures().add(feature);
 			feature.setName(eReference.getName());
 			feature.setLowerBound(eReference.getLowerBound());
 			feature.setUpperBound(eReference.getUpperBound());
-			trace.registerReference(eReference, feature);
+			
+			trace.registerReference(eReference, feature, getMappingType(eReference));
 		}
 		
 		EList superTypes = proto.getESuperTypes();
@@ -79,6 +102,18 @@ class Composer extends AstransSwitch {
 			EClass eClass = (EClass) iter.next();
 			image.getESuperTypes().add(trace.getMappedClass(eClass));
 		}
+	}
+
+	private ReferenceMappingType getMappingType(EReference eReference) {
+		ReferenceMappingType mappingType;
+		if (translatedTypes.get(eReference.getEReferenceType()) != null) {
+			mappingType = ReferenceMappingType.TRANSLATED_LITERAL;
+		} else {
+			mappingType = skippedClasses.contains(eReference.getEReferenceType()) 
+				? ReferenceMappingType.NONE_LITERAL
+				: ReferenceMappingType.MAPPED_LITERAL;
+		}
+		return mappingType;
 	}
 
 	public void composeCreatedClass(CreateClass action, AstransInterpreterTrace trace) {
@@ -97,7 +132,7 @@ class Composer extends AstransSwitch {
 		EList superclasses = action.getSuperclasses();
 		for (Iterator iter = superclasses.iterator(); iter.hasNext();) {
 			EClassifierReference reference = (EClassifierReference) iter.next();
-			result.getESuperTypes().add(referenceTranslator.resolveEClassifierReference(reference));
+			result.getESuperTypes().add(referenceResolver.resolveEClassifierReference(reference));
 		}
 	}
 
@@ -117,7 +152,7 @@ class Composer extends AstransSwitch {
 	public EStructuralFeature caseReference(Reference reference) {
 		assert reference != null;
 	
-		EClass resolvedType = (EClass) referenceTranslator.resolveEClassifierReference(reference.getType());
+		EClass resolvedType = (EClass) referenceResolver.resolveEClassifierReference(reference.getType());
 		boolean containment = reference.isContainment();
 		EStructuralFeature result = createReferenceFeature(resolvedType, containment);
 		
@@ -129,7 +164,7 @@ class Composer extends AstransSwitch {
 	}
 
 	private EStructuralFeature createReferenceFeature(EClass type, boolean containment) {
-		EClassifier calculatedType = referenceTranslator.translateReferenceType(type);
+		EClassifier calculatedType = translateReferenceType(type);
 		
 		EStructuralFeature result;
 		if (calculatedType instanceof EClass || calculatedType == null) {

@@ -4,9 +4,11 @@
 package ru.ifmo.rain.astrans.interpreter;
 
 import org.eclipse.emf.ecore.EClass;
+import org.eclipse.emf.ecore.EClassifier;
 import org.eclipse.emf.ecore.EDataType;
 
 import astrans.CreatedEClass;
+import astrans.EClassifierReference;
 import astrans.ExistingEClass;
 import astrans.ExistingEDataType;
 import astrans.MappedEClass;
@@ -49,4 +51,9 @@ class ReferenceResolver extends AstransSwitch {
 	public EDataType caseExistingEDataType(ExistingEDataType reference) {
 		return reference.getEDataType();
 	}
+
+	public EClassifier resolveEClassifierReference(EClassifierReference reference) {
+		return (EClassifier) doSwitch(reference);
+	}
+
 }

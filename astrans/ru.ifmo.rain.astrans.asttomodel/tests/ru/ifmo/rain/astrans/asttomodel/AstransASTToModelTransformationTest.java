@@ -91,7 +91,7 @@ public class AstransASTToModelTransformationTest {
 	public final void testRun() throws IOException {
 		Transformation result = transformation.run(input);
 		EMFHelper.saveEObjectToFile(result, resultFileName);
-		Difference difference = EMFComparator.comapre(result, expectedResult);
+		Difference difference = EMFComparator.compare(result, expectedResult);
 		assertTrue(difference.toString(), difference.areEqual());
 	}
 

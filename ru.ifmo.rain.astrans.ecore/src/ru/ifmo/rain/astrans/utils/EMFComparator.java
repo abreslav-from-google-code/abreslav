@@ -15,7 +15,7 @@ import org.eclipse.emf.ecore.util.FeatureMapUtil;
 public class EMFComparator {
 	/* Most part of the code is stollen from EqualityHelper from EcoreUtil */
 
-	public static Difference comapre(EObject o1, EObject o2) {
+	public static Difference compare(EObject o1, EObject o2) {
 		EMFComparator comparator = new EMFComparator();
 		return comparator.compareEObjects(o1, o2);		
 	}

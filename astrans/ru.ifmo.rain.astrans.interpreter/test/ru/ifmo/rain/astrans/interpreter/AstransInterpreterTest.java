@@ -7,7 +7,11 @@ import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Iterator;
 
+import org.eclipse.emf.common.util.EList;
+import org.eclipse.emf.common.util.TreeIterator;
+import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EPackage;
 import org.eclipse.emf.ecore.EcorePackage;
 import org.eclipse.emf.ecore.resource.Resource;
@@ -21,6 +25,10 @@ import org.junit.runners.Parameterized.Parameters;
 import ru.ifmo.rain.astrans.utils.Difference;
 import ru.ifmo.rain.astrans.utils.EMFComparator;
 import ru.ifmo.rain.astrans.utils.EMFHelper;
+import trace.AttributeMapping;
+import trace.Trace;
+import trace.TraceFactory;
+import trace.TracePackage;
 import astrans.AstransPackage;
 import astrans.Transformation;
 
@@ -31,6 +39,8 @@ public class AstransInterpreterTest {
 	private String transformationFileName;
 	private String outputFileName;
 	private String expectedFileName;
+	private String traceFileName;
+	private String expectedTraceFileName;
 	
 	@Parameters
 	public static Collection<Object[]> parameters() {
@@ -46,17 +56,21 @@ public class AstransInterpreterTest {
 					path + "/Transformation.xmi",
 					path + "/output.ecore",
 					path + "/expected.ecore",
+					path + "/trace.xmi",
+					path + "/expected_trace.xmi",
 				});
 			}
 		}
 		return result;
 	}
 	
-	public AstransInterpreterTest(final String inputFileName, final String transformationFileName, final String outputFileName, final String expectedFileName) {
+	public AstransInterpreterTest(String inputFileName, final String transformationFileName, final String outputFileName, final String expectedFileName, final String traceFileName, final String expectedTraceFileName) {
 		this.inputFileName = inputFileName;
 		this.transformationFileName = transformationFileName;
 		this.outputFileName = outputFileName;
 		this.expectedFileName = expectedFileName;
+		this.traceFileName = traceFileName;
+		this.expectedTraceFileName = expectedTraceFileName;
 	}
 
 	@Test
@@ -77,14 +91,27 @@ public class AstransInterpreterTest {
 		resourceSet.getResources().add(inputResource);
 		
 		EcoreUtil.resolve(transformation.getInput(), resourceSet);
-		EPackage output = AstransInterpreter.run(transformation);
+		Trace trace = TraceFactory.eINSTANCE.createTrace();
+		EPackage output = AstransInterpreter.run(transformation, trace);
 		
 		Resource resource = EMFHelper.wrapIntoXMIResource(output, "output.ecore");
 		EMFHelper.saveResourceToFile(resource, outputFileName);
+		resourceSet.getResources().add(resource);
+		Resource traceResource = EMFHelper.wrapIntoXMIResource(trace, "trace.xmi");
+		resourceSet.getResources().add(traceResource);
+		EMFHelper.saveResourceToFile(traceResource, traceFileName);
 
-		Difference diagnostic = EMFComparator.comapre(expected, output);
+		Difference resultDifference = EMFComparator.compare(expected, output);
 		
-		assertTrue(diagnostic.toString(), diagnostic.areEqual());
+		assertTrue("model: " + resultDifference.toString(), resultDifference.areEqual());
+		
+		Resource expectedTraceResource = EMFHelper.getXMIResource(TracePackage.eINSTANCE, expectedTraceFileName);
+		EMFHelper.loadResourceFromFile(expectedTraceResource, expectedTraceFileName);
+		Trace expectedTrace = (Trace) expectedTraceResource.getContents().get(0);
+		resourceSet.getResources().add(expectedTraceResource);
+		
+		Difference traceDifference = EMFComparator.compare(expectedTrace, trace);
+		assertTrue("trace: " + traceDifference.toString(), traceDifference.areEqual());
 	}
 	
 }
