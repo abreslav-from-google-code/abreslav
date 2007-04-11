@@ -1,0 +1,30 @@
+@namespace(uri="http://rain.ifmo.ru/~breslav/2007/astrans/interperter/trace", prefix="trace")
+package trace;
+
+class Trace {
+	val ClassMapping[*] classMappings;
+	val AttributeMapping[*] attributeMappings;
+	val ReferenceMapping[*] referenceMappings;
+}
+
+class ClassMapping {
+	ref ecore.EClass[1] proto;
+	ref ecore.EClass[1] image;
+}
+
+class AttributeMapping {
+	ref ecore.EAttribute[1] proto;
+	ref ecore.EAttribute[1] image;
+}
+
+class ReferenceMapping {
+	ref ecore.EReference[1] proto;
+	ref ecore.EStructuralFeature[1] image;
+	attr ReferenceMappingType type;
+}
+
+enum ReferenceMappingType {
+	NONE = 0;
+	TRANSLATED = 1;
+	MAPPED = 2;
+}
