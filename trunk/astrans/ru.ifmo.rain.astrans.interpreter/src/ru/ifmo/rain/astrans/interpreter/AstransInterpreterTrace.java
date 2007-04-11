@@ -13,6 +13,12 @@ import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.EReference;
 import org.eclipse.emf.ecore.EStructuralFeature;
 
+import trace.AttributeMapping;
+import trace.ClassMapping;
+import trace.ReferenceMapping;
+import trace.ReferenceMappingType;
+import trace.Trace;
+import trace.TraceFactory;
 import astrans.CreateClass;
 
 public class AstransInterpreterTrace {
@@ -21,8 +27,19 @@ public class AstransInterpreterTrace {
 	private final Map<EAttribute, EAttribute> attributeTrace = new HashMap<EAttribute, EAttribute>();
 	private final Map<EReference, EStructuralFeature> referenceTrace = new HashMap<EReference, EStructuralFeature>();
 	
+	private final Trace trace;
+	
+	public AstransInterpreterTrace(final Trace trace) {
+		this.trace = trace;
+	}
+
 	public void registerMappedClass(EClass proto, EClass image) {
 		mapTrace.put(proto, image);
+		
+		ClassMapping mapping = TraceFactory.eINSTANCE.createClassMapping();
+		mapping.setProto(proto);
+		mapping.setImage(image);
+		trace.getClassMappings().add(mapping);
 	}
 	
 	public EClass getMappedClass(EClass proto) {
@@ -41,19 +58,30 @@ public class AstransInterpreterTrace {
 		return createActionTrace.get(action);
 	}
 	
-	public void registerAttribute(EAttribute source, EAttribute dest) {
-		attributeTrace.put(source, dest);
+	public void registerAttribute(EAttribute proto, EAttribute image) {
+		attributeTrace.put(proto, image);
+		
+		AttributeMapping mapping = TraceFactory.eINSTANCE.createAttributeMapping();
+		mapping.setProto(proto);
+		mapping.setImage(image);
+		trace.getAttributeMappings().add(mapping);
 	}
 	
-	public EAttribute getCorrespondingAttribute(EAttribute source) {
-		return attributeTrace.get(source);
+	public EAttribute getCorrespondingAttribute(EAttribute proto) {
+		return attributeTrace.get(proto);
 	}
 
-	public void registerReference(EReference source, EStructuralFeature dest) {
-		referenceTrace.put(source, dest);
+	public void registerReference(EReference proto, EStructuralFeature image, ReferenceMappingType mappingType) {
+		referenceTrace.put(proto, image);
+		
+		ReferenceMapping mapping = TraceFactory.eINSTANCE.createReferenceMapping();
+		mapping.setProto(proto);
+		mapping.setImage(image);
+		mapping.setType(mappingType);
+		trace.getReferenceMappings().add(mapping);
 	}
 	
-	public EStructuralFeature getCorrespondingFeature(EReference source) {
-		return referenceTrace.get(source);
+	public EStructuralFeature getCorrespondingFeature(EReference proto) {
+		return referenceTrace.get(proto);
 	}
 }

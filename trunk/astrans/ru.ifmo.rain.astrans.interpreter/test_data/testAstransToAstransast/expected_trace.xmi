@@ -1,0 +1,139 @@
+<?xml version="1.0" encoding="ASCII"?>
+<trace:Trace xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:ecore="http://www.eclipse.org/emf/2002/Ecore" xmlns:trace="http://rain.ifmo.ru/~breslav/2007/astrans/interperter/trace">
+  <classMappings>
+    <proto href="http://rain.ifmo.ru/~breslav/2007/astrans#//Action"/>
+    <image href="output.ecore#//ActionAS"/>
+  </classMappings>
+  <classMappings>
+    <proto href="http://rain.ifmo.ru/~breslav/2007/astrans#//EClassifierReference"/>
+    <image href="output.ecore#//EClassifierReferenceAS"/>
+  </classMappings>
+  <classMappings>
+    <proto href="http://rain.ifmo.ru/~breslav/2007/astrans#//TranslateReferences"/>
+    <image href="output.ecore#//TranslateReferencesAS"/>
+  </classMappings>
+  <classMappings>
+    <proto href="http://rain.ifmo.ru/~breslav/2007/astrans#//CreateClass"/>
+    <image href="output.ecore#//CreateClassAS"/>
+  </classMappings>
+  <classMappings>
+    <proto href="http://rain.ifmo.ru/~breslav/2007/astrans#//StructuralFeature"/>
+    <image href="output.ecore#//StructuralFeatureAS"/>
+  </classMappings>
+  <classMappings>
+    <proto href="http://rain.ifmo.ru/~breslav/2007/astrans#//Attribute"/>
+    <image href="output.ecore#//AttributeAS"/>
+  </classMappings>
+  <classMappings>
+    <proto href="http://rain.ifmo.ru/~breslav/2007/astrans#//Reference"/>
+    <image href="output.ecore#//ReferenceAS"/>
+  </classMappings>
+  <classMappings>
+    <proto href="http://rain.ifmo.ru/~breslav/2007/astrans#//ChangeInheritance"/>
+    <image href="output.ecore#//ChangeInheritanceAS"/>
+  </classMappings>
+  <classMappings>
+    <proto href="http://rain.ifmo.ru/~breslav/2007/astrans#//SkipClass"/>
+    <image href="output.ecore#//SkipClassAS"/>
+  </classMappings>
+  <classMappings>
+    <proto href="http://rain.ifmo.ru/~breslav/2007/astrans#//Transformation"/>
+    <image href="output.ecore#//TransformationAS"/>
+  </classMappings>
+  <attributeMappings>
+    <proto href="http://rain.ifmo.ru/~breslav/2007/astrans#//Reference/containment"/>
+    <image href="output.ecore#//ReferenceAS/containment"/>
+  </attributeMappings>
+  <attributeMappings>
+    <proto href="http://rain.ifmo.ru/~breslav/2007/astrans#//SkipClass/includeDescendants"/>
+    <image href="output.ecore#//SkipClassAS/includeDescendants"/>
+  </attributeMappings>
+  <attributeMappings>
+    <proto href="http://rain.ifmo.ru/~breslav/2007/astrans#//Transformation/outputName"/>
+    <image href="output.ecore#//TransformationAS/outputName"/>
+  </attributeMappings>
+  <attributeMappings>
+    <proto href="http://rain.ifmo.ru/~breslav/2007/astrans#//Transformation/outputNsURI"/>
+    <image href="output.ecore#//TransformationAS/outputNsURI"/>
+  </attributeMappings>
+  <attributeMappings>
+    <proto href="http://rain.ifmo.ru/~breslav/2007/astrans#//TranslateReferences/includeDescendants"/>
+    <image href="output.ecore#//TranslateReferencesAS/includeDescendants"/>
+  </attributeMappings>
+  <attributeMappings>
+    <proto href="http://rain.ifmo.ru/~breslav/2007/astrans#//CreateClass/name"/>
+    <image href="output.ecore#//CreateClassAS/name"/>
+  </attributeMappings>
+  <attributeMappings>
+    <proto href="http://rain.ifmo.ru/~breslav/2007/astrans#//CreateClass/abstract"/>
+    <image href="output.ecore#//CreateClassAS/abstract"/>
+  </attributeMappings>
+  <attributeMappings>
+    <proto href="http://rain.ifmo.ru/~breslav/2007/astrans#//StructuralFeature/name"/>
+    <image href="output.ecore#//StructuralFeatureAS/name"/>
+  </attributeMappings>
+  <attributeMappings>
+    <proto href="http://rain.ifmo.ru/~breslav/2007/astrans#//StructuralFeature/lowerBound"/>
+    <image href="output.ecore#//StructuralFeatureAS/lowerBound"/>
+  </attributeMappings>
+  <attributeMappings>
+    <proto href="http://rain.ifmo.ru/~breslav/2007/astrans#//StructuralFeature/upperBound"/>
+    <image href="output.ecore#//StructuralFeatureAS/upperBound"/>
+  </attributeMappings>
+  <referenceMappings type="TRANSLATED">
+    <proto href="http://rain.ifmo.ru/~breslav/2007/astrans#//Reference/type"/>
+    <image xsi:type="ecore:EReference" href="output.ecore#//ReferenceAS/type"/>
+  </referenceMappings>
+  <referenceMappings type="TRANSLATED">
+    <proto href="http://rain.ifmo.ru/~breslav/2007/astrans#//SkipClass/targetProto"/>
+    <image xsi:type="ecore:EReference" href="output.ecore#//SkipClassAS/targetProto"/>
+  </referenceMappings>
+  <referenceMappings type="MAPPED">
+    <proto href="http://rain.ifmo.ru/~breslav/2007/astrans#//Transformation/createClassActions"/>
+    <image xsi:type="ecore:EReference" href="output.ecore#//TransformationAS/createClassActions"/>
+  </referenceMappings>
+  <referenceMappings type="MAPPED">
+    <proto href="http://rain.ifmo.ru/~breslav/2007/astrans#//Transformation/translateReferencesActions"/>
+    <image xsi:type="ecore:EReference" href="output.ecore#//TransformationAS/translateReferencesActions"/>
+  </referenceMappings>
+  <referenceMappings type="MAPPED">
+    <proto href="http://rain.ifmo.ru/~breslav/2007/astrans#//Transformation/changeInheritanceActions"/>
+    <image xsi:type="ecore:EReference" href="output.ecore#//TransformationAS/changeInheritanceActions"/>
+  </referenceMappings>
+  <referenceMappings type="MAPPED">
+    <proto href="http://rain.ifmo.ru/~breslav/2007/astrans#//Transformation/skipClassActions"/>
+    <image xsi:type="ecore:EReference" href="output.ecore#//TransformationAS/skipClassActions"/>
+  </referenceMappings>
+  <referenceMappings type="TRANSLATED">
+    <proto href="http://rain.ifmo.ru/~breslav/2007/astrans#//Transformation/input"/>
+    <image xsi:type="ecore:EReference" href="output.ecore#//TransformationAS/input"/>
+  </referenceMappings>
+  <referenceMappings type="TRANSLATED">
+    <proto href="http://rain.ifmo.ru/~breslav/2007/astrans#//ChangeInheritance/targetProto"/>
+    <image xsi:type="ecore:EReference" href="output.ecore#//ChangeInheritanceAS/targetProto"/>
+  </referenceMappings>
+  <referenceMappings type="TRANSLATED">
+    <proto href="http://rain.ifmo.ru/~breslav/2007/astrans#//ChangeInheritance/superclasses"/>
+    <image xsi:type="ecore:EReference" href="output.ecore#//ChangeInheritanceAS/superclasses"/>
+  </referenceMappings>
+  <referenceMappings type="TRANSLATED">
+    <proto href="http://rain.ifmo.ru/~breslav/2007/astrans#//TranslateReferences/modelReferenceTypeProto"/>
+    <image xsi:type="ecore:EReference" href="output.ecore#//TranslateReferencesAS/modelReferenceTypeProto"/>
+  </referenceMappings>
+  <referenceMappings type="MAPPED">
+    <proto href="http://rain.ifmo.ru/~breslav/2007/astrans#//TranslateReferences/textualReferenceType"/>
+    <image xsi:type="ecore:EReference" href="output.ecore#//TranslateReferencesAS/textualReferenceType"/>
+  </referenceMappings>
+  <referenceMappings type="TRANSLATED">
+    <proto href="http://rain.ifmo.ru/~breslav/2007/astrans#//CreateClass/superclasses"/>
+    <image xsi:type="ecore:EReference" href="output.ecore#//CreateClassAS/superclasses"/>
+  </referenceMappings>
+  <referenceMappings type="MAPPED">
+    <proto href="http://rain.ifmo.ru/~breslav/2007/astrans#//CreateClass/structuralFeatures"/>
+    <image xsi:type="ecore:EReference" href="output.ecore#//CreateClassAS/structuralFeatures"/>
+  </referenceMappings>
+  <referenceMappings type="TRANSLATED">
+    <proto href="http://rain.ifmo.ru/~breslav/2007/astrans#//Attribute/type"/>
+    <image xsi:type="ecore:EReference" href="output.ecore#//AttributeAS/type"/>
+  </referenceMappings>
+</trace:Trace>
