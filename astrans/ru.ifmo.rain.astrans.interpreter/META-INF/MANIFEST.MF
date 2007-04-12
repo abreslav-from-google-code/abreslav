@@ -6,4 +6,5 @@ Bundle-Version: 1.0.0
 Bundle-Localization: plugin
 Require-Bundle: org.eclipse.emf.ecore,
  ru.ifmo.rain.astrans.astransformation,
- ru.ifmo.rain.astrans.interpreter.trace
+ ru.ifmo.rain.astrans.interpreter.trace,
+ ru.ifmo.rain.astrans.utils
