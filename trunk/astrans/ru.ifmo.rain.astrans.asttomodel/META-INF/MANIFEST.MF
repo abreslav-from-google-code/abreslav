@@ -7,5 +7,6 @@ Bundle-Localization: plugin
 Require-Bundle: org.eclipse.ui,
  org.eclipse.core.runtime,
  ru.ifmo.rain.astrans.ast,
- ru.ifmo.rain.astrans.ecore
+ ru.ifmo.rain.astrans.ecore,
+ ru.ifmo.rain.astrans.utils
 Eclipse-LazyStart: true
