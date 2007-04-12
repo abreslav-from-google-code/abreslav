@@ -8,8 +8,7 @@ Bundle-Vendor: %providerName
 Bundle-Localization: plugin
 Export-Package: astrans,
  astrans.impl,
- astrans.util,
- ru.ifmo.rain.astrans.utils
+ astrans.util
 Require-Bundle: org.eclipse.core.runtime,
  org.eclipse.emf.ecore;visibility:=reexport,
  org.eclipse.emf.ecore.xmi
