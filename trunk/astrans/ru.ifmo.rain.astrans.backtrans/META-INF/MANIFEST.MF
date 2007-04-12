@@ -1,0 +1,9 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: Backtrans Plug-in
+Bundle-SymbolicName: ru.ifmo.rain.astrans.backtrans
+Bundle-Version: 1.0.0
+Bundle-Localization: plugin
+Require-Bundle: ru.ifmo.rain.astrans.interpreter.trace,
+ ru.ifmo.rain.astrans.astransformation,
+ ru.ifmo.rain.astrans.utils
