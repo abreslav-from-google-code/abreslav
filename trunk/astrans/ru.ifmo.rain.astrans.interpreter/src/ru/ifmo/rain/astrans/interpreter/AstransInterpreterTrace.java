@@ -36,9 +36,7 @@ public class AstransInterpreterTrace {
 	public void registerMappedClass(EClass proto, EClass image) {
 		mapTrace.put(proto, image);
 		
-		ClassMapping mapping = TraceFactory.eINSTANCE.createClassMapping();
-		mapping.setProto(proto);
-		mapping.setImage(image);
+		ClassMapping mapping = TraceFactory.eINSTANCE.createClassMapping(proto, image);
 		trace.getClassMappings().add(mapping);
 	}
 	
@@ -61,9 +59,7 @@ public class AstransInterpreterTrace {
 	public void registerAttribute(EAttribute proto, EAttribute image) {
 		attributeTrace.put(proto, image);
 		
-		AttributeMapping mapping = TraceFactory.eINSTANCE.createAttributeMapping();
-		mapping.setProto(proto);
-		mapping.setImage(image);
+		AttributeMapping mapping = TraceFactory.eINSTANCE.createAttributeMapping(proto, image);
 		trace.getAttributeMappings().add(mapping);
 	}
 	
@@ -74,10 +70,7 @@ public class AstransInterpreterTrace {
 	public void registerReference(EReference proto, EStructuralFeature image, ReferenceMappingType mappingType) {
 		referenceTrace.put(proto, image);
 		
-		ReferenceMapping mapping = TraceFactory.eINSTANCE.createReferenceMapping();
-		mapping.setProto(proto);
-		mapping.setImage(image);
-		mapping.setType(mappingType);
+		ReferenceMapping mapping = TraceFactory.eINSTANCE.createReferenceMapping(proto, image, mappingType);
 		trace.getReferenceMappings().add(mapping);
 	}
 	
