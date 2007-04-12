@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="ASCII"?>
+<trace:Trace xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:ecore="http://www.eclipse.org/emf/2002/Ecore" xmlns:trace="http://rain.ifmo.ru/~breslav/2007/astrans/interperter/trace">
+  <classMappings>
+    <proto href="http://www.eclipse.org/emf/2002/Ecore#//EReference"/>
+    <image href="http://www.eclipse.org/emf/2002/Ecore#//EAnnotation"/>
+  </classMappings>
+  <attributeMappings>
+    <proto href="http://www.eclipse.org/emf/2002/Ecore#//EClassifier/instanceClass"/>
+    <image href="http://www.eclipse.org/emf/2002/Ecore#//EClassifier/instanceClassName"/>
+  </attributeMappings>
+  <referenceMappings type="TRANSLATED">
+    <proto href="http://www.eclipse.org/emf/2002/Ecore#//EEnumLiteral/eEnum"/>
+    <image xsi:type="ecore:EAttribute" href="http://www.eclipse.org/emf/2002/Ecore#//EClassifier/defaultValue"/>
+  </referenceMappings>
+</trace:Trace>
