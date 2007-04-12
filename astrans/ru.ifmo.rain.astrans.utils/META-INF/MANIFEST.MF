@@ -1,0 +1,9 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: Utils Plug-in
+Bundle-SymbolicName: ru.ifmo.rain.astrans.utils
+Bundle-Version: 1.0.0
+Bundle-Localization: plugin
+Require-Bundle: org.eclipse.emf.ecore,
+ org.eclipse.emf.ecore.xmi
+Export-Package: ru.ifmo.rain.astrans.utils
