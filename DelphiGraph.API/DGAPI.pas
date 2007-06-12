@@ -19,6 +19,10 @@ function CharPressed : Boolean;
 function ReadKey : Word;
 function ReadChar : Char;
 
+function MousePressed : Boolean;
+function GetMouseX : Integer;
+function GetMouseY : Integer;
+
 procedure FreezeScreen;
 procedure UnFreezeScreen;
 
@@ -42,6 +46,8 @@ var
   eventThread : THandle = 0;
   bufferBMP : HBITMAP = 0;
   buffer : HDC = 0;
+  freezeBufferBMP : HBITMAP = 0;
+  freezeBuffer : HDC = 0;
   WindowRect : TRect;
   WindowWidth : Integer = -1;
   WindowHeight : Integer = -1;
@@ -51,6 +57,9 @@ var
   Frozen : Boolean = false;
   ks : TKeyboardState;
   KeyQueue : TObjectQueue;
+  IsLButtonDown : Boolean = false;
+  MouseX : Integer = 0;
+  MouseY : Integer = 0;
 
 type
   TKeyEvent = class
@@ -105,9 +114,9 @@ var
   Shift : TShiftState;
   r : Integer;
 begin
+  Result := 0;
   case msg of
     WM_DESTROY: begin
-      Result := 0;
       PostQuitMessage(0);
       if HaltOnWindowClose then
         Halt(0)
@@ -115,18 +124,28 @@ begin
         Exit;
     end;
     WM_PAINT: begin
-      dc := BeginPaint(hWnd, ps);
-      Assert(dc <> 0);
-      try
-        Assert(buffer <> 0);
-        cs.Enter;
-        BitBlt(dc, 0, 0, WindowWidth, WindowHeight, buffer, 0, 0, SRCCOPY);
-      finally
-        cs.Leave;
-//        event.SetEvent;
-        EndPaint(hWnd, ps);
-      end;
-      Result := 0;
+        dc := BeginPaint(hWnd, ps);
+        Assert(dc <> 0);
+        try
+          Assert(buffer <> 0);
+          cs.Enter;
+          if not Frozen then
+            BitBlt(dc, 0, 0, WindowWidth, WindowHeight, buffer, 0, 0, SRCCOPY)
+          else
+            BitBlt(dc, 0, 0, WindowWidth, WindowHeight, freezeBuffer, 0, 0, SRCCOPY);
+        finally
+          cs.Leave;
+  //        event.SetEvent;
+          EndPaint(hWnd, ps);
+        end;
+    end;
+    WM_LBUTTONDOWN:
+      IsLButtonDown := true;
+    WM_LBUTTONUP:
+      IsLButtonDown := false;
+    WM_MOUSEMOVE: begin
+      MouseX := LoWord(lParam);
+      MouseY := HiWord(lParam);
     end;
     WM_KEYDOWN: begin
       if GetKeyState(VK_SHIFT) < 0 then
@@ -139,7 +158,6 @@ begin
 
       KeyQueue.Push(TKeyEvent.Create(wParam, c[1], r <> 0, Shift));
       keyPressEvent.SetEvent;
-      Result := 0;
     end;
     else
       Result := DefWindowProc(wnd, msg, wparam, lparam);
@@ -188,6 +206,13 @@ begin
     Assert(buffer <> 0);
     SelectObject(buffer, bufferBMP);
     Windows.FillRect(buffer, WindowRect, GetStockObject(WHITE_BRUSH));
+
+    freezeBufferBMP := CreateCompatibleBitmap(hDC, WindowWidth, WindowHeight);
+    Assert(freezeBufferBMP <> 0);
+    freezeBuffer := CreateCompatibleDC(hDC);
+    Assert(freezeBuffer <> 0);
+    SelectObject(freezeBuffer, freezeBufferBMP);
+
   finally
     ReleaseDC(hWnd, hDC);
   end;
@@ -215,6 +240,11 @@ begin
   buffer := 0;
   DeleteObject(bufferBMP);
   bufferBMP := 0;
+
+  DeleteDC(freezeBuffer);
+  freezeBuffer := 0;
+  DeleteObject(freezeBufferBMP);
+  freezeBufferBMP := 0;
 
   Result := 0;
 end;
@@ -286,6 +316,24 @@ end;
 ///////////////////////////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////////////////////////
 
+function MousePressed : Boolean;
+begin
+  Result := IsLButtonDown;
+end;
+
+function GetMouseX : Integer;
+begin
+  Result := MouseX;
+end;
+
+function GetMouseY : Integer;
+begin
+  Result := MouseY;
+end;
+
+///////////////////////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////
+
 procedure Repaint;
 begin
   if not Frozen then
@@ -294,12 +342,17 @@ end;
 
 procedure FreezeScreen;
 begin
+  cs.Enter;
+  BitBlt(freezeBuffer, 0, 0, WindowWidth, WindowHeight, buffer, 0, 0, SRCCOPY);
   Frozen := true;
+  cs.Leave;
 end;
 
 procedure UnFreezeScreen;
 begin
+  cs.Enter;
   Frozen := false;
+  cs.Leave;
   Repaint;
 end;
 
@@ -329,10 +382,28 @@ end;
 
 procedure Ellipse(x1, y1, x2, y2 : Integer);
 begin
+  Assert(buffer <> 0);
+  cs.Enter;
+  try
+    Windows.Ellipse(buffer, x1, y1, x2, y2);
+  finally
+    cs.Leave;
+  end;
+  Repaint;
 end;
+
 procedure RoundRect(x1, y1, x2, y2, a, b : Integer);
 begin
+  Assert(buffer <> 0);
+  cs.Enter;
+  try
+    Windows.RoundRect(buffer, x1, y1, x2, y2, a, b);
+  finally
+    cs.Leave;
+  end;
+  Repaint;
 end;
+
 procedure MoveTo(x, y : Integer);
 begin
 end;
