@@ -14,6 +14,11 @@ procedure InitGraph(Width, Height : Integer);
 procedure CloseGraph;
 procedure WaitForGraph;
 
+function KeyPressed : Boolean;
+function CharPressed : Boolean;
+function ReadKey : Word;
+function ReadChar : Char;
+
 procedure FreezeScreen;
 procedure UnFreezeScreen;
 
@@ -29,7 +34,7 @@ procedure SetBrushColor(c : TColor);
 implementation
 
 uses
-  Windows, Messages, Classes, Syncobjs;
+  Windows, Messages, Classes, Syncobjs, Contnrs;
 
 var
   wndClass : TWndClassEx;
@@ -42,12 +47,63 @@ var
   WindowHeight : Integer = -1;
   cs : TCriticalSection = nil;
   event : TEvent = nil;
+  keyPressEvent : TEvent = nil;
   Frozen : Boolean = false;
+  ks : TKeyboardState;
+  KeyQueue : TObjectQueue;
+
+type
+  TKeyEvent = class
+  private
+    myVirtualKey : Word;
+    myShiftState : TShiftState;
+    myChar : Char;
+    myIsChar : Boolean;
+  public
+    function GetChar : Char;
+    function GetVirtualKey : Word;
+    function GetShiftState : TShiftState;
+    function isChar : Boolean;
+    constructor Create(vk : Word; c : Char; ic : Boolean; shift : TShiftState);
+  end;
+
+{ TKeyEvent }
+
+constructor TKeyEvent.Create(vk: Word; c : Char; ic : Boolean; shift: TShiftState);
+begin
+  myVirtualKey := vk;
+  myChar := c;
+  myShiftState := shift;
+  myIsChar := ic;
+end;
+
+function TKeyEvent.GetChar: Char;
+begin
+  Result := myChar;
+end;
+
+function TKeyEvent.GetShiftState: TShiftState;
+begin
+  Result := myShiftState;
+end;
+
+function TKeyEvent.GetVirtualKey: Word;
+begin
+  Result := myVirtualKey;
+end;
+
+function TKeyEvent.isChar: Boolean;
+begin
+  Result := myIsChar;
+end;
 
 function WindowProc(wnd: THandle; msg: Integer; wparam: WPARAM; lparam: LPARAM) : LRESULT; stdcall;
 var
   dc : HDC;
   ps : PAINTSTRUCT;
+  c : array[1..2] of Char;
+  Shift : TShiftState;
+  r : Integer;
 begin
   case msg of
     WM_DESTROY: begin
@@ -72,8 +128,17 @@ begin
       end;
       Result := 0;
     end;
-    WM_LBUTTONDOWN: begin
-      SetWindowText(wnd, 'asdfas');
+    WM_KEYDOWN: begin
+      if GetKeyState(VK_SHIFT) < 0 then
+        ks[VK_SHIFT] := $FF
+      else ks[VK_SHIFT] := 0;
+      if GetKeyState(VK_CONTROL) < 0 then
+        ks[VK_CONTROL] := $FF
+      else ks[VK_CONTROL] := 0;
+      r := ToAscii(wParam, lParam shr 16, ks, @c, 0);
+
+      KeyQueue.Push(TKeyEvent.Create(wParam, c[1], r <> 0, Shift));
+      keyPressEvent.SetEvent;
       Result := 0;
     end;
     else
@@ -138,9 +203,12 @@ end;
 function ThreadProc(param : Pointer) : Integer;
 begin
   Frozen := false;
-  
+  KeyQueue := TObjectQueue.Create;
+
   CreateWindow;
 
+  KeyQueue.Free;
+  KeyQueue := nil;
   DestroyWindow(hWnd);
   hWnd := 0;
   DeleteDC(buffer);
@@ -166,8 +234,6 @@ begin
     Exit;
   WindowWidth := Width;
   WindowHeight := Height;
-  cs := TCriticalSection.Create;
-  event := TEvent.Create(nil, true, false, 'DelphiGraphWindowInitialized');
   eventThread := BeginThread(nil, 0, @ThreadProc, nil, 0, id);
   event.WaitFor(1000);
 end;
@@ -181,6 +247,44 @@ procedure WaitForGraph;
 begin
   WaitForSingleObject(eventThread, INFINITE);
 end;
+
+///////////////////////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////
+function KeyPressed : Boolean;
+begin
+  Result := KeyQueue.Count > 0;
+end;
+
+function CharPressed : Boolean;
+begin
+  Result := KeyPressed and TKeyEvent(KeyQueue.Peek).isChar;
+end;
+
+procedure WaitForKey;
+begin
+  while keyPressEvent.WaitFor(INFINITE) = wrTimeout do;
+  keyPressEvent.ResetEvent;
+end;
+
+function ReadChar : Char;
+begin
+  while not CharPressed do begin
+    WaitForKey;
+    if not CharPressed then begin
+      KeyQueue.Pop;
+    end;
+  end;
+  Result := TKeyEvent(KeyQueue.Pop).GetChar;
+end;
+
+function ReadKey : Word;
+begin
+  WaitForKey;
+  Result := TKeyEvent(KeyQueue.Pop).GetVirtualKey;
+end;
+
+///////////////////////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////
 
 procedure Repaint;
 begin
@@ -244,4 +348,8 @@ begin
   DeleteObject(oldBrush);
 end;
 
+begin
+  cs := TCriticalSection.Create;
+  event := TEvent.Create(nil, true, false, 'DelphiGraphWindowInitialized');
+  keyPressEvent := TEvent.Create(nil, true, false, 'DelphiGraphKeyPressed');
 end.
