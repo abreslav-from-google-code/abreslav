@@ -14,6 +14,14 @@ procedure InitGraph(Width, Height : Integer);
 procedure CloseGraph;
 procedure WaitForGraph;
 
+function GetScreenMaxX : Integer;
+function GetScreenMaxY : Integer;
+function GetMaxX : Integer;
+function GetMaxY : Integer;
+
+procedure SetTitle(title : String);
+function GetTitle : String;
+
 function KeyPressed : Boolean;
 function CharPressed : Boolean;
 function ReadKey : Word;
@@ -278,6 +286,37 @@ begin
   WaitForSingleObject(eventThread, INFINITE);
 end;
 
+function GetMaxX : Integer;
+begin
+  Result := WindowWidth;
+end;
+
+function GetMaxY : Integer;
+begin
+  Result := WindowHeight;
+end;
+
+function GetScreenMaxX : Integer;
+begin
+  Result := GetSystemMetrics(SM_CXSCREEN);
+end;
+
+function GetScreenMaxY : Integer;
+begin
+  Result := GetSystemMetrics(SM_CYSCREEN);
+end;
+
+procedure SetTitle(title : String);
+begin
+  SetWindowText(hWnd, PChar(title));
+end;
+
+function GetTitle : String;
+begin
+  SetLength(Result, GetWindowTextLength(hWnd) + 1);
+  GetWindowText(hWnd, PChar(Result), Length(Result));
+end;
+
 ///////////////////////////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////////////////////////
 function KeyPressed : Boolean;
@@ -406,9 +445,26 @@ end;
 
 procedure MoveTo(x, y : Integer);
 begin
+  Assert(buffer <> 0);
+  cs.Enter;
+  try
+    Windows.MoveToEx(buffer, x, y, nil);
+  finally
+    cs.Leave;
+  end;
+  Repaint;
 end;
+
 procedure LineTo(x, y : Integer);
 begin
+  Assert(buffer <> 0);
+  cs.Enter;
+  try
+    Windows.LineTo(buffer, x, y);
+  finally
+    cs.Leave;
+  end;
+  Repaint;
 end;
 
 procedure SetBrushColor(c : TColor);
