@@ -88,7 +88,8 @@ var
   penStyle : TPenStyle = psSolid;
   brushColor : TColor = clWhite;
   brushStyle : TBrushStyle = bsSolid;
-
+  font : TFont = nil;
+  
 type
   TKeyEvent = class
   private
@@ -240,6 +241,8 @@ begin
     freezeBuffer := CreateCompatibleDC(hDC);
     Assert(freezeBuffer <> 0);
     SelectObject(freezeBuffer, freezeBufferBMP);
+
+    font.Handle := GetCurrentObject(hDC, OBJ_FONT);
 
   finally
     ReleaseDC(hWnd, hDC);
@@ -541,20 +544,26 @@ end;
 
 procedure SetPenColor(c : TColor);
 begin
-  penColor := c;
-  SetPen;
+  if c <> penColor then begin
+    penColor := c;
+    SetPen;
+  end;
 end;
 
 procedure SetPenWidth(w : Integer);
 begin
-  penWidth := w;
-  SetPen;
+  if w <> penWidth then begin
+    penWidth := w;
+    SetPen;
+  end;
 end;
 
 procedure SetPenStyle(s : TPenStyle);
 begin
-  penStyle := s;
-  SetPen;
+  if s <> penStyle then begin
+    penStyle := s;
+    SetPen;
+  end;
 end;
 
 const
@@ -597,40 +606,57 @@ end;
 
 procedure SetBrushColor(c : TColor);
 begin
-  brushColor := c;
-  if brushStyle = bsClear then
-    brushStyle := bsSolid;
-  SetBrush;
+  if c <> brushColor then begin
+    brushColor := c;
+    if brushStyle = bsClear then
+      brushStyle := bsSolid;
+    SetBrush;
+  end;
 end;
 
 procedure SetBrushStyle(s : TBrushStyle);
 begin
-  brushStyle := s;
-  SetBrush;
+  if s <> brushStyle then begin
+    brushStyle := s;
+    SetBrush;
+  end;
 end;
 
 procedure SetFontColor(c : TColor);
 begin
-
+  if c <> font.Color then begin
+    font.Color := c;
+    SetTextColor(buffer, c);
+  end;
 end;
 
 procedure SetFontSize(s : Integer);
 begin
-
+  if s <> font.Size then begin
+    font.Size := s;
+    SelectAndDelete(font.Handle);
+  end;
 end;
 
 procedure SetFontName(n : String);
 begin
-
+  if n <> font.Name then begin
+    font.Name := n;
+    SelectAndDelete(font.Handle);
+  end;
 end;
 
 procedure SetFontStyle(s : TFontStyles);
 begin
-
+  if s <> font.Style then begin
+    font.Style := s;
+    SelectAndDelete(font.Handle);
+  end;
 end;
 
 begin
   cs := TCriticalSection.Create;
   event := TEvent.Create(nil, true, false, 'DelphiGraphWindowInitialized');
   keyPressEvent := TEvent.Create(nil, true, false, 'DelphiGraphKeyPressed');
+  font := TFont.Create;
 end.
