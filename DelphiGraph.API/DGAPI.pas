@@ -51,6 +51,12 @@ procedure SetPenStyle(s : TPenStyle);
 procedure SetGraphicMode(m : TPenMode);
 
 procedure SetBrushColor(c : TColor);
+procedure SetBrushStyle(s : TBrushStyle);
+
+procedure SetFontColor(c : TColor);
+procedure SetFontSize(s : Integer);
+procedure SetFontName(n : String);
+procedure SetFontStyle(s : TFontStyles);
 
 implementation
 
@@ -80,6 +86,8 @@ var
   penWidth : Integer = 1;
   penColor : TColor = clBlack;
   penStyle : TPenStyle = psSolid;
+  brushColor : TColor = clWhite;
+  brushStyle : TBrushStyle = bsSolid;
 
 type
   TKeyEvent = class
@@ -560,10 +568,65 @@ begin
   SetROP2(buffer, PenModes[m]);
 end;
 
+const
+  BrushStyles : array[bsHorizontal..bsDiagCross] of Integer = (
+    HS_HORIZONTAL, HS_VERTICAL, HS_FDIAGONAL, HS_BDIAGONAL,
+    HS_CROSS, HS_DIAGCROSS
+  );
+
+procedure SetBrush;
+var
+  brush : HBRUSH;
+begin
+  case brushStyle of
+    bsSolid : begin
+      SetBkColor(buffer, brushColor);
+      SetBkMode(buffer, OPAQUE);
+      brush := CreateSolidBrush(brushColor);
+    end;
+    bsClear : begin
+      SetBkMode(buffer, TRANSPARENT);
+      brush := GetStockObject(NULL_BRUSH);
+    end;
+    else begin
+      brush := CreateHatchBrush(BrushStyles[brushStyle], brushColor);
+    end;
+  end;
+  SelectAndDelete(brush);
+end;
+
 procedure SetBrushColor(c : TColor);
 begin
-  SelectAndDelete(CreateSolidBrush(c));
-  SetBkColor(buffer, c);
+  brushColor := c;
+  if brushStyle = bsClear then
+    brushStyle := bsSolid;
+  SetBrush;
+end;
+
+procedure SetBrushStyle(s : TBrushStyle);
+begin
+  brushStyle := s;
+  SetBrush;
+end;
+
+procedure SetFontColor(c : TColor);
+begin
+
+end;
+
+procedure SetFontSize(s : Integer);
+begin
+
+end;
+
+procedure SetFontName(n : String);
+begin
+
+end;
+
+procedure SetFontStyle(s : TFontStyles);
+begin
+
 end;
 
 begin
