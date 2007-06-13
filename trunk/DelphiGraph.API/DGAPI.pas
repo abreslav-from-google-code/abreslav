@@ -45,6 +45,11 @@ function TextWidth(const Text : String) : Integer;
 function TextHeight(const Text : String) : Integer;
 procedure TextOut(X, Y : Integer; const S : String);
 
+procedure SetPenColor(c : TColor);
+procedure SetPenWidth(w : Integer);
+procedure SetPenStyle(s : TPenStyle);
+procedure SetGraphicMode(m : TPenMode);
+
 procedure SetBrushColor(c : TColor);
 
 implementation
@@ -72,6 +77,9 @@ var
   IsLButtonDown : Boolean = false;
   MouseX : Integer = 0;
   MouseY : Integer = 0;
+  penWidth : Integer = 1;
+  penColor : TColor = clBlack;
+  penStyle : TPenStyle = psSolid;
 
 type
   TKeyEvent = class
@@ -505,34 +513,57 @@ end;
 
 ///////////////////////////////////////////////////////////////////////////////
 
+procedure SelectAndDelete(obj : THandle);
+var
+  old : THandle;
+begin
+  Assert(buffer <> 0);
+  old := SelectObject(buffer, obj);
+  DeleteObject(old);
+end;
+
+const
+  PenStyles: array[TPenStyle] of Word =
+    (PS_SOLID, PS_DASH, PS_DOT, PS_DASHDOT, PS_DASHDOTDOT, PS_NULL,
+     PS_INSIDEFRAME);
+procedure SetPen;
+begin
+  SelectAndDelete(CreatePen(PenStyles[penStyle], penWidth, penColor));
+end;
+
 procedure SetPenColor(c : TColor);
 begin
-
+  penColor := c;
+  SetPen;
 end;
 
 procedure SetPenWidth(w : Integer);
 begin
-
+  penWidth := w;
+  SetPen;
 end;
 
 procedure SetPenStyle(s : TPenStyle);
 begin
-
+  penStyle := s;
+  SetPen;
 end;
+
+const
+  PenModes: array[TPenMode] of Word =
+    (R2_BLACK, R2_WHITE, R2_NOP, R2_NOT, R2_COPYPEN, R2_NOTCOPYPEN, R2_MERGEPENNOT,
+     R2_MASKPENNOT, R2_MERGENOTPEN, R2_MASKNOTPEN, R2_MERGEPEN, R2_NOTMERGEPEN,
+     R2_MASKPEN, R2_NOTMASKPEN, R2_XORPEN, R2_NOTXORPEN);
 
 procedure SetGraphicMode(m : TPenMode);
 begin
-
+  SetROP2(buffer, PenModes[m]);
 end;
 
 procedure SetBrushColor(c : TColor);
-var
-  oldBrush : HBRUSH;
 begin
-  Assert(buffer <> 0);
-  oldBrush := SelectObject(buffer, CreateSolidBrush(c));
+  SelectAndDelete(CreateSolidBrush(c));
   SetBkColor(buffer, c);
-  DeleteObject(oldBrush);
 end;
 
 begin
