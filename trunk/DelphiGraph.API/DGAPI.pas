@@ -19,7 +19,7 @@ function GetScreenMaxY : Integer;
 function GetMaxX : Integer;
 function GetMaxY : Integer;
 
-procedure SetTitle(title : String);
+procedure SetTitle(const title : String);
 function GetTitle : String;
 
 function KeyPressed : Boolean;
@@ -40,6 +40,10 @@ procedure Ellipse(x1, y1, x2, y2 : Integer);
 procedure RoundRect(x1, y1, x2, y2, a, b : Integer);
 procedure MoveTo(x, y : Integer);
 procedure LineTo(x, y : Integer);
+
+function TextWidth(const Text : String) : Integer;
+function TextHeight(const Text : String) : Integer;
+procedure TextOut(X, Y : Integer; const S : String);
 
 procedure SetBrushColor(c : TColor);
 
@@ -255,6 +259,7 @@ begin
   freezeBufferBMP := 0;
 
   Result := 0;
+  eventThread := 0;
 end;
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -306,7 +311,7 @@ begin
   Result := GetSystemMetrics(SM_CYSCREEN);
 end;
 
-procedure SetTitle(title : String);
+procedure SetTitle(const title : String);
 begin
   SetWindowText(hWnd, PChar(title));
 end;
@@ -467,11 +472,66 @@ begin
   Repaint;
 end;
 
+function TextExtent(const Text: string) : TSize;
+begin
+  Assert(buffer <> 0);
+  Result.cX := 0;
+  Result.cY := 0;
+  Windows.GetTextExtentPoint32(buffer, PChar(Text), Length(Text), Result);
+end;
+
+function TextWidth(const Text : String) : Integer;
+begin
+  Result := TextExtent(Text).cX;
+end;
+
+function TextHeight(const Text : String) : Integer;
+begin
+  Result := TextExtent(Text).cY;
+end;
+
+procedure TextOut(X, Y : Integer; const S : String);
+begin
+  Assert(buffer <> 0);
+  cs.Enter;
+  try
+    Windows.TextOut(buffer, X, Y, PChar(S), Length(S));
+    Windows.MoveToEx(buffer, X + TextWidth(S), Y, nil);
+  finally
+    cs.Leave;
+  end;
+  Repaint;
+end;
+
+///////////////////////////////////////////////////////////////////////////////
+
+procedure SetPenColor(c : TColor);
+begin
+
+end;
+
+procedure SetPenWidth(w : Integer);
+begin
+
+end;
+
+procedure SetPenStyle(s : TPenStyle);
+begin
+
+end;
+
+procedure SetGraphicMode(m : TPenMode);
+begin
+
+end;
+
 procedure SetBrushColor(c : TColor);
 var
   oldBrush : HBRUSH;
 begin
+  Assert(buffer <> 0);
   oldBrush := SelectObject(buffer, CreateSolidBrush(c));
+  SetBkColor(buffer, c);
   DeleteObject(oldBrush);
 end;
 
