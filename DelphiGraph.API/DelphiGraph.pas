@@ -315,7 +315,6 @@ var
   penStyle : TPenStyle = psSolid;
   brushColor : TColor = clWhite;
   brushStyle : TBrushStyle = bsSolid;
-  font : TFont = nil;
   graphicMode : TPenMode = pmCopy;
   
 type
@@ -489,10 +488,9 @@ begin
     Assert(freezeBuffer <> 0);
     SelectObject(freezeBuffer, freezeBufferBMP);
 
-    font.Handle := GetCurrentObject(buffer, OBJ_FONT);
-    SetFontName('MS Sans Serif');
     SetFontStyle([]);
     SetFontSize(8);
+    SetFontName('MS Sans Serif');
 
   finally
     ReleaseDC(hWnd, hDC);
@@ -834,6 +832,7 @@ var
   old : THandle;
 begin
   Assert(buffer <> 0);
+  Assert(obj <> 0);
   cs.Enter;
   try
     old := SelectObject(buffer, obj);
@@ -944,10 +943,48 @@ begin
   end;
 end;
 
+var
+  fontColor : TColor = clBlack;
+  fontSize : Integer = -1;
+  fontStyle : TFontStyles = [fsBold];
+  fontName : String = '';
+
+procedure SetFont;
+var
+  height, weight, italic, underline, strikeout : Integer;
+begin
+  if fsBold in fontStyle then
+    weight := FW_BOLD
+  else weight := FW_NORMAL;
+  italic := Cardinal(fsItalic in fontStyle);
+  underline := Cardinal(fsUnderline in fontStyle);
+  strikeout := Cardinal(fsStrikeout in fontStyle);
+
+  cs.Enter;
+  try
+    height := GetDeviceCaps(buffer, LOGPIXELSY);
+    height := -MulDiv(fontSize, GetDeviceCaps(buffer, LOGPIXELSY), 72);
+  finally
+    cs.Leave;
+  end;
+  SelectAndDelete(CreateFont(
+    height,
+    0,
+    0, 0,
+    weight, italic, underline, strikeout,
+    DEFAULT_CHARSET,
+    OUT_DEFAULT_PRECIS,
+    CLIP_DEFAULT_PRECIS,
+    DEFAULT_QUALITY,
+    DEFAULT_PITCH,
+    PChar(fontName)
+  ));
+end;
+  
 procedure SetFontColor(c : TColor);
 begin
-  if c <> font.Color then begin
-    font.Color := c;
+  if c <> fontColor then begin
+    fontColor := c;
     cs.Enter;
     try
       SetTextColor(buffer, c);
@@ -959,25 +996,25 @@ end;
 
 procedure SetFontSize(s : Integer);
 begin
-  if s <> font.Size then begin
-    font.Size := s;
-    SelectAndDelete(font.Handle);
+  if s <> fontSize then begin
+    fontSize := s;
+    SetFont;
   end;
 end;
 
 procedure SetFontName(n : String);
 begin
-  if n <> font.Name then begin
-    font.Name := n;
-    SelectAndDelete(font.Handle);
+  if n <> fontName then begin
+    fontName := n;
+    SetFont;
   end;
 end;
 
 procedure SetFontStyle(s : TFontStyles);
 begin
-  if s <> font.Style then begin
-    font.Style := s;
-    SelectAndDelete(font.Handle);
+  if s <> fontStyle then begin
+    fontStyle := s;
+    SetFont;
   end;
 end;
 
@@ -1015,22 +1052,22 @@ end;
 
 function GetFontColor : TColor;
 begin
-  Result := font.Color;
+  Result := fontColor;
 end;
 
 function GetFontSize : Integer;
 begin
-  Result := font.Size;
+  Result := fontSize;
 end;
 
 function GetFontName : String;
 begin
-  Result := font.Name;
+  Result := fontName;
 end;
 
 function GetFontStyle : TFontStyles;
 begin
-  Result := font.Style;
+  Result := fontStyle;
 end;
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -1167,7 +1204,6 @@ initialization
   event := TEvent.Create(nil, true, false, 'DelphiGraphWindowInitialized');
   keyPressEvent := TEvent.Create(nil, true, false, 'DelphiGraphKeyPressed');
   mouseEvent := TEvent.Create(nil, true, false, 'DelphiGraphMouseEvent');
-  font := TFont.Create;
   Buffers := TObjectList.Create;
   Pictures := TObjectList.Create;
 finalization
@@ -1177,7 +1213,6 @@ finalization
   event.Free;
   keyPressEvent.Free;
   mouseEvent.Free;
-  font.Free;
   ClearListAndFree(Buffers);
   ClearListAndFree(Pictures);
 end.
