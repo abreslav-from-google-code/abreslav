@@ -5,6 +5,13 @@ interface
 uses
   Windows, Graphics, SysUtils;
 
+const
+  VERSION = '2.0';
+  ABOUT_TEXT =
+    'DelphiGraph library version ' + VERSION + #13#10 +
+    'Copyright (C) by A. Breslav'#13#10 +
+    '2007';
+
 type
   TPenStyle = Graphics.TPenStyle;
 const
@@ -317,6 +324,9 @@ var
   brushColor : TColor = clWhite;
   brushStyle : TBrushStyle = bsSolid;
   graphicMode : TPenMode = pmCopy;
+
+const
+  ABOUT_ID = 239;
   
 type
   TKeyEvent = class
@@ -395,6 +405,14 @@ begin
           EndPaint(hWnd, ps);
         end;
     end;
+    WM_SYSCOMMAND: begin
+      if wParam = ABOUT_ID then
+        MessageBox(hWnd,
+          PChar(ABOUT_TEXT),
+          PChar('About...'),
+          MB_OK or MB_ICONINFORMATION or MB_APPLMODAL)
+      else Result := DefWindowProc(wnd, msg, wparam, lparam);
+    end;
     WM_LBUTTONDOWN: begin
       IsLButtonDown := true;
       mouseEvent.SetEvent;
@@ -450,9 +468,13 @@ begin
 end;
 
 procedure CreateWindow;
+const
+  aboutTitle = 'About DelphiGraph library...'; 
 var
   msg : tagMsg;
   hDC : Windows.HDC;
+  hMenu : Windows.HMENU;
+  info : MENUITEMINFO;
 begin
   wndClass.cbSize := sizeof(wndClass);
   wndClass.style := 0;
@@ -475,6 +497,28 @@ begin
     0, 0,
     HInstance,
     nil);
+
+  hMenu := GetSystemMenu(hWnd, false);
+  info.cbSize := SizeOf(info);
+  info.fMask := MIIM_TYPE;
+  info.fType := MFT_SEPARATOR;
+  info.fState := MFS_DEFAULT;
+  info.wID := 0;
+  info.hSubMenu := 0;
+  info.hbmpChecked := 0;
+  info.hbmpUnchecked := 0;
+  info.dwItemData := 0;
+  info.dwTypeData := nil;
+  info.cch := 0;
+  InsertMenuItem(hMenu, GetMenuItemCount(hMenu) - 1, true, info);
+
+  info.fMask := MIIM_TYPE or MIIM_ID;
+  info.fType := MFT_STRING;
+  info.wID := ABOUT_ID;
+  info.dwTypeData := PChar(aboutTitle);
+  info.cch := Length(aboutTitle);
+  InsertMenuItem(hMenu, GetMenuItemCount(hMenu) - 2, true, info);
+
   ShowWindow(hWnd, SW_SHOW);
 
   WindowRect := Rect(0, 0, WindowWidth + 1, WindowHeight + 1);
