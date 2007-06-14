@@ -392,7 +392,6 @@ begin
             BitBlt(dc, 0, 0, WindowWidth, WindowHeight, freezeBuffer, 0, 0, SRCCOPY);
         finally
           cs.Leave;
-  //        event.SetEvent;
           EndPaint(hWnd, ps);
         end;
     end;
@@ -475,7 +474,10 @@ begin
     Assert(freezeBuffer <> 0);
     SelectObject(freezeBuffer, freezeBufferBMP);
 
-    font.Handle := GetCurrentObject(hDC, OBJ_FONT);
+    font.Handle := GetCurrentObject(buffer, OBJ_FONT);
+    SetFontName('MS Sans Serif');
+    SetFontStyle([]);
+    SetFontSize(8);
 
   finally
     ReleaseDC(hWnd, hDC);
@@ -878,6 +880,7 @@ begin
     end;
     else begin
       brush := CreateHatchBrush(BrushStyles[brushStyle], brushColor);
+      SetBkMode(buffer, TRANSPARENT);
     end;
   end;
   SelectAndDelete(brush);
