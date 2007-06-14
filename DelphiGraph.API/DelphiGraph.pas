@@ -1,17 +1,205 @@
-unit DGAPI;
+unit DelphiGraph;
 
 interface
 
 uses
-  Graphics, SysUtils;
+  Windows, Graphics, SysUtils;
+
+type
+  TPenStyle = Graphics.TPenStyle;
+const
+  psSolid = Graphics.psSolid;
+  psDash = Graphics.psDash;
+  psDot = Graphics.psDot;
+  psDashDot = Graphics.psDashDot;
+  psDashDotDot = Graphics.psDashDotDot;
+  psClear = Graphics.psClear;
+  psInsideFrame = Graphics.psInsideFrame;
+
+type
+  TPenMode = Graphics.TPenMode;
+const
+  pmBlack = Graphics.pmBlack;
+  pmWhite = Graphics.pmWhite;
+  pmNop = Graphics.pmNop;
+  pmNot = Graphics.pmNot;
+  pmCopy = Graphics.pmCopy;
+  pmNotCopy = Graphics.pmNotCopy;
+  pmMergePenNot = Graphics.pmMergePenNot;
+  pmMaskPenNot = Graphics.pmMaskPenNot;
+  pmMergeNotPen = Graphics.pmMergeNotPen;
+  pmMaskNotPen = Graphics.pmMaskNotPen;
+  pmMerge = Graphics.pmMerge;
+  pmNotMerge = Graphics.pmNotMerge;
+  pmMask = Graphics.pmMask;
+  pmNotMask = Graphics.pmNotMask;
+  pmXor = Graphics.pmXor;
+  pmNotXor = Graphics.pmNotXor;
+  
+type
+  TBrushStyle = Graphics.TBrushStyle;
+const
+  bsSolid = Graphics.bsSolid;
+  bsClear = Graphics.bsClear;
+  bsHorizontal = Graphics.bsHorizontal;
+  bsVertical = Graphics.bsVertical;
+  bsFDiagonal = Graphics.bsFDiagonal;
+  bsBDiagonal = Graphics.bsBDiagonal;
+  bsCross = Graphics.bsCross;
+  bsDiagCross = Graphics.bsDiagCross;
+
+type
+  TFontStyle = Graphics.TFontStyle;
+  TFontStyles = Graphics.TFontStyles;
+const
+  fsBold = Graphics.fsBold;
+  fsItalic = Graphics.fsItalic;
+  fsUnderline = Graphics.fsUnderline;
+  fsStrikeOut = Graphics.fsStrikeOut;
+  
+type
+  TColor = Graphics.TColor;
+const
+  clBlack = Graphics.clBlack;
+  clMaroon = Graphics.clMaroon;
+  clGreen = Graphics.clGreen;
+  clOlive = Graphics.clOlive;
+  clNavy = Graphics.clNavy;
+  clPurple = Graphics.clPurple;
+  clTeal = Graphics.clTeal;
+  clGray = Graphics.clGray;
+  clSilver = Graphics.clSilver;
+  clRed = Graphics.clRed;
+  clLime = Graphics.clLime;
+  clYellow = Graphics.clYellow;
+  clBlue = Graphics.clBlue;
+  clFuchsia = Graphics.clFuchsia;
+  clAqua = Graphics.clAqua;
+  clLtGray = Graphics.clLtGray;
+  clDkGray = Graphics.clDkGray;
+  clWhite = Graphics.clWhite;
+  clNone = Graphics.clNone;
+  clDefault = Graphics.clDefault;
+
+const
+  { Virtual Keys, Standard Set }
+  VK_LBUTTON = Windows.VK_LBUTTON;
+  VK_RBUTTON = Windows.VK_RBUTTON;
+  VK_CANCEL = Windows.VK_CANCEL;
+  VK_MBUTTON = Windows.VK_MBUTTON;  { NOT contiguous with L & RBUTTON }
+  VK_BACK = Windows.VK_BACK;
+  VK_TAB = Windows.VK_TAB;
+  VK_CLEAR = Windows.VK_CLEAR;
+  VK_RETURN = Windows.VK_RETURN;
+  VK_SHIFT = Windows.VK_SHIFT;
+  VK_CONTROL = Windows.VK_CONTROL;
+  VK_MENU = Windows.VK_MENU;
+  VK_PAUSE = Windows.VK_PAUSE;
+  VK_CAPITAL = Windows.VK_CAPITAL;
+  VK_KANA = Windows.VK_KANA;
+  VK_HANGUL = Windows.VK_HANGUL;
+  VK_JUNJA = Windows.VK_JUNJA;
+  VK_FINAL = Windows.VK_FINAL;
+  VK_HANJA = Windows.VK_HANJA;
+  VK_KANJI = Windows.VK_KANJI;
+  VK_CONVERT = Windows.VK_CONVERT;
+  VK_NONCONVERT = Windows.VK_NONCONVERT;
+  VK_ACCEPT = Windows.VK_ACCEPT;
+  VK_MODECHANGE = Windows.VK_MODECHANGE;
+  VK_ESCAPE = Windows.VK_ESCAPE;
+  VK_SPACE = Windows.VK_SPACE;
+  VK_PRIOR = Windows.VK_PRIOR;
+  VK_NEXT = Windows.VK_NEXT;
+  VK_END = Windows.VK_END;
+  VK_HOME = Windows.VK_HOME;
+  VK_LEFT = Windows.VK_LEFT;
+  VK_UP = Windows.VK_UP;
+  VK_RIGHT = Windows.VK_RIGHT;
+  VK_DOWN = Windows.VK_DOWN;
+  VK_SELECT = Windows.VK_SELECT;
+  VK_PRINT = Windows.VK_PRINT;
+  VK_EXECUTE = Windows.VK_EXECUTE;
+  VK_SNAPSHOT = Windows.VK_SNAPSHOT;
+  VK_INSERT = Windows.VK_INSERT;
+  VK_DELETE = Windows.VK_DELETE;
+  VK_HELP = Windows.VK_HELP;
+{ VK_0 thru VK_9 are the same as ASCII '0' thru '9' ($30 - $39) }
+{ VK_A thru VK_Z are the same as ASCII 'A' thru 'Z' ($41 - $5A) }
+  VK_LWIN = Windows.VK_LWIN;
+  VK_RWIN = Windows.VK_RWIN;
+  VK_APPS = Windows.VK_APPS;
+  VK_NUMPAD0 = Windows.VK_NUMPAD0;
+  VK_NUMPAD1 = Windows.VK_NUMPAD1;
+  VK_NUMPAD2 = Windows.VK_NUMPAD2;
+  VK_NUMPAD3 = Windows.VK_NUMPAD3;
+  VK_NUMPAD4 = Windows.VK_NUMPAD4;
+  VK_NUMPAD5 = Windows.VK_NUMPAD5;
+  VK_NUMPAD6 = Windows.VK_NUMPAD6;
+  VK_NUMPAD7 = Windows.VK_NUMPAD7;
+  VK_NUMPAD8 = Windows.VK_NUMPAD8;
+  VK_NUMPAD9 = Windows.VK_NUMPAD9;
+  VK_MULTIPLY = Windows.VK_MULTIPLY;
+  VK_ADD = Windows.VK_ADD;
+  VK_SEPARATOR = Windows.VK_SEPARATOR;
+  VK_SUBTRACT = Windows.VK_SUBTRACT;
+  VK_DECIMAL = Windows.VK_DECIMAL;
+  VK_DIVIDE = Windows.VK_DIVIDE;
+  VK_F1 = Windows.VK_F1;
+  VK_F2 = Windows.VK_F2;
+  VK_F3 = Windows.VK_F3;
+  VK_F4 = Windows.VK_F4;
+  VK_F5 = Windows.VK_F5;
+  VK_F6 = Windows.VK_F6;
+  VK_F7 = Windows.VK_F7;
+  VK_F8 = Windows.VK_F8;
+  VK_F9 = Windows.VK_F9;
+  VK_F10 = Windows.VK_F10;
+  VK_F11 = Windows.VK_F11;
+  VK_F12 = Windows.VK_F12;
+  VK_F13 = Windows.VK_F13;
+  VK_F14 = Windows.VK_F14;
+  VK_F15 = Windows.VK_F15;
+  VK_F16 = Windows.VK_F16;
+  VK_F17 = Windows.VK_F17;
+  VK_F18 = Windows.VK_F18;
+  VK_F19 = Windows.VK_F19;
+  VK_F20 = Windows.VK_F20;
+  VK_F21 = Windows.VK_F21;
+  VK_F22 = Windows.VK_F22;
+  VK_F23 = Windows.VK_F23;
+  VK_F24 = Windows.VK_F24;
+  VK_NUMLOCK = Windows.VK_NUMLOCK;
+  VK_SCROLL = Windows.VK_SCROLL;
+{ VK_L & VK_R - left and right Alt, Ctrl and Shift virtual keys.
+  Used only as parameters to GetAsyncKeyState() and GetKeyState().
+  No other API or message will distinguish left and right keys in this way. }
+  VK_LSHIFT = Windows.VK_LSHIFT;
+  VK_RSHIFT = Windows.VK_RSHIFT;
+  VK_LCONTROL = Windows.VK_LCONTROL;
+  VK_RCONTROL = Windows.VK_RCONTROL;
+  VK_LMENU = Windows.VK_LMENU;
+  VK_RMENU = Windows.VK_RMENU;
+  VK_PROCESSKEY = Windows.VK_PROCESSKEY;
+  VK_ATTN = Windows.VK_ATTN;
+  VK_CRSEL = Windows.VK_CRSEL;
+  VK_EXSEL = Windows.VK_EXSEL;
+  VK_EREOF = Windows.VK_EREOF;
+  VK_PLAY = Windows.VK_PLAY;
+  VK_ZOOM = Windows.VK_ZOOM;
+  VK_NONAME = Windows.VK_NONAME;
+  VK_PA1 = Windows.VK_PA1;
+  VK_OEM_CLEAR = Windows.VK_OEM_CLEAR;
+
+type
+  TPoint = Windows.TPoint;
 
 procedure Sleep(ms : Cardinal);
-
-procedure DefaultExceptionHandler(E : Exception);
 
 var
   HaltOnWindowClose : Boolean = true;
   ExceptionHandler : procedure(E : Exception);
+
+procedure DefaultExceptionHandler(E : Exception);
 
 procedure InitGraph(Width, Height : Integer);
 procedure CloseGraph;
@@ -43,6 +231,7 @@ procedure Ellipse(x1, y1, x2, y2 : Integer);
 procedure RoundRect(x1, y1, x2, y2, a, b : Integer);
 procedure MoveTo(x, y : Integer);
 procedure LineTo(x, y : Integer);
+procedure Polygon(points : array of TPoint);
 
 function TextWidth(const Text : String) : Integer;
 function TextHeight(const Text : String) : Integer;
@@ -85,10 +274,19 @@ procedure DeleteBuffer(var buf : TBuffer);
 procedure SaveScreenToBuffer(buf : TBuffer);
 procedure LoadScreenFromBuffer(buf : TBuffer);
 
+type
+  TPicture = type Integer;
+
+function LoadPicture(fileName : String) : TPicture;
+procedure UnLoadPicture(p : TPicture);
+procedure DrawPicture(x, y : Integer; p : TPicture);
+function GetPictureWidth(p : TPicture) : Integer;
+function GetPictureHeight(p : TPicture) : Integer;
+
 implementation
 
 uses
-  Windows, Messages, Classes, Syncobjs, Contnrs;
+  Messages, Classes, Syncobjs, Contnrs;
 
 var
   wndClass : TWndClassEx;
@@ -512,6 +710,18 @@ begin
   Repaint;
 end;
 
+procedure Polygon(points : array of TPoint);
+begin
+  Assert(buffer <> 0);
+  cs.Enter;
+  try
+    Windows.Polygon(buffer, points, High(points) + 1);
+  finally
+    cs.Leave;
+  end;
+  Repaint;
+end;
+
 procedure MoveTo(x, y : Integer);
 begin
   Assert(buffer <> 0);
@@ -818,11 +1028,71 @@ end;
 ////////////////////////////////////////////////////////////////////////////////
 ////////////////////////////////////////////////////////////////////////////////
 
+var
+  Pictures : TObjectList;
+
+function LoadPicture(fileName : String) : TPicture;
+var
+  bmp : TBitmap;
 begin
+  bmp := TBitmap.Create;
+  bmp.LoadFromFile(fileName);
+  Result := Pictures.Add(bmp);
+end;
+
+procedure UnLoadPicture(p : TPicture);
+begin
+  Pictures[p].Free;
+  Pictures[p] := nil;
+end;
+
+procedure DrawPicture(x, y : Integer; p : TPicture);
+var
+  picture : TBitmap;
+begin
+  picture := TBitmap(Pictures[p]);
+  cs.Enter;
+  try
+    BitBlt(buffer, x, y, picture.Width, picture.Height, picture.Canvas.Handle, 0, 0, SRCCOPY);
+  finally
+    cs.Leave;
+  end;
+  Repaint;
+end;
+
+function GetPictureWidth(p : TPicture) : Integer;
+begin
+  Result := TBitmap(Pictures[p]).Width;
+end;
+
+function GetPictureHeight(p : TPicture) : Integer;
+begin
+  Result := TBitmap(Pictures[p]).Height;
+end;
+
+////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
+
+var
+  i : Integer;
+initialization
   ExceptionHandler := DefaultExceptionHandler;
   cs := TCriticalSection.Create;
   event := TEvent.Create(nil, true, false, 'DelphiGraphWindowInitialized');
   keyPressEvent := TEvent.Create(nil, true, false, 'DelphiGraphKeyPressed');
   font := TFont.Create;
   Buffers := TObjectList.Create;
+  Pictures := TObjectList.Create;
+finalization
+  cs.Free;
+  event.Free;
+  keyPressEvent.Free;
+  font.Free;
+  Buffers.Free;
+  for i := 0 to Buffers.Count - 1 do
+    Buffers[i].Free;
+  Pictures.Free;
+  for i := 0 to Pictures.Count - 1 do
+    Pictures[i].Free;
 end.
