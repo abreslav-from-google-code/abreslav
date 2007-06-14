@@ -963,6 +963,8 @@ procedure SetBrushStyle(s : TBrushStyle);
 begin
   if s <> brushStyle then begin
     brushStyle := s;
+    if brushStyle = bsClear then
+      brushColor := clWhite;
     SetBrush;
   end;
 end;
