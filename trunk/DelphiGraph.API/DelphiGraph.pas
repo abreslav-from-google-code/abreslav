@@ -691,9 +691,12 @@ end;
 procedure FreezeScreen;
 begin
   cs.Enter;
-  BitBlt(freezeBuffer, 0, 0, WindowWidth, WindowHeight, buffer, 0, 0, SRCCOPY);
-  Frozen := true;
-  cs.Leave;
+  try
+    BitBlt(freezeBuffer, 0, 0, WindowWidth, WindowHeight, buffer, 0, 0, SRCCOPY);
+    Frozen := true;
+  finally
+    cs.Leave;
+  end;
 end;
 
 procedure UnFreezeScreen;
@@ -793,7 +796,12 @@ begin
   Assert(buffer <> 0);
   Result.cX := 0;
   Result.cY := 0;
-  Windows.GetTextExtentPoint32(buffer, PChar(Text), Length(Text), Result);
+  cs.Enter;
+  try
+    Windows.GetTextExtentPoint32(buffer, PChar(Text), Length(Text), Result);
+  finally
+    cs.Leave;
+  end;
 end;
 
 function TextWidth(const Text : String) : Integer;
@@ -826,8 +834,13 @@ var
   old : THandle;
 begin
   Assert(buffer <> 0);
-  old := SelectObject(buffer, obj);
-  DeleteObject(old);
+  cs.Enter;
+  try
+    old := SelectObject(buffer, obj);
+    DeleteObject(old);
+  finally
+    cs.Leave;
+  end;
 end;
 
 const
@@ -872,7 +885,12 @@ const
 procedure SetGraphicMode(m : TPenMode);
 begin
   graphicMode := m;
-  SetROP2(buffer, PenModes[m]);
+  cs.Enter;
+  try
+    SetROP2(buffer, PenModes[m]);
+  finally
+    cs.Leave;
+  end;
 end;
 
 const
@@ -885,20 +903,25 @@ procedure SetBrush;
 var
   brush : HBRUSH;
 begin
-  case brushStyle of
-    bsSolid : begin
-      SetBkColor(buffer, brushColor);
-      SetBkMode(buffer, OPAQUE);
-      brush := CreateSolidBrush(brushColor);
+  cs.Enter;
+  try
+    case brushStyle of
+      bsSolid : begin
+        SetBkColor(buffer, brushColor);
+        SetBkMode(buffer, OPAQUE);
+        brush := CreateSolidBrush(brushColor);
+      end;
+      bsClear : begin
+        SetBkMode(buffer, TRANSPARENT);
+        brush := GetStockObject(NULL_BRUSH);
+      end;
+      else begin
+        brush := CreateHatchBrush(BrushStyles[brushStyle], brushColor);
+        SetBkMode(buffer, TRANSPARENT);
+      end;
     end;
-    bsClear : begin
-      SetBkMode(buffer, TRANSPARENT);
-      brush := GetStockObject(NULL_BRUSH);
-    end;
-    else begin
-      brush := CreateHatchBrush(BrushStyles[brushStyle], brushColor);
-      SetBkMode(buffer, TRANSPARENT);
-    end;
+  finally
+    cs.Leave;
   end;
   SelectAndDelete(brush);
 end;
@@ -925,7 +948,12 @@ procedure SetFontColor(c : TColor);
 begin
   if c <> font.Color then begin
     font.Color := c;
-    SetTextColor(buffer, c);
+    cs.Enter;
+    try
+      SetTextColor(buffer, c);
+    finally
+      cs.Leave;
+    end;
   end;
 end;
 
@@ -1033,7 +1061,12 @@ begin
   end;
   Graphics.TBitmap(Buffers[buf]).Width := WindowWidth;
   Graphics.TBitmap(Buffers[buf]).Height := WindowHeight;
-  BitBlt(Graphics.TBitmap(Buffers[buf]).Canvas.Handle, 0, 0, WindowWidth, WindowHeight, buffer, 0, 0, SRCCOPY);
+  cs.Enter;
+  try
+    BitBlt(Graphics.TBitmap(Buffers[buf]).Canvas.Handle, 0, 0, WindowWidth, WindowHeight, buffer, 0, 0, SRCCOPY);
+  finally
+    cs.Leave;
+  end;
 end;
 
 procedure LoadScreenFromBuffer(buf : TBuffer);
