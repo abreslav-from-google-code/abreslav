@@ -522,6 +522,8 @@ begin
 end;
 
 function ThreadProc(param : Pointer) : Integer;
+var
+  t : TObjectQueue;
 begin
   try
     try
@@ -535,10 +537,6 @@ begin
           ExceptionHandler(E);
     end;
   finally
-    while KeyQueue.Count > 0 do
-      KeyQueue.Pop.Free;
-    KeyQueue.Free;
-    KeyQueue := nil;
     DestroyWindow(hWnd);
     hWnd := 0;
     DeleteDC(buffer);
@@ -550,6 +548,19 @@ begin
     freezeBuffer := 0;
     DeleteObject(freezeBufferBMP);
     freezeBufferBMP := 0;
+
+    keycs.Enter;
+    try
+      while KeyQueue.Count > 0 do
+        KeyQueue.Pop.Free;
+      // For other thread to be sure that
+      // KeyQueue is eigther a valid object or nil
+      t := KeyQueue;
+      KeyQueue := nil;
+      t.Free;
+    finally
+      keycs.Leave;
+    end;
 
     Result := 0;
     eventThread := 0;
@@ -621,18 +632,28 @@ end;
 ///////////////////////////////////////////////////////////////////////////////
 function KeyPressed : Boolean;
 begin
+  if KeyQueue = nil then begin
+    Result := false;
+    Exit;
+  end;
   Result := KeyQueue.Count > 0;
 end;
 
 function CharPressed : Boolean;
 begin
+  if KeyQueue = nil then begin
+    Result := false;
+    Exit;
+  end;
   Result := (KeyQueue.Count > 0) and TKeyEvent(KeyQueue.Peek).isChar;
 end;
 
 procedure WaitForKey;
 begin
-  if KeyQueue.Count > 0 then
+  if KeyPressed then begin
+    keyPressEvent.ResetEvent;
     Exit;
+  end;
   keyPressEvent.WaitFor(INFINITE);
   keyPressEvent.ResetEvent;
 end;
@@ -951,7 +972,7 @@ end;
 
 procedure SetBrushColor(c : TColor);
 begin
-  if c <> brushColor then begin
+  if (c <> brushColor) or (brushStyle = bsClear) then begin
     brushColor := c;
     if brushStyle = bsClear then
       brushStyle := bsSolid;
