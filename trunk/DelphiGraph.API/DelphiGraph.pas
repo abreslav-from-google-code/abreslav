@@ -504,6 +504,8 @@ begin
           ExceptionHandler(E);
     end;
   finally
+    while KeyQueue.Count > 0 do
+      KeyQueue.Pop.Free;
     KeyQueue.Free;
     KeyQueue := nil;
     DestroyWindow(hWnd);
@@ -603,20 +605,28 @@ begin
 end;
 
 function ReadChar : Char;
+var
+  ke : TKeyEvent;
 begin
   while not CharPressed do begin
     WaitForKey;
     if not CharPressed then begin
-      KeyQueue.Pop;
+      KeyQueue.Pop.Free;
     end;
   end;
-  Result := TKeyEvent(KeyQueue.Pop).GetChar;
+  ke := TKeyEvent(KeyQueue.Pop);
+  Result := ke.GetChar;
+  ke.Free;
 end;
 
 function ReadKey : Word;
+var
+  ke : TKeyEvent;
 begin
   WaitForKey;
-  Result := TKeyEvent(KeyQueue.Pop).GetVirtualKey;
+  ke := TKeyEvent(KeyQueue.Pop);
+  Result := ke.GetVirtualKey;
+  ke.Free;
 end;
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -1074,8 +1084,17 @@ end;
 ////////////////////////////////////////////////////////////////////////////////
 ////////////////////////////////////////////////////////////////////////////////
 
+procedure ClearListAndFree(l : TObjectList);
 var
   i : Integer;
+begin
+  for i := 0 to l.Count - 1 do begin
+    l[i].Free;
+    l[i] := nil;
+  end;
+  l.Free;
+end;
+
 initialization
   ExceptionHandler := DefaultExceptionHandler;
   cs := TCriticalSection.Create;
@@ -1089,10 +1108,6 @@ finalization
   event.Free;
   keyPressEvent.Free;
   font.Free;
-  Buffers.Free;
-  for i := 0 to Buffers.Count - 1 do
-    Buffers[i].Free;
-  Pictures.Free;
-  for i := 0 to Pictures.Count - 1 do
-    Pictures[i].Free;
+  ClearListAndFree(Buffers);
+  ClearListAndFree(Pictures);
 end.
