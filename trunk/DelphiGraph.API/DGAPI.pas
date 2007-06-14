@@ -3,12 +3,15 @@ unit DGAPI;
 interface
 
 uses
-  Graphics;
+  Graphics, SysUtils;
 
 procedure Sleep(ms : Cardinal);
 
+procedure DefaultExceptionHandler(E : Exception);
+
 var
   HaltOnWindowClose : Boolean = true;
+  ExceptionHandler : procedure(E : Exception);
 
 procedure InitGraph(Width, Height : Integer);
 procedure CloseGraph;
@@ -58,6 +61,30 @@ procedure SetFontSize(s : Integer);
 procedure SetFontName(n : String);
 procedure SetFontStyle(s : TFontStyles);
 
+function GetPenColor : TColor;
+function GetPenWidth : Integer;
+function GetPenStyle : TPenStyle;
+function GetGraphicMode : TPenMode;
+
+function GetBrushColor : TColor;
+function GetBrushStyle : TBrushStyle;
+
+function GetFontColor : TColor;
+function GetFontSize : Integer;
+function GetFontName : String;
+function GetFontStyle : TFontStyles;
+
+procedure SaveScreen;
+procedure LoadScreen;
+
+type
+  TBuffer = type Integer;
+
+function GetNewBuffer : TBuffer;
+procedure DeleteBuffer(var buf : TBuffer);
+procedure SaveScreenToBuffer(buf : TBuffer);
+procedure LoadScreenFromBuffer(buf : TBuffer);
+
 implementation
 
 uses
@@ -89,6 +116,7 @@ var
   brushColor : TColor = clWhite;
   brushStyle : TBrushStyle = bsSolid;
   font : TFont = nil;
+  graphicMode : TPenMode = pmCopy;
   
 type
   TKeyEvent = class
@@ -256,29 +284,45 @@ begin
   end;
 end;
 
+procedure DefaultExceptionHandler(E : Exception);
+begin
+  WriteLn('-------------------------------------------------------------------');
+  WriteLn('Exception in graphics thread: ');
+  WriteLn('class: ', E.ClassName, '; message: ', E.Message);
+  WriteLn('-------------------------------------------------------------------');
+end;
+
 function ThreadProc(param : Pointer) : Integer;
 begin
-  Frozen := false;
-  KeyQueue := TObjectQueue.Create;
+  try
+    try
+      Frozen := false;
+      KeyQueue := TObjectQueue.Create;
 
-  CreateWindow;
+      CreateWindow;
+    except
+      on E : Exception do
+        if Assigned(ExceptionHandler) then
+          ExceptionHandler(E);
+    end;
+  finally
+    KeyQueue.Free;
+    KeyQueue := nil;
+    DestroyWindow(hWnd);
+    hWnd := 0;
+    DeleteDC(buffer);
+    buffer := 0;
+    DeleteObject(bufferBMP);
+    bufferBMP := 0;
 
-  KeyQueue.Free;
-  KeyQueue := nil;
-  DestroyWindow(hWnd);
-  hWnd := 0;
-  DeleteDC(buffer);
-  buffer := 0;
-  DeleteObject(bufferBMP);
-  bufferBMP := 0;
+    DeleteDC(freezeBuffer);
+    freezeBuffer := 0;
+    DeleteObject(freezeBufferBMP);
+    freezeBufferBMP := 0;
 
-  DeleteDC(freezeBuffer);
-  freezeBuffer := 0;
-  DeleteObject(freezeBufferBMP);
-  freezeBufferBMP := 0;
-
-  Result := 0;
-  eventThread := 0;
+    Result := 0;
+    eventThread := 0;
+  end;
 end;
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -296,6 +340,7 @@ begin
     Exit;
   WindowWidth := Width;
   WindowHeight := Height;
+  event.ResetEvent;
   eventThread := BeginThread(nil, 0, @ThreadProc, nil, 0, id);
   event.WaitFor(1000);
 end;
@@ -574,6 +619,7 @@ const
 
 procedure SetGraphicMode(m : TPenMode);
 begin
+  graphicMode := m;
   SetROP2(buffer, PenModes[m]);
 end;
 
@@ -654,9 +700,129 @@ begin
   end;
 end;
 
+////////////////////////////////////////////////////////////////////////////////
+
+function GetPenColor : TColor;
 begin
+  Result := penColor;
+end;
+
+function GetPenWidth : Integer;
+begin
+  Result := penWidth;
+end;
+
+function GetPenStyle : TPenStyle;
+begin
+  Result := penStyle;
+end;
+
+function GetGraphicMode : TPenMode;
+begin
+  Result := graphicMode;
+end;
+
+function GetBrushColor : TColor;
+begin
+  Result := brushColor;
+end;
+
+function GetBrushStyle : TBrushStyle;
+begin
+  Result := brushStyle;
+end;
+
+function GetFontColor : TColor;
+begin
+  Result := font.Color;
+end;
+
+function GetFontSize : Integer;
+begin
+  Result := font.Size;
+end;
+
+function GetFontName : String;
+begin
+  Result := font.Name;
+end;
+
+function GetFontStyle : TFontStyles;
+begin
+  Result := font.Style;
+end;
+
+////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
+var
+  Buffers : TObjectList;
+
+const
+  NIL_BUFFER = -1;
+
+function GetNewBuffer : TBuffer;
+begin
+  Result := Buffers.Add(Graphics.TBitmap.Create);
+end;
+
+procedure DeleteBuffer(var buf : TBuffer);
+begin
+  Buffers[buf].Free;
+  Buffers[buf] := nil;
+  buf := NIL_BUFFER;
+end;
+
+procedure SaveScreenToBuffer(buf : TBuffer);
+begin
+  if buf = NIL_BUFFER then begin
+     raise Exception.Create('NIL Buffer used');
+  end;
+  Graphics.TBitmap(Buffers[buf]).Width := WindowWidth;
+  Graphics.TBitmap(Buffers[buf]).Height := WindowHeight;
+  BitBlt(Graphics.TBitmap(Buffers[buf]).Canvas.Handle, 0, 0, WindowWidth, WindowHeight, buffer, 0, 0, SRCCOPY);
+end;
+
+procedure LoadScreenFromBuffer(buf : TBuffer);
+begin
+  if buf = NIL_BUFFER then begin
+     raise Exception.Create('NIL Buffer used');
+  end;
+  cs.Enter;
+  try
+    BitBlt(buffer, 0, 0, WindowWidth, WindowHeight, Graphics.TBitmap(Buffers[buf]).Canvas.Handle, 0, 0, SRCCOPY);
+  finally
+    cs.Leave;
+  end;
+  Repaint;
+end;
+
+var
+  DefaultSaveBuffer : TBuffer = NIL_BUFFER;
+
+procedure SaveScreen;
+begin
+  if DefaultSaveBuffer = NIL_BUFFER then
+    DefaultSaveBuffer := GetNewBuffer;
+  SaveScreenToBuffer(DefaultSaveBuffer);
+end;
+
+procedure LoadScreen;
+begin
+  if DefaultSaveBuffer = NIL_BUFFER then
+    SaveScreen;
+  LoadScreenFromBuffer(DefaultSaveBuffer);
+end;
+
+////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
+
+begin
+  ExceptionHandler := DefaultExceptionHandler;
   cs := TCriticalSection.Create;
   event := TEvent.Create(nil, true, false, 'DelphiGraphWindowInitialized');
   keyPressEvent := TEvent.Create(nil, true, false, 'DelphiGraphKeyPressed');
   font := TFont.Create;
+  Buffers := TObjectList.Create;
 end.
