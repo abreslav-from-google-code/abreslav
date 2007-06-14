@@ -6,7 +6,7 @@ uses
   Windows, Graphics, SysUtils;
 
 const
-  VERSION = '2.0';
+  VERSION = '2.0 beta';
   ABOUT_TEXT =
     'DelphiGraph library version ' + VERSION + #13#10 +
     'Copyright (C) by A. Breslav'#13#10 +
@@ -676,7 +676,7 @@ end;
 ///////////////////////////////////////////////////////////////////////////////
 function KeyPressed : Boolean;
 begin
-  if KeyQueue = nil then begin
+  if (KeyQueue = nil) or (buffer = 0) then begin
     Result := false;
     Exit;
   end;
@@ -685,11 +685,7 @@ end;
 
 function CharPressed : Boolean;
 begin
-  if KeyQueue = nil then begin
-    Result := false;
-    Exit;
-  end;
-  Result := (KeyQueue.Count > 0) and TKeyEvent(KeyQueue.Peek).isChar;
+  Result := (KeyPressed) and TKeyEvent(KeyQueue.Peek).isChar;
 end;
 
 procedure WaitForKey;
