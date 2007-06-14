@@ -428,6 +428,21 @@ end;
 const
   CLASS_NAME = 'DelphiGraph.API.MainWindow';
 
+procedure SetClientAreaSize(w, h : Integer);
+var
+  client, window : TRect;
+  diff : TPoint;
+begin
+  GetClientRect(hWnd, client);
+  GetWindowRect(hWnd, window);
+  diff.x := (window.Right - window.Left) - client.Right;
+  diff.y := (window.Bottom - window.Top) - client.Bottom;
+  MoveWindow(hWnd,
+    window.Left, window.Top,
+    w + diff.x,
+    h + diff.y, true);
+end;
+
 procedure CreateWindow;
 var
   msg : tagMsg;
@@ -448,7 +463,7 @@ begin
   hWnd := CreateWindowEx(
     0, // style
     CLASS_NAME,
-    'Graphical Mode Emulation',
+    'Эмуляция графического режима',
     WS_CAPTION or WS_SYSMENU or WS_DLGFRAME,
     Integer(CW_USEDEFAULT), 0, WindowWidth, WindowHeight, // size
     0, 0,
@@ -483,6 +498,8 @@ begin
     ReleaseDC(hWnd, hDC);
   end;
 
+  SetClientAreaSize(WindowWidth, WindowHeight);
+  
   event.SetEvent;
 
   while GetMessage(msg, 0, 0, 0) do begin
