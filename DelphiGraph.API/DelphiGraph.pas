@@ -1171,6 +1171,8 @@ initialization
   Buffers := TObjectList.Create;
   Pictures := TObjectList.Create;
 finalization
+  CloseGraph;
+  WaitForGraph;
   cs.Free;
   event.Free;
   keyPressEvent.Free;
