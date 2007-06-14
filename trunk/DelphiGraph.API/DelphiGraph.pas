@@ -303,6 +303,7 @@ var
   cs : TCriticalSection = nil;
   event : TEvent = nil;
   keyPressEvent : TEvent = nil;
+  keycs : TCriticalSection = nil;
   mouseEvent : TEvent = nil;
   Frozen : Boolean = false;
   ks : TKeyboardState;
@@ -416,8 +417,14 @@ begin
       else ks[VK_CONTROL] := 0;
       r := ToAscii(wParam, lParam shr 16, ks, @c, 0);
 
-      KeyQueue.Push(TKeyEvent.Create(wParam, c[1], r <> 0, Shift));
-      keyPressEvent.SetEvent;
+      keycs.Enter;
+      try
+        KeyQueue.Push(TKeyEvent.Create(wParam, c[1], r <> 0, Shift));
+        keyPressEvent.SetEvent;
+      finally
+        keycs.Leave;
+      end;
+
     end;
     else
       Result := DefWindowProc(wnd, msg, wparam, lparam);
@@ -619,12 +626,14 @@ end;
 
 function CharPressed : Boolean;
 begin
-  Result := KeyPressed and TKeyEvent(KeyQueue.Peek).isChar;
+  Result := (KeyQueue.Count > 0) and TKeyEvent(KeyQueue.Peek).isChar;
 end;
 
 procedure WaitForKey;
 begin
-  while keyPressEvent.WaitFor(INFINITE) = wrTimeout do;
+  if KeyQueue.Count > 0 then
+    Exit;
+  keyPressEvent.WaitFor(INFINITE);
   keyPressEvent.ResetEvent;
 end;
 
@@ -634,11 +643,21 @@ var
 begin
   while not CharPressed do begin
     WaitForKey;
-    if not CharPressed then begin
-      KeyQueue.Pop.Free;
+    keycs.Enter;
+    try
+      if not CharPressed then begin
+        KeyQueue.Pop.Free;
+      end;
+    finally
+      keycs.Leave;
     end;
   end;
-  ke := TKeyEvent(KeyQueue.Pop);
+  keycs.Enter;
+  try
+    ke := TKeyEvent(KeyQueue.Pop);
+  finally
+    keycs.Leave;
+  end;
   Result := ke.GetChar;
   ke.Free;
 end;
@@ -648,7 +667,12 @@ var
   ke : TKeyEvent;
 begin
   WaitForKey;
-  ke := TKeyEvent(KeyQueue.Pop);
+  keycs.Enter;
+  try
+    ke := TKeyEvent(KeyQueue.Pop);
+  finally
+    keycs.Leave;
+  end;
   Result := ke.GetVirtualKey;
   ke.Free;
 end;
@@ -1203,6 +1227,7 @@ initialization
   cs := TCriticalSection.Create;
   event := TEvent.Create(nil, true, false, 'DelphiGraphWindowInitialized');
   keyPressEvent := TEvent.Create(nil, true, false, 'DelphiGraphKeyPressed');
+  keycs := TCriticalSection.Create;
   mouseEvent := TEvent.Create(nil, true, false, 'DelphiGraphMouseEvent');
   Buffers := TObjectList.Create;
   Pictures := TObjectList.Create;
@@ -1212,6 +1237,7 @@ finalization
   cs.Free;
   event.Free;
   keyPressEvent.Free;
+  keycs.Free;
   mouseEvent.Free;
   ClearListAndFree(Buffers);
   ClearListAndFree(Pictures);
