@@ -218,6 +218,7 @@ function CharPressed : Boolean;
 function ReadKey : Word;
 function ReadChar : Char;
 
+procedure WaitForMouseEvent;
 function MousePressed : Boolean;
 function GetMouseX : Integer;
 function GetMouseY : Integer;
@@ -302,6 +303,7 @@ var
   cs : TCriticalSection = nil;
   event : TEvent = nil;
   keyPressEvent : TEvent = nil;
+  mouseEvent : TEvent = nil;
   Frozen : Boolean = false;
   ks : TKeyboardState;
   KeyQueue : TObjectQueue;
@@ -394,13 +396,18 @@ begin
           EndPaint(hWnd, ps);
         end;
     end;
-    WM_LBUTTONDOWN:
+    WM_LBUTTONDOWN: begin
       IsLButtonDown := true;
-    WM_LBUTTONUP:
+      mouseEvent.SetEvent;
+    end;
+    WM_LBUTTONUP: begin
       IsLButtonDown := false;
+      mouseEvent.SetEvent;
+    end;
     WM_MOUSEMOVE: begin
       MouseX := LoWord(lParam);
       MouseY := HiWord(lParam);
+      mouseEvent.SetEvent;
     end;
     WM_KEYDOWN: begin
       if GetKeyState(VK_SHIFT) < 0 then
@@ -631,6 +638,12 @@ end;
 
 ///////////////////////////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////////////////////////
+
+procedure WaitForMouseEvent;
+begin
+  mouseEvent.waitFor(INFINITE);
+  mouseEvent.ResetEvent;
+end;
 
 function MousePressed : Boolean;
 begin
@@ -1100,6 +1113,7 @@ initialization
   cs := TCriticalSection.Create;
   event := TEvent.Create(nil, true, false, 'DelphiGraphWindowInitialized');
   keyPressEvent := TEvent.Create(nil, true, false, 'DelphiGraphKeyPressed');
+  mouseEvent := TEvent.Create(nil, true, false, 'DelphiGraphMouseEvent');
   font := TFont.Create;
   Buffers := TObjectList.Create;
   Pictures := TObjectList.Create;
@@ -1107,6 +1121,7 @@ finalization
   cs.Free;
   event.Free;
   keyPressEvent.Free;
+  mouseEvent.Free;
   font.Free;
   ClearListAndFree(Buffers);
   ClearListAndFree(Pictures);
