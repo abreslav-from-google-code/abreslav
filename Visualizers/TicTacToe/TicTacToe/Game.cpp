@@ -2,6 +2,7 @@
 #include "TicTacToe.h"
 #include "Game.h"
 #include "WindowEvents.h"
+#include "Server.h"
 
 Game game;
 
@@ -52,6 +53,7 @@ void Game::processEvent(int _event, Player player, SOCKET s)
 			break;
 		case WAITING_FOR_Y:
 			playerSockets[Y] = new BufferedSocket(accept(s, NULL, NULL));
+			stopListening();
 			sendIDAndField(YOU_ARE_Y, Y, H_CELLS, V_CELLS);
 			playerSockets[X]->write(YOUR_TURN);
 			state = X_TURN;

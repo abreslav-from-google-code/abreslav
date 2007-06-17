@@ -13,3 +13,4 @@ ServerResult setupServer();
 ServerResult startServer(HWND hWnd);
 void socketEventHandler(HWND hWnd, SOCKET s, int _event, int error);
 void shutdownServer(HWND hWnd);
+void stopListening();
