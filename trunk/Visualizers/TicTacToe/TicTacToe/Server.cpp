@@ -72,8 +72,12 @@ void socketEventHandler(HWND hWnd, SOCKET s, int _event, int error)
 	game.processEvent(_event, s);
 }
 
-void shutdownServer(HWND hWnd)
+void stopListening()
 {
 	closesocket(ListenSocket);
+}
+
+void shutdownServer(HWND hWnd)
+{
 	WSACleanup();
 }
