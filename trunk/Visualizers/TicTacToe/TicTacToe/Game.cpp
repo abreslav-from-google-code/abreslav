@@ -63,18 +63,25 @@ void Game::processEvent(int _event, Player player, SOCKET s)
 		break;
 	case FD_READ:
 		{
+			playerSockets[player]->receiveAll();
 			if (!((state == X_TURN) && (player == X)) &&
 				!((state == Y_TURN) && (player == Y)))
 			{
+				playerSockets[player]->clearReadBuffer();			
 				break;
 			}
-			Player other = (player == X) ? Y : X;
-			WORD x = playerSockets[player]->readWord();
-			WORD y = playerSockets[player]->readWord();
-			processTurn(player, x, y);
-			Sleep(400);
-			playerSockets[other]->write(OTHER_PLAYERS_TURN_DATA, x, y);
-			state = (state == X_TURN) ? Y_TURN : X_TURN;
+			if (playerSockets[player]->areBytesReady(4))
+			{
+				WORD x = playerSockets[player]->readWord();
+				WORD y = playerSockets[player]->readWord();
+				processTurn(player, x, y);
+
+				Sleep(400);
+
+				Player other = (player == X) ? Y : X;
+				playerSockets[other]->write(OTHER_PLAYERS_TURN_DATA, x, y);
+				state = (state == X_TURN) ? Y_TURN : X_TURN;
+			}
 			break;
 		}
 	case FD_WRITE:
