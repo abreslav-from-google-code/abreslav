@@ -42,21 +42,30 @@ void Player::opponentTurn(WORD x, WORD y, Game::Status s)
 	ASSERT(state == WAITING_FOR_OTHERS_TURN_DATA);
 	comm.write(x);
 	comm.write(y);
-	if (s == getWonStatus())
+	state = processGameStatus(s, WAITING_FOR_TURN_DATA);
+}
+
+Player::State Player::processGameStatus(Game::Status s, Player::State playState)
+{
+	if (isWonStatus(s))
 	{
-		state = WON;
 		comm.write(YOU_WIN);
-	} else if (s == getLostStatus())
+		return WON;
+	} 
+	else if (isLostStatus(s))
 	{
-		state = LOST;
 		comm.write(YOU_LOOSE);
-	} else if (s == getErrorStatus())
+		return LOST;
+	} 
+	else if (isErrorStatus(s))
 	{
-		state = LOST;
 		comm.write(YOUR_ERROR);
-	} else {
-		state = WAITING_FOR_TURN_DATA;
+		return LOST;
+	} 
+	else 
+	{
 		comm.write(PLAY);
+		return playState;
 	}
 }
 
@@ -101,7 +110,16 @@ void Player::step()
 			WORD y = comm.read<WORD>();
 			game.setCellState(x, y, getMyCellState());
 			other->opponentTurn(x, y, game.getStatus());
-			state = WAITING_FOR_OTHERS_TURN_DATA;
+			if (!isPlayStatus(game.getStatus()))
+			{
+				comm.write(fWidth);
+				comm.write(fHeight);
+				state = processGameStatus(game.getStatus(), WAITING_FOR_OTHERS_TURN_DATA);
+			}
+			else
+			{
+				state = WAITING_FOR_OTHERS_TURN_DATA;
+			}
 		}
 		break;
 	case WAITING_FOR_OTHERS_TURN_DATA:

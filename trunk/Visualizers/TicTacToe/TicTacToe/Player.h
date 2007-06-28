@@ -28,10 +28,10 @@ public:
 
 	typedef enum
 	{
-		PLAY,
-		YOU_WIN,
-		YOU_LOOSE,
-		YOUR_ERROR
+		PLAY = 1,
+		YOU_WIN = 2,
+		YOU_LOOSE = 3,
+		YOUR_ERROR = 4
 	} StatusMessage;
 
 	Player(Game& g, Communicator& c) 
@@ -63,14 +63,23 @@ protected:
 	virtual Message getYouAreMessage() = 0;
 	virtual State getFirstGameState() = 0;
 	virtual Game::CellState getMyCellState() = 0;
-	virtual Game::Status getWonStatus() = 0;
-	virtual Game::Status getLostStatus() = 0;
-	virtual Game::Status getErrorStatus() = 0;
+	virtual bool isWonStatus(Game::Status status) = 0;
+	virtual bool isLostStatus(Game::Status status) = 0;
+	virtual bool isErrorStatus(Game::Status status) = 0;
+
+	bool isPlayStatus(Game::Status status)
+	{
+		return 
+			!isWonStatus(status) 
+			&& !isLostStatus(status) 
+			&& !isErrorStatus(status);
+	}
 
 private:
 	void othersNameReady();
 	void opponentTurn(WORD x, WORD y, Game::Status s);
 	State sendOthersName();
+	State Player::processGameStatus(Game::Status s, State playState);
 
 	Game& game;
 	State state;
@@ -81,13 +90,36 @@ private:
 	WORD fHeight;
 };
 
+namespace m_or
+{
+	template <typename T> 
+	class Base
+	{
+	public:
+		static bool is(T v)
+		{
+			return false;
+		}
+	};
+
+	template <typename T, T VALUE, typename B = Base<T>> 
+	class Or : public B
+	{
+	public:
+		static bool is(T v)
+		{
+			return (v == VALUE) || B::is(v);
+		}
+	};
+}
+
 template <
 	Player::Message MESSAGE, 
 	Player::State STATE, 
 	Game::CellState CELL_STATE,
-	Game::Status WON_STATUS,
-	Game::Status LOST_STATUS,
-	Game::Status ERROR_STATUS>
+	typename WON_STATUS, // assumed to have static bool is(Game::Status)
+	typename LOST_STATUS,
+	typename ERROR_STATUS>
 class SpecificPlayer : public Player
 {
 public:
@@ -111,32 +143,40 @@ protected:
 		return CELL_STATE;
 	}
 
-	virtual Game::Status getWonStatus()
+	virtual bool isWonStatus(Game::Status status)
 	{
-		return WON_STATUS;
+		return WON_STATUS::is(status);
 	}
 
-	virtual Game::Status getLostStatus()
+	virtual bool isLostStatus(Game::Status status)
 	{
-		return LOST_STATUS;
+		return LOST_STATUS::is(status);
 	}
 
-	virtual Game::Status getErrorStatus()
+	virtual bool isErrorStatus(Game::Status status)
 	{
-		return ERROR_STATUS;
+		return ERROR_STATUS::is(status);
 	}
 };
+
+template <Game::Status VALUE, typename B = m_or::Base<Game::Status>> 
+class SOr : public m_or::Or<Game::Status, VALUE, B>
+{};
 
 typedef SpecificPlayer<
 		Player::YOU_ARE_X, 
 		Player::WAITING_FOR_TURN_DATA, 
-		Game::CROSS, Game::CROSS_WON, 
-		Game::CIRCLE_WON, Game::CROSS_ERROR> 
+		Game::CROSS, 
+		SOr<Game::CROSS_WON, SOr<Game::CIRCLE_ERROR>>,
+		SOr<Game::CIRCLE_WON>, 
+		SOr<Game::CROSS_ERROR>> 
 	CrossPlayer;
 
 typedef SpecificPlayer<
 		Player::YOU_ARE_Y, 
 		Player::WAITING_FOR_OTHERS_TURN_DATA, 
-		Game::CIRCLE, Game::CIRCLE_WON, 
-		Game::CROSS_WON, Game::CIRCLE_ERROR> 
+		Game::CIRCLE, 
+		SOr<Game::CIRCLE_WON, SOr<Game::CROSS_ERROR>>,
+		SOr<Game::CROSS_WON>, 
+		SOr<Game::CIRCLE_ERROR>> 
 	CirclePlayer;
