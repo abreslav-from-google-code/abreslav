@@ -1,13 +1,10 @@
 #include "stdafx.h"
 #include "Server.h"
-#include "Game.h"
 
 #define HOST "127.0.0.1"
 #define PORT 10000
 
-SOCKET ListenSocket;
-
-ServerResult setupServer()
+GameServer::Result GameServer::setup()
 {
 	//----------------------
 	// Initialize Winsock
@@ -15,17 +12,17 @@ ServerResult setupServer()
 	int iResult = WSAStartup(MAKEWORD(2,2), &wsaData);
 	if (iResult != NO_ERROR)
 	{
-		return SERVER_ERROR;
+		return RESULT_ERROR;
 	}
 
 	//----------------------
 	// Create a SOCKET for listening for 
 	// incoming connection requests
-	ListenSocket = socket(AF_INET, SOCK_STREAM, IPPROTO_TCP);
-	if (ListenSocket == INVALID_SOCKET) 
+	listenSocket = socket(AF_INET, SOCK_STREAM, IPPROTO_TCP);
+	if (listenSocket == INVALID_SOCKET) 
 	{
 		WSACleanup();
-		return SERVER_ERROR;
+		return RESULT_ERROR;
 	}
 	//----------------------
 	// The sockaddr_in structure specifies the address family,
@@ -37,47 +34,110 @@ ServerResult setupServer()
 
 	//----------------------
 	// Bind the socket.
-	if (bind( ListenSocket, 
+	if (bind( listenSocket, 
 		(SOCKADDR*) &service, 
 		sizeof(service)) == SOCKET_ERROR) 
 	{
-			closesocket(ListenSocket);
-			return SERVER_ERROR;
+			closesocket(listenSocket);
+			return RESULT_ERROR;
 	}
 
+	return RESULT_OK;
+}
+
+GameServer::Result GameServer::start(HWND hWnd)
+{
 	//----------------------
 	// Listen for incoming connection requests 
 	// on the created socket
-	if (listen( ListenSocket, 2 ) == SOCKET_ERROR)
+	if (listen( listenSocket, 2 ) == SOCKET_ERROR)
 	{
-		return SERVER_ERROR;
+		return RESULT_ERROR;
 	}
 
-	return SERVER_OK;
-}
-
-ServerResult startServer(HWND hWnd)
-{
-	if (WSAAsyncSelect(ListenSocket, 
+	if (WSAAsyncSelect(listenSocket, 
 		hWnd, SOCKET_EVENT, 
 		FD_READ | FD_WRITE | FD_ACCEPT | FD_CLOSE) != 0)
 	{
-		return SERVER_ERROR;
+		return RESULT_ERROR;
 	}
-	return SERVER_OK;
+	return RESULT_OK;
 }
 
-void socketEventHandler(HWND hWnd, SOCKET s, int _event, int error)
+void GameServer::handleEvent(HWND hWnd, SOCKET s, int _event, int error)
 {
-	game.processEvent(_event, s);
+	processEvent(_event, s);
 }
 
-void stopListening()
+void GameServer::stopListening()
 {
-	closesocket(ListenSocket);
+	WSAAsyncSelect(listenSocket, 0, 0, 0);
+	ioctlsocket(listenSocket, FIONBIO, 0);
+	closesocket(listenSocket);
 }
 
-void shutdownServer(HWND hWnd)
+void GameServer::initPlayer(Player& p, BufferedSocket& bs, SOCKET s)
 {
-	WSACleanup();
+	bs.setSocket(s);
+	p.setFieldSize(H_CELLS, V_CELLS);
+}
+
+void GameServer::processEvent(int _event, SOCKET s)
+{
+	switch (_event)
+	{
+	case FD_ACCEPT:
+		switch (*state)
+		{
+		case WAITING_FOR_X:
+			initPlayer(x, xSocket, accept(listenSocket, NULL, NULL));
+			state = WAITING_FOR_Y;
+			break;
+		case WAITING_FOR_Y:
+			initPlayer(y, ySocket, accept(listenSocket, NULL, NULL));
+			stopListening();
+			y.setOther(&x);
+			x.setOther(&y);
+			state = X_TURN;
+			break;
+		default:
+			throw "panic";
+		}
+		break;
+	case FD_READ:
+	case FD_WRITE:
+	case FD_CLOSE:
+		if (xSocket.isMine(s))
+		{
+			processEvent(_event, x, xSocket);
+		}
+		if (ySocket.isMine(s))
+		{
+			processEvent(_event, y, ySocket);
+		}
+		break;
+	default:
+		throw "panic";
+	}
+}
+
+void GameServer::processEvent(int _event, Player& p, BufferedSocket& bs)
+{
+	switch (_event)
+	{
+	case FD_READ:
+		bs.receiveAll();
+		p.step();
+		break;
+	case FD_WRITE:
+		bs.writeToSocket();
+		p.step();
+		break;
+	case FD_CLOSE:
+//		delete playerSockets[player];
+//		playerSockets[player] = NULL;
+		break;
+	default:
+		throw "panic";
+	}
 }

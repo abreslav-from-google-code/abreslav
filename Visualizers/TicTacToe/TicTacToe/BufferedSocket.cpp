@@ -1,20 +1,26 @@
 #include "stdafx.h"
 #include "BufferedSocket.h"
 
-void BufferedSocket::write(char message)
+void BufferedSocket::write(const void* buffer, size_t len)
 {
-	wBuf.write(&message, 1);
+	wBuf.write(buffer, len);
 	writeToSocket();
 }
 
-void BufferedSocket::write(char message, WORD data1, WORD data2)
+void BufferedSocket::read(void* buffer, size_t len)
 {
-	wBuf.write(&message, 1);
-	wBuf.write(&data1, 2);
-	wBuf.write(&data2, 2);
-	writeToSocket();	
+	rBuf.read(buffer, len);
 }
 
+void BufferedSocket::peek(void* buffer, size_t len)
+{
+	rBuf.peek(buffer, len);
+}
+
+bool BufferedSocket::areBytesReady(size_t size)
+{
+	return size <= rBuf.getSize();
+}
 
 int BufferedSocket::writeToSocket()
 {
@@ -22,27 +28,15 @@ int BufferedSocket::writeToSocket()
 	{
 		return 0;
 	}
-	int sent = send(socket, wBuf.getStartAddress(), wBuf.getSize(), 0);
+	int sent = send(socket, wBuf.getStartAddress(), (int) wBuf.getSize(), 0);
 	wBuf.remove(sent);
 	return sent;
-}
-
-WORD BufferedSocket::readWord()
-{
-	WORD res;
-	rBuf.read(&res, sizeof(res));
-	return res;
 }
 
 void BufferedSocket::receiveAll()
 {
 	int count = recv(socket, rBuf.getEndAddress(), BUFSIZE, 0);
 	rBuf.append(count);
-}
-
-bool BufferedSocket::areBytesReady(int count)
-{
-	return count <= rBuf.getSize();
 }
 
 void BufferedSocket::clearReadBuffer()
@@ -57,52 +51,57 @@ bool BufferedSocket::isMine(SOCKET s)
 
 //////////////////////////////////////
 
-void Buffer::write(const void* buf, int len)
+void Buffer::write(const void* buf, size_t len)
 {
-	if (end + len >= BUFSIZE)
+	if (end + len - 1 >= BUFSIZE)
 	{
 		throw "panic";
 	}
 
-	for (int i = 0; i < len; i++)
+	for (size_t i = 0; i < len; i++)
 	{
-		buffer[end + i + 1] = ((char*) buf)[i];
+		buffer[end + i] = ((char*) buf)[i];
 	}
 	append(len);
 }
 
-void Buffer::read(void* buf, int len)
+void Buffer::peek(void* buf, size_t len)
 {
 	if (len > getSize())
 	{
 		throw "panic";
 	}
 
-	for (int i = 0; i < len; i++)
+	for (size_t i = 0; i < len; i++)
 	{
 		((char*) buf)[i] = buffer[start + i];
 	}
+}
+
+void Buffer::read(void* buf, size_t len)
+{
+	peek(buf, len);
 	remove(len);
 }
 
-void Buffer::remove(int count)
+void Buffer::remove(size_t count)
 {
 	if (count > 0)
 	{
 		start += count;
-		if (start > end)
+		if (start >= end)
 		{
 			start = 0;
-			end = -1;
+			end = 0;
 		}
 	}
 }
 
-void Buffer::append(int count)
+void Buffer::append(size_t count)
 {
 	if (count > 0)
 	{
-		if (end >= BUFSIZE)
+		if (end > BUFSIZE)
 		{
 			throw "panic";
 		}

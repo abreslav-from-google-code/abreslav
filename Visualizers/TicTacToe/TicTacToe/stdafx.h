@@ -35,3 +35,4 @@
 
 
 // TODO: reference additional headers your program requires here
+#define ASSERT(x) if (!(x)) { throw "panic"; }

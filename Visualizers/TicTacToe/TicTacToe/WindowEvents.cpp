@@ -1,12 +1,8 @@
 #include "stdafx.h"
-#include "TicTacToe.h"
-#include "Game.h"
 #include "WindowEvents.h"
 
 #define CROSS_COLOR 0xFF0000
 #define CIRCLE_COLOR 0x0000FF
-
-extern HWND hWnd;
 
 int getCellSize(HWND hWnd)
 {
@@ -17,14 +13,13 @@ int getCellSize(HWND hWnd)
 		(r.right - r.left) / H_CELLS, 
 		(r.bottom - r.top) / V_CELLS
 	);
-
 }
 
 HPEN CROSS_PEN = CreatePen(PS_SOLID, 2, CROSS_COLOR);
 HPEN CIRCLE_PEN = CreatePen(PS_SOLID, 2, CIRCLE_COLOR);
 HPEN GRID_PEN = (HPEN) GetStockObject(BLACK_PEN);
 
-void paintWindow(HWND hWnd, HDC hDC)
+void WindowPainter::paintWindow(HWND hWnd, HDC hDC)
 {
 	int cellSize = getCellSize(hWnd);
 	SelectObject(hDC, GRID_PEN);
@@ -45,16 +40,16 @@ void paintWindow(HWND hWnd, HDC hDC)
 			int l = x * cellSize;
 			int t = y * cellSize;
 			int f = 1;
-			switch (getCellState(x, y))
+			switch (gameServer.getGame().getCellState(x, y))
 			{
-			case CROSS:
+			case Game::CROSS:
 				SelectObject(hDC, CROSS_PEN);
 				MoveToEx(hDC, l + f, t + f, NULL);
 				LineTo(hDC, l + cellSize - f, t + cellSize - f);
 				MoveToEx(hDC, l + f, t + cellSize - f, NULL);
 				LineTo(hDC, l + cellSize - f, t + f);
 				break;
-			case CIRCLE:
+			case Game::CIRCLE:
 				SelectObject(hDC, CIRCLE_PEN);
 				Ellipse(hDC, l + f, t + f, l + cellSize, t + cellSize);
 				break;
@@ -63,14 +58,32 @@ void paintWindow(HWND hWnd, HDC hDC)
 	}
 
 	char* message = NULL;
-	switch (game.getState())
+	switch (gameServer.getState())
 	{
-	case Game::WAITING_FOR_X:
+	case GameServer::WAITING_FOR_X:
 		message = "Waiting for the first player...";
 		break;
-	case Game::WAITING_FOR_Y:
+	case GameServer::WAITING_FOR_Y:
 		message = "Waiting for the second player...";
 		break;
+	}
+	if (message == NULL)
+	{
+		switch (gameServer.getGame().getStatus())
+		{
+		case Game::CROSS_WON:
+			message = "X has won!";
+			break;
+		case Game::CIRCLE_WON:
+			message = "O has won!";
+			break;
+		case Game::CROSS_ERROR:
+			message = "X has made an erroneous turn and lost!";
+			break;
+		case Game::CIRCLE_ERROR:
+			message = "O has made an erroneous turn and lost!";
+			break;
+		}
 	}
 	if (message != NULL)
 	{
@@ -96,20 +109,7 @@ void paintWindow(HWND hWnd, HDC hDC)
 	}
 }
 
-void handleLeftClick(HWND hWnd, int xPos, int yPos)
-{
-/*	static int c = 0;
-	int cellSize = getCellSize(hWnd);
-	int x = xPos / cellSize;
-	int y = yPos / cellSize;
-	if (setCellState(x, y, ((c % 2) ? CROSS : CIRCLE)))
-	{
-		c++;
-	}
-	InvalidateRect(hWnd, NULL, TRUE);*/
-}
-
-void repaint()
+void WindowPainter::repaint()
 {
 	InvalidateRect(hWnd, NULL, TRUE);
 }	
