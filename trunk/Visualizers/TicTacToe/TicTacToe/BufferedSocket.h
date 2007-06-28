@@ -1,13 +1,14 @@
 #pragma once
 
 #include "Winsock2.h"
+#include "Communicator.h"
 
 #define BUFSIZE 1024
 
 class Buffer
 {
 public:
-	Buffer() : start(0), end(-1)
+	Buffer() : start(0), end(0)
 	{
 	}
 
@@ -18,13 +19,14 @@ public:
 
 	char* getEndAddress()
 	{
-		return &buffer[end + 1];
+		return &buffer[end];
 	}
 
-	void write(const void* buf, int len);
-	void read(void* buf, int len);
-	void remove(int count);
-	void append(int count);
+	void write(const void* buf, size_t len);
+	void read(void* buf, size_t len);
+	void peek(void* buf, size_t len);
+	void remove(size_t count);
+	void append(size_t count);
 	void clear();
 
 	bool isEmpty() const
@@ -32,23 +34,23 @@ public:
 		return start > end;
 	}
 
-	int getSize() const
+	size_t getSize() const
 	{
-		return end - start + 1;
+		return end - start;
 	}
 private:
 	char buffer[BUFSIZE];
-	int start;
-	int end;
+	size_t start;
+	size_t end;
 };
 
-class BufferedSocket
+class BufferedSocket : public Communicator
 {
 public:
-	explicit BufferedSocket(SOCKET s) : socket(s) 
+	explicit BufferedSocket() : socket(SOCKET_ERROR) 
 	{}
 
-	~BufferedSocket()
+	virtual ~BufferedSocket()
 	{
 		WSAAsyncSelect(socket, 0, 0, 0);	
 		ioctlsocket(socket, FIONBIO, 0);	
@@ -56,15 +58,26 @@ public:
 		closesocket(socket);	
 	}
 
-	void write(char message);
-	void write(char message, WORD data1, WORD data2);
+	void setSocket(SOCKET s)
+	{
+		if (socket != SOCKET_ERROR)
+		{
+			throw "panic";
+		}
+		socket = s;
+	}
+
+	virtual bool areBytesReady(size_t size);
+
 	int writeToSocket();
 	void receiveAll();
 	void clearReadBuffer();
-	bool areBytesReady(int count);
-	WORD readWord();
 	bool isMine(SOCKET s);
 
+protected:
+	virtual void write(const void* buffer, size_t len);
+	virtual void read(void* buffer, size_t len);
+	virtual void peek(void* buffer, size_t len);
 private:
 	SOCKET socket;
 

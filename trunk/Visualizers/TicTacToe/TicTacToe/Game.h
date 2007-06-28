@@ -1,58 +1,53 @@
 #pragma once
 
-#include "BufferedSocket.h"
+#pragma once
 
-class Game
+#include <exception>
+#include "Observable.h"
+
+#define H_CELLS 30
+#define V_CELLS (H_CELLS + 5)
+
+class FieldIndexOutOfBounds : public std::exception
+{
+	virtual const char* what() const throw()
+	{
+		return "Field index out of bounds";
+	}
+};
+
+#define THROW(a) 
+
+class Game : public Observable
 {
 public:
 	typedef enum
 	{
-		WAITING_FOR_X = 1,
-		WAITING_FOR_Y = 2,
-		X_TURN = 3,
-		Y_TURN = 4
-	} State;
+		EMPTY,
+		CROSS,
+		CIRCLE
+	} CellState;
 
-	Game() : state(WAITING_FOR_X)
-	{}
-
-	~Game()
+	typedef enum
 	{
-		if (state != WAITING_FOR_X)
-		{
-			delete playerSockets[X];
-		}
-		if (state != WAITING_FOR_Y)
-		{
-			delete playerSockets[Y];
-		}
+		PLAY,
+		CROSS_WON,
+		CIRCLE_WON,
+		CROSS_ERROR,
+		CIRCLE_ERROR
+	} Status;
+
+	Game()
+		: status(PLAY)
+	{
+		clearField();
 	}
 
-	void processEvent(int _event, SOCKET s);
-	State getState() const;
-	
-	typedef enum
-	{
-		YOU_ARE_X = 100,
-		YOU_ARE_Y = 101,
-		YOUR_TURN = 102,
-		OTHER_PLAYERS_TURN_DATA = 103,
-	} Message;
-
+	void clearField();
+	void setCellState(int x, int y, CellState value);
+	Status getStatus() const;
+	CellState getCellState(int x, int y) const THROW(FieldIndexOutOfBounds) ;
 private:
-	typedef enum
-	{
-		NONE = -1,
-		X = 0, 
-		Y = 1
-	} Player;
-	
-	void processEvent(int _event, Player player, SOCKET s);
-	void processTurn(Player player, int x, int y);
-	void sendIDAndField(Message message, Player player, WORD w, WORD h);
-	State state;
-	BufferedSocket* playerSockets[2];
+	CellState field[H_CELLS][V_CELLS];
+	Status status;
 };
-
-extern Game game;
-

@@ -12,11 +12,12 @@
 HINSTANCE hInst;								// current instance
 TCHAR szTitle[MAX_LOADSTRING];					// The title bar text
 TCHAR szWindowClass[MAX_LOADSTRING];			// the main window class name
-HWND hWnd;
+GameServer* gserver = NULL;
+WindowPainter* wpainter = NULL;
 
 // Forward declarations of functions included in this code module:
 ATOM				MyRegisterClass(HINSTANCE hInstance);
-BOOL				InitInstance(HINSTANCE, int);
+HWND				InitInstance(HINSTANCE, int);
 LRESULT CALLBACK	WndProc(HWND, UINT, WPARAM, LPARAM);
 INT_PTR CALLBACK	About(HWND, UINT, WPARAM, LPARAM);
 
@@ -28,7 +29,10 @@ int APIENTRY _tWinMain(HINSTANCE hInstance,
 	UNREFERENCED_PARAMETER(hPrevInstance);
 	UNREFERENCED_PARAMETER(lpCmdLine);
 
-	if (setupServer() == SERVER_ERROR)
+	Game game;
+	GameServer server(game);
+	gserver = &server;
+	if (server.setup() == GameServer::RESULT_ERROR)
 	{
 		MessageBox(0, 0, 0, 0);
 	}
@@ -43,10 +47,17 @@ int APIENTRY _tWinMain(HINSTANCE hInstance,
 	MyRegisterClass(hInstance);
 
 	// Perform application initialization:
-	if (!InitInstance (hInstance, nCmdShow))
+	HWND hWnd = InitInstance (hInstance, nCmdShow);
+	if (hWnd == 0)
 	{
 		return FALSE;
 	}
+	
+	WindowPainter painter(server, hWnd);
+	wpainter = &painter;
+
+	ShowWindow(hWnd, nCmdShow);
+	UpdateWindow(hWnd);
 
 	hAccelTable = LoadAccelerators(hInstance, MAKEINTRESOURCE(IDC_TICTACTOE));
 
@@ -109,22 +120,19 @@ ATOM MyRegisterClass(HINSTANCE hInstance)
 //        In this function, we save the instance handle in a global variable and
 //        create and display the main program window.
 //
-BOOL InitInstance(HINSTANCE hInstance, int nCmdShow)
+HWND InitInstance(HINSTANCE hInstance, int nCmdShow)
 {
    hInst = hInstance; // Store instance handle in our global variable
 
-   hWnd = CreateWindow(szWindowClass, szTitle, WS_OVERLAPPEDWINDOW,
+   HWND hWnd = CreateWindow(szWindowClass, szTitle, WS_OVERLAPPEDWINDOW,
       CW_USEDEFAULT, 0, CW_USEDEFAULT, 0, NULL, NULL, hInstance, NULL);
 
    if (!hWnd)
    {
-      return FALSE;
+      return 0;
    }
 
-   ShowWindow(hWnd, nCmdShow);
-   UpdateWindow(hWnd);
-
-   return TRUE;
+   return hWnd;
 }
 
 //
@@ -146,7 +154,7 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 	switch (message)
 	{
 	case WM_CREATE:
-		if (startServer(hWnd) == SERVER_ERROR)
+		if (gserver->start(hWnd) == GameServer::RESULT_ERROR)
 		{
 			MessageBox(0, 0, 0, 0);
 		}
@@ -169,17 +177,13 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 		break;
 	case WM_PAINT:
 		hdc = BeginPaint(hWnd, &ps);
-		paintWindow(hWnd, hdc);
+		wpainter->paintWindow(hWnd, hdc);
 		EndPaint(hWnd, &ps);
 		break;
 	case SOCKET_EVENT:
-		socketEventHandler(hWnd, wParam, WSAGETSELECTEVENT(lParam), WSAGETSELECTERROR(lParam));
-		break;
-	case WM_LBUTTONDOWN:
-		handleLeftClick(hWnd, LOWORD(lParam), HIWORD(lParam));
+		gserver->handleEvent(hWnd, wParam, WSAGETSELECTEVENT(lParam), WSAGETSELECTERROR(lParam));
 		break;
 	case WM_DESTROY:
-		shutdownServer(hWnd);
 		PostQuitMessage(0);
 		break;
 	default:
