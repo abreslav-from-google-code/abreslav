@@ -48,6 +48,9 @@ public:
 	Status getStatus() const;
 	CellState getCellState(int x, int y) const THROW(FieldIndexOutOfBounds) ;
 private:
+	Status checkStatus(int xx, int yy);
+	Status checkLine(int x0, int y0, int dx, int dy);
+
 	CellState field[H_CELLS][V_CELLS];
 	Status status;
 };
