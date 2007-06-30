@@ -4,8 +4,19 @@ interface
 
 type
   TPlayer = (Cross, Circle);
+  TGameStatus = type Integer;
+
+const
+  PLAY : TGameStatus = 0;
+  CROSS_WON : TGameStatus = 1;
+  CIRCLE_WON : TGameStatus = 2;
+  CROSS_ERROR : TGameStatus = 3;
+  CIRCLE_ERROR : TGameStatus = 4;
+
+type
   TTurn = packed record
     x, y : Word;
+    status : TGameStatus;
   end;
 
 function Me : TPlayer;
@@ -89,48 +100,33 @@ begin
 end;
 
 const
+  HELLO = 99;
   YOU_ARE_X = 100;
   YOU_ARE_Y = 101;
   YOUR_TURN = 102;
   OTHERS_DATA = 103;
-  NAME = 104;
 
 function ReadTurnData(s : TSocket) : TTurn;
-var
-  command : Byte;
 begin
-  read(s, command, sizeof(Command));
-  if (command <> OTHERS_DATA) then
-    raise Exception.Create('Expectations broken');
   read(s, Result, sizeof(Result));
 end;
 
 procedure WaitForGameStart(name : String);
 var
-  command : Byte;
-  int : Integer;
+  size : Integer;
   nameString : String;
 begin
   nameString := name + '@Delphi SC v. 1.0';
   // Send name
-  command := TicTacToe.NAME;
-  send(ConnectSocket, command, sizeof(command), 0);
-  int := Length(nameString);
-  send(ConnectSocket, int, sizeof(int), 0);
-  send(ConnectSocket, PChar(nameString)^, Length(nameString), 0);
+  size := Length(nameString);
+  send(ConnectSocket, size, sizeof(size), 0);
+  send(ConnectSocket, PChar(nameString)^, size, 0);
   // Wait for partner's name
-  read(ConnectSocket, command, sizeof(command));
-  if (command <> NAME) then
-    raise Exception.Create('X expectation broken!');
-  read(ConnectSocket, int, sizeof(int));
-  SetLength(nameString, int);
-  read(ConnectSocket, PChar(nameString)^, int);
+  read(ConnectSocket, size, sizeof(size));
+  SetLength(nameString, size);
+  read(ConnectSocket, PChar(nameString)^, size);
   // Wait for turn notification
-  if (Player = Cross) then begin
-    read(ConnectSocket, command, 1);
-    if (command <> YOUR_TURN) then
-      raise Exception.Create('X expectation broken!');
-  end else begin
+  if (Player = Circle) then begin
     XFirstTurn := ReadTurnData(ConnectSocket);
   end;
 end;
@@ -138,7 +134,7 @@ end;
 var
   wsaData : TWSAData;
   clientService : sockaddr_in;
-  role : Byte;
+  command : Integer;
   res : Integer;
 initialization
   res := WSAStartup($0202, wsaData);
@@ -164,11 +160,14 @@ initialization
     raise Exception.Create( 'Failed to connect.' );
   end;
 
-  read(ConnectSocket, role, 1);
+  command := HELLO;
+  send(ConnectSocket, command, sizeof(command), 0);
+
+  read(ConnectSocket, command, sizeof(command));
   read(ConnectSocket, Width, sizeof(Width));
   read(ConnectSocket, Height, sizeof(Height));
 
-  if (role = YOU_ARE_X) then begin
+  if (command = YOU_ARE_X) then begin
     Player := Cross;
     Other := Circle;
   end else begin
@@ -177,5 +176,7 @@ initialization
   end;
 
 finalization
+  shutdown(ConnectSocket, FD_WRITE);
+  closesocket(ConnectSocket);
   WSACleanup();
 end.

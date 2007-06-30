@@ -57,11 +57,15 @@ Game::Status Game::checkLine(int x0, int y0, int dx, int dy)
 		if (field[x][y] == lastState)
 		{
 			c++;
+			if (c >= 5)
+			{
+				break;
+			}
 		}
 		else
 		{
 			lastState = field[x][y];
-			c = 0;
+			c = 1;
 		}
 	}
 
