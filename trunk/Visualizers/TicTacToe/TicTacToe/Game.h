@@ -30,11 +30,11 @@ public:
 
 	typedef enum
 	{
-		PLAY,
-		CROSS_WON,
-		CIRCLE_WON,
-		CROSS_ERROR,
-		CIRCLE_ERROR
+		PLAY = 0,
+		CROSS_WON = 1,
+		CIRCLE_WON = 2,
+		CROSS_ERROR = 3,
+		CIRCLE_ERROR = 4
 	} Status;
 
 	Game()

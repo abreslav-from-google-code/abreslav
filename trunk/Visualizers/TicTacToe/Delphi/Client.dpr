@@ -66,6 +66,7 @@ var
   mine, his : TCellState;
   myColor, hisColor : TColor;
   hisTurn : TTurn;
+  name : String;
 begin
   FillChar(field, SizeOf(field), csEmpty);
   topband := 20;
@@ -88,9 +89,11 @@ begin
 
   mColor := myColor;
 
-  DrawField;  
+  DrawField;
 
-  WaitForGameStart;
+  name := '<noname>';
+
+  WaitForGameStart(name);
   if Me = Circle then begin
     field[CrossFirstTurn.x][CrossFirstTurn.y] := csCross;
   end;
@@ -105,7 +108,7 @@ begin
       mx := GetMouseX;
       my := GetMouseY;
       x := mx div CELL_SIZE;
-      y := my div CELL_SIZE;
+      y := (my - topband) div CELL_SIZE;
       if (x >= 0) and (x < FieldWidth) and (y >= 0) and (y < FieldHeight) and
          (field[x][y] = csEmpty) then begin
         field[x][y] := mine;
