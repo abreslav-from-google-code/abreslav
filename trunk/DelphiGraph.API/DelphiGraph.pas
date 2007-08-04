@@ -293,6 +293,8 @@ function GetPictureHeight(p : TPicture) : Integer;
 
 function ReadString(Default : String = ''; Prompt : String = 'Enter your string here:') : String;
 
+{$R 'input_dialog.res'}
+
 implementation
 
 uses
