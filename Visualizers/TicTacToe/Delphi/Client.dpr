@@ -118,11 +118,27 @@ begin
         hisTurn := makeTurn(x, y);
         field[hisTurn.x][hisTurn.y] := his;
         mColor := myColor;
-        message := 'Your turn...';
+        case hisTurn.status of
+          YourTurn: message := 'Your turn...';
+          YouHaveWon: begin
+            message := 'You have won :)';
+            break;
+          end;
+          YouHaveLost : begin
+            message := 'You have lost :(';
+            break;
+          end;
+          YourMistake : begin
+            message := 'You have made a mistake and lost :(';
+            break;
+          end;
+        end;
         DrawField;
       end;
     end;
   end;
+
+  DrawField;
 
   WaitForGraph;
 end.

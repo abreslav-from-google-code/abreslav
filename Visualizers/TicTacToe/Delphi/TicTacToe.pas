@@ -4,19 +4,12 @@ interface
 
 type
   TPlayer = (Cross, Circle);
-  TGameStatus = type Integer;
-
-const
-  PLAY : TGameStatus = 0;
-  CROSS_WON : TGameStatus = 1;
-  CIRCLE_WON : TGameStatus = 2;
-  CROSS_ERROR : TGameStatus = 3;
-  CIRCLE_ERROR : TGameStatus = 4;
+  TPlayerStatus = (YourTurn, YouHaveWon, YouHaveLost, YourMistake);
 
 type
   TTurn = packed record
     x, y : Word;
-    status : TGameStatus;
+    status : TPlayerStatus;
   end;
 
 function Me : TPlayer;
@@ -106,9 +99,20 @@ const
   YOUR_TURN = 102;
   OTHERS_DATA = 103;
 
+const
+  PLAY = 1;
+  YOU_WIN = 2;
+  YOU_LOOSE = 3;
+  YOUR_ERROR = 4;
+  int2ps : array[1..4] of TPlayerStatus = (YourTurn, YouHaveWon, YouHaveLost, YourMistake);
+
 function ReadTurnData(s : TSocket) : TTurn;
+var
+  status : Integer;
 begin
-  read(s, Result, sizeof(Result));
+  read(s, Result, sizeof(Result.x) + sizeof(Result.y));
+  read(s, status, sizeof(status));
+  Result.status := int2ps[status];
 end;
 
 procedure WaitForGameStart(name : String);
