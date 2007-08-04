@@ -91,7 +91,7 @@ begin
 
   DrawField;
 
-  name := '<noname>';
+  name := ReadString('<noname>', 'Enter your name:');
 
   WaitForGameStart(name);
   if Me = Circle then begin
