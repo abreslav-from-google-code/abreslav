@@ -1299,7 +1299,7 @@ begin
           EndDialog(hDlg, 1);
           edit := GetDlgItem(hDlg, 105);
           SetLength(InputResult, GetWindowTextLength(edit));
-          GetWindowText(edit, PChar(InputResult), Length(InputResult));
+          GetWindowText(edit, PChar(InputResult), Length(InputResult) + 1);
         end;
         IDCANCEL : EndDialog(hDlg, 0);
       end;
