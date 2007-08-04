@@ -291,6 +291,8 @@ procedure DrawPicture(x, y : Integer; p : TPicture);
 function GetPictureWidth(p : TPicture) : Integer;
 function GetPictureHeight(p : TPicture) : Integer;
 
+function ReadString(Default : String = ''; Prompt : String = 'Enter your string here:') : String;
+
 implementation
 
 uses
@@ -469,7 +471,7 @@ end;
 
 procedure CreateWindow;
 const
-  aboutTitle = 'About DelphiGraph library...'; 
+  aboutTitle = 'About DelphiGraph library...';
 var
   msg : tagMsg;
   hDC : Windows.HDC;
@@ -1268,6 +1270,49 @@ end;
 function GetPictureHeight(p : TPicture) : Integer;
 begin
   Result := TBitmap(Pictures[p]).Height;
+end;
+
+////////////////////////////////////////////////////////////////////////////////
+
+var
+  InputPrompt : String = '';
+  InputResult : String = ''; 
+
+function InputDlgProc(hDlg: Windows.HWND; Msg: UINT; wParam: WPARAM; lParam: LPARAM): LRESULT; stdcall;
+const
+  IDC_EDIT = 105;
+  IDC_PROMPT = 104;
+var
+  edit : Windows.HWND;
+begin
+  Result := 1;
+  case Msg of
+    WM_INITDIALOG: begin
+      SetDlgItemText(hDlg, IDC_EDIT, PChar(InputResult));
+      SetDlgItemText(hDlg, IDC_PROMPT, PChar(InputPrompt));
+    end;
+    WM_COMMAND:
+      case wParam and $FFFF of
+        IDOK : begin
+          EndDialog(hDlg, 1);
+          edit := GetDlgItem(hDlg, 105);
+          SetLength(InputResult, GetWindowTextLength(edit));
+          GetWindowText(edit, PChar(InputResult), Length(InputResult));
+        end;
+        IDCANCEL : EndDialog(hDlg, 0);
+      end;
+    WM_CLOSE : EndDialog(hDlg, 0);
+    else Result := 0;
+  end;
+end;
+
+function ReadString;
+begin
+  InputPrompt := Prompt;
+  InputResult := Default;
+  if DialogBox(hInstance, PChar(103), hWnd, @InputDlgProc) = 1 then
+    Result := InputResult
+  else Result := Default;
 end;
 
 ////////////////////////////////////////////////////////////////////////////////
