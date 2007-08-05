@@ -76,6 +76,11 @@ public:
 	{
 		return value;
 	}
+
+	const T& getValue() const
+	{
+		return value;
+	}
 private:
 	T value;
 };

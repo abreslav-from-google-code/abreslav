@@ -66,9 +66,31 @@ public:
 		game.removeObserver(so);
 	}
 
+	void addNameObserver(Observer* so)
+	{
+		x.addObserver(so);
+		y.addObserver(so);
+	}
+
+	void removeNameObserver(Observer* so)
+	{
+		x.removeObserver(so);
+		y.removeObserver(so);
+	}
+
 	const Game& getGame() const
 	{
 		return game;
+	}
+
+	const Player& getX() const
+	{
+		return x;
+	}
+
+	const Player& getY() const
+	{
+		return y;
 	}
 	
 private:
