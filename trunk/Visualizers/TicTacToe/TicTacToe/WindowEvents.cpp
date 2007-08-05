@@ -1,5 +1,7 @@
 #include "stdafx.h"
+#include <string>
 #include "WindowEvents.h"
+#include "Player.h"
 
 #define CROSS_COLOR 0xFF0000
 #define CIRCLE_COLOR 0x0000FF
@@ -19,9 +21,8 @@ HPEN CROSS_PEN = CreatePen(PS_SOLID, 2, CROSS_COLOR);
 HPEN CIRCLE_PEN = CreatePen(PS_SOLID, 2, CIRCLE_COLOR);
 HPEN GRID_PEN = (HPEN) GetStockObject(BLACK_PEN);
 
-void WindowPainter::paintWindow(HWND hWnd, HDC hDC)
+void WindowPainter::drawGrid(HDC hDC, int cellSize)
 {
-	int cellSize = getCellSize(hWnd);
 	SelectObject(hDC, GRID_PEN);
 	for (int x = 0; x < H_CELLS + 1; x++)
 	{
@@ -33,6 +34,10 @@ void WindowPainter::paintWindow(HWND hWnd, HDC hDC)
 		MoveToEx(hDC, 0, y * cellSize, NULL);
 		LineTo(hDC, H_CELLS * cellSize, y * cellSize);
 	}
+}
+
+void WindowPainter::fillGrid(HDC hDC, int cellSize)
+{
 	for (int x = 0; x < H_CELLS; x++)
 	{
 		for (int y = 0; y < V_CELLS; y++)
@@ -56,7 +61,33 @@ void WindowPainter::paintWindow(HWND hWnd, HDC hDC)
 			}
 		}
 	}
+}
 
+void drawPlayerStatus(HDC hDC, int x, int y, int lineHeight, const std::string& message, const std::string& name)
+{
+	TextOutA(hDC, x, y, message.c_str(), (int) message.size());
+	y += lineHeight;
+	TextOutA(hDC, x, y, name.c_str(), (int) name.size());
+}
+
+void WindowPainter::drawPlayerStatuses(HDC hDC, int cellSize)
+{
+	int field = 20;
+	int x = cellSize * H_CELLS + field;
+	int y = field;
+	char* s = "X";
+	SIZE size;
+	GetTextExtentPoint32A(hDC, s, (int) strlen(s), &size);
+
+	SetTextColor(hDC, CROSS_COLOR);
+	drawPlayerStatus(hDC, x, y, size.cy, "X player:", gameServer.getX().getName());
+	SetTextColor(hDC, CIRCLE_COLOR);
+	drawPlayerStatus(hDC, x, y + size.cy * 2, size.cy, "O player:", gameServer.getY().getName());
+}
+
+void WindowPainter::drawMessageBox(HDC hDC, int cellSize)
+{
+	SetTextColor(hDC, 0);
 	char* message = NULL;
 	switch (gameServer.getState())
 	{
@@ -109,7 +140,18 @@ void WindowPainter::paintWindow(HWND hWnd, HDC hDC)
 	}
 }
 
+void WindowPainter::paintWindow(HWND hWnd, HDC hDC)
+{
+	int cellSize = getCellSize(hWnd);
+	drawGrid(hDC, cellSize);
+	fillGrid(hDC, cellSize);
+	drawPlayerStatuses(hDC, cellSize);
+	drawMessageBox(hDC, cellSize);
+}
+
 void WindowPainter::repaint()
 {
-	InvalidateRect(hWnd, NULL, TRUE);
+//	InvalidateRect(hWnd, NULL, TRUE);
+	MessageBeep(-1);
+	RedrawWindow(hWnd, NULL, NULL, RDW_ERASE | RDW_INTERNALPAINT | RDW_INVALIDATE | RDW_UPDATENOW);
 }	

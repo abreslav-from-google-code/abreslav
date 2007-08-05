@@ -93,6 +93,7 @@ void Player::step()
 		if (comm.isStringReady())
 		{
 			comm.readString(name);
+			notify();
 			state = sendOthersName();
 			if (other != NULL)
 			{

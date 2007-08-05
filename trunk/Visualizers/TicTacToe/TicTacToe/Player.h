@@ -1,10 +1,11 @@
 #pragma once
 
 #include "Communicator.h"
+#include "Observable.h"
 #include <string>
 #include "Game.h"
 
-class Player
+class Player : public Observable
 {
 public:
 	typedef enum
@@ -38,7 +39,8 @@ public:
 		: game(g),
 		  state(WAITING_FOR_FIELD),
 		  other(NULL),
-		  comm(c)
+		  comm(c),
+		  name("<unknown>")
 	{
 	}
 
@@ -51,7 +53,7 @@ public:
 		return name;
 	}
 
-	bool isNameReady()
+	bool isNameReady() const
 	{
 		return state > WAITING_FOR_NAME;
 	}
