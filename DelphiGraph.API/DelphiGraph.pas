@@ -6,7 +6,7 @@ uses
   Windows, Graphics, SysUtils;
 
 const
-  VERSION = '2.0 beta';
+  VERSION = '2.1 beta';
   ABOUT_TEXT =
     'DelphiGraph library version ' + VERSION + #13#10 +
     'Copyright (C) by A. Breslav'#13#10 +
@@ -220,6 +220,8 @@ function GetMaxY : Integer;
 procedure SetTitle(const title : String);
 function GetTitle : String;
 
+function CheckKeyState(vk : Word) : Boolean;
+procedure WaitForKey;
 function KeyPressed : Boolean;
 function CharPressed : Boolean;
 function ReadKey : Word;
@@ -678,6 +680,11 @@ end;
 
 ///////////////////////////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////////////////////////
+function CheckKeyState(vk : Word) : Boolean;
+begin
+  Result := GetKeyState(vk) and $7000 <> 0;
+end;
+
 function KeyPressed : Boolean;
 begin
   if (KeyQueue = nil) or (buffer = 0) then begin
@@ -789,8 +796,11 @@ end;
 procedure UnFreezeScreen;
 begin
   cs.Enter;
-  Frozen := false;
-  cs.Leave;
+  try
+    Frozen := false;
+  finally
+    cs.Leave;
+  end;
   Repaint;
 end;
 
