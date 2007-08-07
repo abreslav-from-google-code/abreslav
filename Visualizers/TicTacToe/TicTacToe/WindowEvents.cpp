@@ -151,7 +151,7 @@ void WindowPainter::paintWindow(HWND hWnd, HDC hDC)
 
 void WindowPainter::repaint()
 {
-//	InvalidateRect(hWnd, NULL, TRUE);
-	MessageBeep(-1);
-	RedrawWindow(hWnd, NULL, NULL, RDW_ERASE | RDW_INTERNALPAINT | RDW_INVALIDATE | RDW_UPDATENOW);
+	InvalidateRect(hWnd, NULL, TRUE);
+//	MessageBeep(-1);
+//	RedrawWindow(hWnd, NULL, NULL, RDW_ERASE | RDW_INTERNALPAINT | RDW_INVALIDATE | RDW_UPDATENOW);
 }	
