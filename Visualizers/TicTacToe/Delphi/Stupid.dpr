@@ -3,13 +3,11 @@ program Stupid;
 uses
   SysUtils,
   DelphiGraph,
-  TicTacToe in 'TicTacToe.pas';
-
-type
-  TCellState = (csEmpty, csCross, csCircle);
+  Math,
+  TicTacToe in 'TicTacToe.pas',
+  StupidThinker in 'StupidThinker.pas';
 
 var
-  field : array[0..100, 0..100] of TCellState;
   message : String;
 
 procedure DrawField;
@@ -29,12 +27,43 @@ begin
   TextOut((GetMaxX - TextWidth(message)) div 2, (h + GetMaxY - TextHeight(message)) div 2, message);
 end;
 
+procedure PlayGame;
 var
-  mine, his : TCellState;
   hisTurn : TTurn;
+  x, y : Integer;
 begin
-  FillChar(field, SizeOf(field), csEmpty);
+  DrawField;
 
+  Randomize;
+  x := Random(FieldWidth);
+  y := Random(FieldHeight);
+
+  while true do begin
+    Decide(x, y);
+    RecordAndCalculate(x, y, mine);
+    hisTurn := makeTurn(x, y);
+    case hisTurn.status of
+      YourTurn: message := 'Your turn...';
+      YouHaveWon: begin
+        message := 'I have won :)';
+        break;
+      end;
+      YouHaveLost : begin
+        message := 'I have lost :(';
+        break;
+      end;
+      YourMistake : begin
+        message := 'I''m too stupid to play this game!';
+        break;
+      end;
+    end;
+
+    RecordAndCalculate(hisTurn.x, hisTurn.y, his);
+    DrawField;
+  end;
+end;
+
+begin
   InitGraph(450, 150);
 
   if Me = Cross then begin
@@ -51,32 +80,11 @@ begin
 
   WaitForGameStart('Stupid');
   if Me = Circle then begin
-    field[CrossFirstTurn.x][CrossFirstTurn.y] := csCross;
+    RecordAndCalculate(CrossFirstTurn.x, CrossFirstTurn.y, his);
   end;
 
-  DrawField;
-
-  while true do begin
-    hisTurn := makeTurn(0, 0);
-    field[hisTurn.x][hisTurn.y] := his;
-    case hisTurn.status of
-      YourTurn: message := 'Your turn...';
-      YouHaveWon: begin
-        message := 'I have won :)';
-        break;
-      end;
-      YouHaveLost : begin
-        message := 'I have lost :(';
-        break;
-      end;
-      YourMistake : begin
-        message := 'I''m too stupid to play this game!';
-        break;
-      end;
-    end;
-    DrawField;
-  end;
-
+  PlayGame;
+  
   DrawField;
 
   WaitForGraph;
