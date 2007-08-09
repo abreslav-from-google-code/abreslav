@@ -120,7 +120,7 @@ var
   size : Integer;
   nameString : String;
 begin
-  nameString := name + '@Delphi SC v. 1.0';
+  nameString := name + '@DSC1.0';
   // Send name
   size := Length(nameString);
   send(ConnectSocket, size, sizeof(size), 0);
