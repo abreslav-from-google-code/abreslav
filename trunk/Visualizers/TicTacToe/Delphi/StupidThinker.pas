@@ -100,18 +100,21 @@ begin
     Result := 0;
     Exit;
   end;
+  Result := 0;
   if state = mine then begin
-    if (len = 3) and open then
-      Result := 8
-    else if len = 4 then
-      Result := 12
-    else Result := 2 * len;
+    case len of
+      1 : Result := 5;
+      2 : Result := 11;
+      3 : Result := 17 + ord(open) * 5;
+      4 : Result := 100;
+    end;
   end else begin
-    if (len = 3) and open then
-      Result := 9
-    else if (len = 4) and not open then
-      Result := 10
-    else Result := len;
+    case len of
+      1 : Result := 3;
+      2 : Result := 8;
+      3 : Result := 11 + ord(open) * 10;
+      4 : Result := 50;
+    end;
   end;
 end;
 
