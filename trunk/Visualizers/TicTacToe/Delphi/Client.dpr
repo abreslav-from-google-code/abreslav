@@ -23,6 +23,7 @@ procedure DrawField;
 var
   l, t, r, b, x, y : Integer;
 begin
+  FreezeScreen;
   ClrScr;
   SetFontStyle([fsBold]);
   SetFontColor(mColor);
@@ -59,6 +60,7 @@ begin
       end;
     end;
   end;
+  UnFreezeScreen;
 end;
 
 var
