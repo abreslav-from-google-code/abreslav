@@ -55,7 +55,7 @@ void Buffer::write(const void* buf, size_t len)
 {
 	if (end + len - 1 >= BUFSIZE)
 	{
-		throw "panic";
+		throw "Written data exceeds buffer size";
 	}
 
 	for (size_t i = 0; i < len; i++)
@@ -69,7 +69,7 @@ void Buffer::peek(void* buf, size_t len)
 {
 	if (len > getSize())
 	{
-		throw "panic";
+		throw "Attempt to read more data than available";
 	}
 
 	for (size_t i = 0; i < len; i++)
@@ -103,7 +103,7 @@ void Buffer::append(size_t count)
 	{
 		if (end > BUFSIZE)
 		{
-			throw "panic";
+			throw "Stored data exceeds buffer size";
 		}
 		end += count;
 	}

@@ -101,7 +101,7 @@ void GameServer::processEvent(int _event, SOCKET s)
 			state = X_TURN;
 			break;
 		default:
-			throw "panic";
+			throw "Impossible state";
 		}
 		break;
 	case FD_READ:
@@ -117,7 +117,7 @@ void GameServer::processEvent(int _event, SOCKET s)
 		}
 		break;
 	default:
-		throw "panic";
+		throw "Unexpected event";
 	}
 }
 
@@ -138,6 +138,6 @@ void GameServer::processEvent(int _event, Player& p, BufferedSocket& bs)
 //		playerSockets[player] = NULL;
 		break;
 	default:
-		throw "panic";
+		throw "Unexpected event";
 	}
 }

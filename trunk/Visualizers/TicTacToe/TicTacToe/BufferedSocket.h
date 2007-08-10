@@ -62,7 +62,7 @@ public:
 	{
 		if (socket != SOCKET_ERROR)
 		{
-			throw "panic";
+			throw "Invalid socket handle";
 		}
 		socket = s;
 	}
