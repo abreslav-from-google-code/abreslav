@@ -81,7 +81,7 @@ void Player::step()
 		{
 			if (comm.read<Message>() != HELLO)
 			{
-				throw "panic";
+				throw "Protocol expectation broken";
 			}
 			comm.write(getYouAreMessage());
 			comm.write(fWidth);
@@ -131,6 +131,6 @@ void Player::step()
 	case LOST:
 		break;
 	default:
-		throw "panic";
+		throw "Impossible state";
 	}
 }
