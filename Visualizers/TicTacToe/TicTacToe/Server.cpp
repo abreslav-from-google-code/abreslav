@@ -134,8 +134,8 @@ void GameServer::processEvent(int _event, Player& p, BufferedSocket& bs)
 		p.step();
 		break;
 	case FD_CLOSE:
-//		delete playerSockets[player];
-//		playerSockets[player] = NULL;
+		game.playerSurrendered(p.getMyCellState());
+		p.surrender();
 		break;
 	default:
 		throw "Unexpected event";

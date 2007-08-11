@@ -101,6 +101,15 @@ begin
   end;
 
   mColor := myColor;
+
+  // In case the other has disconnected too early
+  if CrossFirstTurn.status = YouHaveWon then begin
+    message := 'You have won :)';
+    DrawField;
+    WaitForGraph;
+    Exit;
+  end;
+  
   message := 'Your turn...';
   DrawField;
 

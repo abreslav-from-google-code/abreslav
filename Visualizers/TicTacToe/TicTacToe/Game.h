@@ -47,10 +47,12 @@ public:
 	void setCellState(int x, int y, CellState value);
 	Status getStatus() const;
 	CellState getCellState(int x, int y) const THROW(FieldIndexOutOfBounds);
+	void playerSurrendered(CellState s);
 private:
 	Status checkStatus(int xx, int yy);
 	Status checkLine(int x0, int y0, int dx, int dy);
 
 	CellState field[H_CELLS][V_CELLS];
 	Status status;
+	Status surrenderStatus;
 };

@@ -61,15 +61,17 @@ public:
 	void setOther(Player* o);
 	void setFieldSize(WORD w, WORD h);
 	void step();
+	void surrender();
+	virtual Game::CellState getMyCellState() const = 0 ;
 protected:
-	virtual Message getYouAreMessage() = 0;
-	virtual State getFirstGameState() = 0;
-	virtual Game::CellState getMyCellState() = 0;
-	virtual bool isWonStatus(Game::Status status) = 0;
-	virtual bool isLostStatus(Game::Status status) = 0;
-	virtual bool isErrorStatus(Game::Status status) = 0;
+	void winTechnically();
+	virtual Message getYouAreMessage() const = 0;
+	virtual State getFirstGameState() const = 0;
+	virtual bool isWonStatus(Game::Status status) const = 0;
+	virtual bool isLostStatus(Game::Status status) const = 0;
+	virtual bool isErrorStatus(Game::Status status) const = 0;
 
-	bool isPlayStatus(Game::Status status)
+	bool isPlayStatus(Game::Status status) const
 	{
 		return 
 			!isWonStatus(status) 
@@ -130,32 +132,32 @@ public:
 	{
 	}
 protected:
-	virtual Player::Message getYouAreMessage()
+	virtual Player::Message getYouAreMessage() const
 	{
 		return MESSAGE;
 	}
 
-	virtual Player::State getFirstGameState()
+	virtual Player::State getFirstGameState() const
 	{
 		return STATE;
 	}
 
-	virtual Game::CellState getMyCellState()
+	virtual Game::CellState getMyCellState() const 
 	{
 		return CELL_STATE;
 	}
 
-	virtual bool isWonStatus(Game::Status status)
+	virtual bool isWonStatus(Game::Status status) const
 	{
 		return WON_STATUS::is(status);
 	}
 
-	virtual bool isLostStatus(Game::Status status)
+	virtual bool isLostStatus(Game::Status status) const
 	{
 		return LOST_STATUS::is(status);
 	}
 
-	virtual bool isErrorStatus(Game::Status status)
+	virtual bool isErrorStatus(Game::Status status) const
 	{
 		return ERROR_STATUS::is(status);
 	}

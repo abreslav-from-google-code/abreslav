@@ -7,6 +7,7 @@ const int line = 5;
 void Game::clearField()
 {
 	status = PLAY;
+	surrenderStatus = PLAY;
 	for (int x = 0; x < H_CELLS; x++)
 	{
 		for (int y = 0; y < V_CELLS; y++)
@@ -17,9 +18,18 @@ void Game::clearField()
 	notify();
 }
 
+void Game::playerSurrendered(CellState s)
+{
+	if (surrenderStatus == PLAY)
+	{
+		surrenderStatus = (s == CIRCLE) ? CROSS_WON : CIRCLE_WON;
+		notify();
+	}
+}
+
 Game::Status Game::getStatus() const
 {
-	return status;
+	return (surrenderStatus == PLAY) ? status : surrenderStatus;
 }
 
 Game::Status Game::checkStatus(int xx, int yy)
