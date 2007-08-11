@@ -76,6 +76,7 @@ void Player::sendResultMessage(Player::StatusMessage s)
 		comm.write(fHeight);
 		comm.write(s);
 		break;
+	case WAITING_FOR_FIELD:
 	case WON:
 	case LOST:
 		break;
