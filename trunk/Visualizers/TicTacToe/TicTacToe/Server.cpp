@@ -54,7 +54,6 @@ GameServer::Result GameServer::start(HWND hWnd)
 	{
 		return RESULT_ERROR;
 	}
-
 	if (WSAAsyncSelect(listenSocket, 
 		hWnd, SOCKET_EVENT, 
 		FD_READ | FD_WRITE | FD_ACCEPT | FD_CLOSE) != 0)
@@ -64,11 +63,15 @@ GameServer::Result GameServer::start(HWND hWnd)
 	return RESULT_OK;
 }
 
-GameServer::Result GameServer::restart()
+GameServer::Result GameServer::restart(HWND hWnd)
 {
 	x.gameRestarted();
 	y.gameRestarted();
 	game.clearField();
+	state = WAITING_FOR_X;
+
+	setup();
+	start(hWnd);
 	return RESULT_OK;
 }
 

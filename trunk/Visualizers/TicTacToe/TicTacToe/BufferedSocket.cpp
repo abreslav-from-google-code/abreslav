@@ -22,7 +22,11 @@ void BufferedSocket::close()
 	WSAAsyncSelect(socket, 0, 0, 0);	
 	ioctlsocket(socket, FIONBIO, 0);	
 	shutdown(socket, SD_SEND);
-	closesocket(socket);		
+	closesocket(socket);
+
+	rBuf.clear();
+	wBuf.clear();
+	socket = SOCKET_ERROR;
 }
 
 bool BufferedSocket::areBytesReady(size_t size)
