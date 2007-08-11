@@ -62,9 +62,10 @@ public:
 	void setFieldSize(WORD w, WORD h);
 	void step();
 	void surrender();
+	void gameRestarted();
 	virtual Game::CellState getMyCellState() const = 0 ;
 protected:
-	void winTechnically();
+	void sendResultMessage(StatusMessage s);
 	virtual Message getYouAreMessage() const = 0;
 	virtual State getFirstGameState() const = 0;
 	virtual bool isWonStatus(Game::Status status) const = 0;

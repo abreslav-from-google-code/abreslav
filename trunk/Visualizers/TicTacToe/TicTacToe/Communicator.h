@@ -48,6 +48,7 @@ public:
 	void writeString(const std::string& s);
 	bool isStringReady();
 	void readString(std::string& s) UC_THROW(BufferUnderflowException);
+	virtual void close() = 0;
 protected:
 	virtual void write(const void* buffer, size_t len) = 0;
 	virtual void read(void* buffer, size_t len) = 0;

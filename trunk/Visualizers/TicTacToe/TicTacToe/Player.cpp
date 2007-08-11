@@ -45,24 +45,30 @@ void Player::opponentTurn(WORD x, WORD y, Game::Status s)
 	state = processGameStatus(s, WAITING_FOR_TURN_DATA);
 }
 
+void Player::gameRestarted()
+{
+	sendResultMessage(YOU_LOOSE);
+	comm.close();
+}
+
 void Player::surrender()
 {
 	if (other != NULL)
 	{
-		other->winTechnically();
+		other->sendResultMessage(YOU_WIN);
 	}
 }
 
-void Player::winTechnically()
+void Player::sendResultMessage(Player::StatusMessage s)
 {
 	switch (state) 
 	{
+	case WAITING_FOR_TURN_DATA:
 	case WAITING_FOR_OTHERS_TURN_DATA:
 		comm.write(fWidth);
 		comm.write(fHeight);
-		comm.write(YOU_WIN);
+		comm.write(s);
 		break;
-	case WAITING_FOR_TURN_DATA:
 	case WON:
 	case LOST:
 		break;

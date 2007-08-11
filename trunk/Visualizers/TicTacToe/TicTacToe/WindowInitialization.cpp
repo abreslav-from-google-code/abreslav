@@ -168,6 +168,9 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 		case IDM_ABOUT:
 			DialogBox(hInst, MAKEINTRESOURCE(IDD_ABOUTBOX), hWnd, About);
 			break;
+		case IDM_RESTART:
+			gserver->restart();
+			break;
 		case IDM_EXIT:
 			DestroyWindow(hWnd);
 			break;

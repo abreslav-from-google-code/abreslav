@@ -64,6 +64,14 @@ GameServer::Result GameServer::start(HWND hWnd)
 	return RESULT_OK;
 }
 
+GameServer::Result GameServer::restart()
+{
+	x.gameRestarted();
+	y.gameRestarted();
+	game.clearField();
+	return RESULT_OK;
+}
+
 void GameServer::handleEvent(HWND hWnd, SOCKET s, int _event, int error)
 {
 	processEvent(_event, s);
