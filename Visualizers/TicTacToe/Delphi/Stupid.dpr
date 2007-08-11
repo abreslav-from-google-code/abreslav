@@ -78,12 +78,13 @@ begin
 
   first := true;
   while true do begin
+  {
     while true do begin
       WaitForMouseEvent;
       if MousePressed then
         break;
     end;
-
+   }
     if first and (mine = csCross) then begin
       Randomize;
       x := Random(FieldWidth div 2) + FieldWidth div 4;

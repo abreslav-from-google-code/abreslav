@@ -3,7 +3,7 @@
 
 #define SOCKET_EVENT WM_USER + 1
 
-#include "BufferedSocket.h"
+#include "AsyncSocket.h"
 #include "Observable.h"
 #include "Player.h"
 
@@ -97,14 +97,15 @@ public:
 private:
 	void stopListening();
 	void processEvent(int _event, SOCKET s);
-	void initPlayer(Player& p, BufferedSocket& bs, SOCKET s);
-	void processEvent(int _event, Player& p, BufferedSocket& bs);
+	void initPlayer(Player& p, AsyncSocket& bs, SOCKET s);
+	void processEvent(int _event, Player& p, AsyncSocket& bs);
 
 	Game& game;
+	HWND hWnd;
 	SOCKET listenSocket;
 	ObservableProperty<State> state;
-	BufferedSocket xSocket;
-	BufferedSocket ySocket;
+	AsyncSocket xSocket;
+	AsyncSocket ySocket;
 	CrossPlayer x;
 	CirclePlayer y;
 };
