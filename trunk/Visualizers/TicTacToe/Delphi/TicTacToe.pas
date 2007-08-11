@@ -88,7 +88,7 @@ begin
     if (r <> SOCKET_ERROR) then
       rd := rd + r
     else
-      raise Exception.Create('ERROR reading data');
+      raise Exception.Create('ERROR reading data: ' + IntToStr(WSAGetLastError()));
   end;
 end;
 

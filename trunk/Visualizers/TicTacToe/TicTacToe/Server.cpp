@@ -47,6 +47,7 @@ GameServer::Result GameServer::setup()
 
 GameServer::Result GameServer::start(HWND hWnd)
 {
+	this->hWnd = hWnd;
 	//----------------------
 	// Listen for incoming connection requests 
 	// on the created socket
@@ -87,9 +88,9 @@ void GameServer::stopListening()
 	closesocket(listenSocket);
 }
 
-void GameServer::initPlayer(Player& p, BufferedSocket& bs, SOCKET s)
+void GameServer::initPlayer(Player& p, AsyncSocket& bs, SOCKET s)
 {
-	bs.setSocket(s);
+	bs.setSocket(s, hWnd);
 	p.setFieldSize(H_CELLS, V_CELLS);
 }
 
@@ -121,10 +122,14 @@ void GameServer::processEvent(int _event, SOCKET s)
 		if (xSocket.isMine(s))
 		{
 			processEvent(_event, x, xSocket);
-		}
-		if (ySocket.isMine(s))
+		} 
+		else if (ySocket.isMine(s))
 		{
 			processEvent(_event, y, ySocket);
+		}
+		else
+		{
+			closesocket(s);
 		}
 		break;
 	default:
@@ -132,7 +137,7 @@ void GameServer::processEvent(int _event, SOCKET s)
 	}
 }
 
-void GameServer::processEvent(int _event, Player& p, BufferedSocket& bs)
+void GameServer::processEvent(int _event, Player& p, AsyncSocket& bs)
 {
 	switch (_event)
 	{

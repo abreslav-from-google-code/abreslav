@@ -48,13 +48,14 @@ void Player::opponentTurn(WORD x, WORD y, Game::Status s)
 void Player::gameRestarted()
 {
 	sendResultMessage(YOU_LOOSE);
-	comm.close();
 
 	state = WAITING_FOR_FIELD;
-	name = "";
+	name = "<unknown>";
 	other = NULL;
 	fWidth = 0;
 	fHeight = 0;
+
+	comm.close();
 }
 
 void Player::surrender()
