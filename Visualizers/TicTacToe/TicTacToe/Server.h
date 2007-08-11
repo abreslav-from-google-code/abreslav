@@ -37,6 +37,7 @@ public:
 		WSACleanup();
 	}
 
+	Result restart();
 	Result setup();
 	Result start(HWND hWnd);
 	void handleEvent(HWND hWnd, SOCKET s, int _event, int error);

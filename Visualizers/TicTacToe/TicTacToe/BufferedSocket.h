@@ -52,10 +52,7 @@ public:
 
 	virtual ~BufferedSocket()
 	{
-		WSAAsyncSelect(socket, 0, 0, 0);	
-		ioctlsocket(socket, FIONBIO, 0);	
-		shutdown(socket, SD_SEND);
-		closesocket(socket);	
+		close();
 	}
 
 	void setSocket(SOCKET s)
@@ -78,6 +75,7 @@ protected:
 	virtual void write(const void* buffer, size_t len);
 	virtual void read(void* buffer, size_t len);
 	virtual void peek(void* buffer, size_t len);
+	virtual void close();
 private:
 	SOCKET socket;
 

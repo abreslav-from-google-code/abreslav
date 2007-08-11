@@ -37,6 +37,7 @@ IDC_TICTACTOE MENU
 BEGIN
     POPUP "&File"
     BEGIN
+        MENUITEM "R&estart",             IDM_RESTART
         MENUITEM "E&xit",                IDM_EXIT
     END
     POPUP "&Help"

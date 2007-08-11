@@ -17,6 +17,14 @@ void BufferedSocket::peek(void* buffer, size_t len)
 	rBuf.peek(buffer, len);
 }
 
+void BufferedSocket::close()
+{
+	WSAAsyncSelect(socket, 0, 0, 0);	
+	ioctlsocket(socket, FIONBIO, 0);	
+	shutdown(socket, SD_SEND);
+	closesocket(socket);		
+}
+
 bool BufferedSocket::areBytesReady(size_t size)
 {
 	return size <= rBuf.getSize();
