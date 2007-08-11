@@ -19,13 +19,15 @@ var
 procedure DrawField;
 var
   l, t, r, b, x, y : Integer;
+  c : TColor;
   s : String;
 begin
   FreezeScreen;
+  SetBrushColor(clWhite);
   ClrScr;
-//  SetFontStyle([fsBold]);
-//  SetFontColor(mColor);
-//  TextOut((GetMaxX - TextWidth(message)) div 2, (topband - TextHeight(message)) div 2, message);
+  SetFontStyle([fsBold]);
+  SetFontColor(clBlack);
+  TextOut((GetMaxX - TextWidth(message)) div 2, (topband - TextHeight(message)) div 2, message);
   SetPenWidth(1);
   SetPenColor(clBlack);
   for x := 0 to FieldWidth - 1 do begin
@@ -37,6 +39,7 @@ begin
     LineTo(FieldWidth * CELL_SIZE, topband + y * CELL_SIZE);
   end;
   SetPenWidth(2);
+  SetFontStyle([]);
   for x := 0 to FieldWidth - 1 do begin
     l := x * CELL_SIZE;
     r := l + CELL_SIZE;
@@ -53,9 +56,15 @@ begin
         end;
         csCircle : begin
           SetPenColor(CIRCLE_COLOR);
+          SetBrushColor(clWhite);
           Ellipse(l, t, r, b);
         end;
         else begin
+          SetPenStyle(psClear);
+          c := Round(255 * getCellPenalty(x, y) / 50) mod 255;
+          SetBrushColor(RGB(255, 255 - c, 255 - c));
+          Rectangle(l + 1, t + 1, r + 1, b + 1);
+          SetPenStyle(psSolid);
           s := IntToStr(getCellPenalty(x, y));
           TextOut(
             l + (CELL_SIZE - TextWidth(s)) div 2,
@@ -102,7 +111,7 @@ begin
     DrawField;
 
     case hisTurn.status of
-      YourTurn: message := 'Your turn...';
+      YourTurn: message := 'Playing...';
       YouHaveWon: begin
         message := 'I have won :)';
         break;

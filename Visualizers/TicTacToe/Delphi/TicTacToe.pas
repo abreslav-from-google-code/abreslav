@@ -147,6 +147,7 @@ initialization
 
   ConnectSocket := socket(AF_INET, SOCK_STREAM, IPPROTO_TCP);
   if (ConnectSocket = INVALID_SOCKET) then begin
+    WSACleanup();
     raise Exception.Create('Error at socket(): '{, WSAGetLastError()});
   end;
 
@@ -161,7 +162,9 @@ initialization
   //----------------------
   // Connect to server.
   if ( connect( ConnectSocket, clientService, sizeof(clientService) ) = SOCKET_ERROR) then begin
-    raise Exception.Create( 'Failed to connect.' );
+    closesocket(ConnectSocket);
+    WSACleanup();
+    raise Exception.Create( 'Failed to connect: ' + IntToStr(WSAGetLastError()) );
   end;
 
   command := HELLO;

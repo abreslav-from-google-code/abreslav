@@ -39,6 +39,7 @@ GameServer::Result GameServer::setup()
 		sizeof(service)) == SOCKET_ERROR) 
 	{
 			closesocket(listenSocket);
+			WSACleanup();
 			return RESULT_ERROR;
 	}
 
@@ -65,13 +66,17 @@ GameServer::Result GameServer::start(HWND hWnd)
 
 GameServer::Result GameServer::restart(HWND hWnd)
 {
+	stopListening();
 	x.gameRestarted();
 	y.gameRestarted();
 	game.clearField();
 	state = WAITING_FOR_X;
 
-	setup();
-	start(hWnd);
+	WSACleanup();
+	if (setup() != RESULT_OK)
+		throw "panic";
+	if (start(hWnd) != RESULT_OK)
+		throw "panic";
 	return RESULT_OK;
 }
 
@@ -82,8 +87,6 @@ void GameServer::handleEvent(HWND hWnd, SOCKET s, int _event, int error)
 
 void GameServer::stopListening()
 {
-	WSAAsyncSelect(listenSocket, 0, 0, 0);
-	ioctlsocket(listenSocket, FIONBIO, 0);
 	closesocket(listenSocket);
 }
 
