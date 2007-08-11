@@ -45,6 +45,33 @@ void Player::opponentTurn(WORD x, WORD y, Game::Status s)
 	state = processGameStatus(s, WAITING_FOR_TURN_DATA);
 }
 
+void Player::surrender()
+{
+	if (other != NULL)
+	{
+		other->winTechnically();
+	}
+}
+
+void Player::winTechnically()
+{
+	switch (state) 
+	{
+	case WAITING_FOR_OTHERS_TURN_DATA:
+		comm.write(fWidth);
+		comm.write(fHeight);
+		comm.write(YOU_WIN);
+		break;
+	case WAITING_FOR_TURN_DATA:
+	case WON:
+	case LOST:
+		break;
+	default:
+		throw "Unsupported behaviour";
+	}
+}
+
+
 Player::State Player::processGameStatus(Game::Status s, Player::State playState)
 {
 	if (isWonStatus(s))
