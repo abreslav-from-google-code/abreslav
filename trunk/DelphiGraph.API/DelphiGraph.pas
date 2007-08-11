@@ -247,6 +247,8 @@ function TextWidth(const Text : String) : Integer;
 function TextHeight(const Text : String) : Integer;
 procedure TextOut(X, Y : Integer; const S : String);
 
+function RGB(r, g, b : Byte) : TColor;
+
 procedure SetPenColor(c : TColor);
 procedure SetPenWidth(w : Integer);
 procedure SetPenStyle(s : TPenStyle);
@@ -320,7 +322,7 @@ var
   mouseEvent : TEvent = nil;
   Frozen : Boolean = false;
   ks : TKeyboardState;
-  KeyQueue : TObjectQueue;
+  KeyQueue : TObjectQueue = nil;
   IsLButtonDown : Boolean = false;
   MouseX : Integer = 0;
   MouseY : Integer = 0;
@@ -948,6 +950,11 @@ const
 procedure SetPen;
 begin
   SelectAndDelete(CreatePen(PenStyles[penStyle], penWidth, penColor));
+end;
+
+function RGB(r, g, b : Byte) : TColor;
+begin
+  Result := r or g shl 8 or b shl 16;
 end;
 
 procedure SetPenColor(c : TColor);
