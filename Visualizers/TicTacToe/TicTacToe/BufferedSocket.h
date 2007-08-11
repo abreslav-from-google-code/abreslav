@@ -59,7 +59,7 @@ public:
 	{
 		if (socket != SOCKET_ERROR)
 		{
-			throw "Invalid socket handle";
+			throw "Socket already assigned";
 		}
 		socket = s;
 	}

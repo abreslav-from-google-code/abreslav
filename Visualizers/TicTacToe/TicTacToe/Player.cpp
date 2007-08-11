@@ -49,6 +49,12 @@ void Player::gameRestarted()
 {
 	sendResultMessage(YOU_LOOSE);
 	comm.close();
+
+	state = WAITING_FOR_FIELD;
+	name = "";
+	other = NULL;
+	fWidth = 0;
+	fHeight = 0;
 }
 
 void Player::surrender()
