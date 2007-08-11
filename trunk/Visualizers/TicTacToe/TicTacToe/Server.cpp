@@ -47,7 +47,6 @@ GameServer::Result GameServer::setup()
 
 GameServer::Result GameServer::start(HWND hWnd)
 {
-	this->hWnd = hWnd;
 	//----------------------
 	// Listen for incoming connection requests 
 	// on the created socket
@@ -90,7 +89,7 @@ void GameServer::stopListening()
 
 void GameServer::initPlayer(Player& p, AsyncSocket& bs, SOCKET s)
 {
-	bs.setSocket(s, hWnd);
+	bs.setSocket(s);
 	p.setFieldSize(H_CELLS, V_CELLS);
 }
 

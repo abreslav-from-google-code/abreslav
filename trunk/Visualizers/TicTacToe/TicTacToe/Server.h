@@ -101,7 +101,6 @@ private:
 	void processEvent(int _event, Player& p, AsyncSocket& bs);
 
 	Game& game;
-	HWND hWnd;
 	SOCKET listenSocket;
 	ObservableProperty<State> state;
 	AsyncSocket xSocket;
