@@ -9,6 +9,7 @@ var
   mine, his : TCellState;
 
 procedure RecordAndCalculate(x, y : Integer; cell : TCellState);
+procedure DecideRand(var x, y : Integer);
 procedure Decide(var x, y : Integer);
 function getCell(x, y : Integer) : TCellState;
 function getCellPenalty(x, y : Integer) : Integer;
@@ -18,9 +19,12 @@ implementation
 uses
   Math, TicTacToe;
 
+const
+  MAX_SIZE = 100;
+
 var
-  field : array[0..100, 0..100] of TCellState;
-  penalties : array[0..100, 0..100] of Integer;
+  field : array[0..MAX_SIZE-1, 0..MAX_SIZE-1] of TCellState;
+  penalties : array[0..MAX_SIZE-1, 0..MAX_SIZE-1] of Integer;
 
 procedure Decide(var x, y : Integer);
 var
@@ -34,6 +38,42 @@ begin
         x := i;
         y := j;
       end;
+end;
+
+procedure DecideRand(var x, y : Integer);
+var
+  i, j : Integer;
+  mx, my : array[0..MAX_SIZE-1] of Integer;
+  max, c : Integer;
+  overf : Boolean;
+begin
+  max := penalties[0, 0];
+  mx[0] := 0;
+  my[0] := 0;
+  c := 1;
+  overf := false;
+  for i := 0 to FieldWidth - 1 do
+    for j := 0 to FieldHeight - 1 do
+      if max < penalties[i, j] then begin
+        max := penalties[i, j];
+        c := 1;
+        overf := false;
+        mx[0] := i;
+        my[0] := j;
+      end else if max = penalties[i, j] then begin
+        mx[c] := i;
+        my[c] := j;
+        if c = High(mx) then begin
+          overf := true;
+        end;
+        c := (c + 1) mod High(mx);
+      end;
+  if overf then
+    c := High(mx) - Low(mx) + 1;
+  Randomize;
+  max := Random(c);
+  x := mx[max];
+  y := my[max];
 end;
 
 procedure FindAffectedLines(x, y, dx, dy : Integer); forward;
