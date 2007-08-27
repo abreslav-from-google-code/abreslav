@@ -146,7 +146,7 @@ begin
   SetFontName('Arial');
   SetFontSize(8);
 
-  if Me = Cross then begin
+  if Me = csCross then begin
     mine := csCross;
     his := csCircle;
     message := 'I''m the first! My luck!';
@@ -159,7 +159,7 @@ begin
   DrawField;
 
   WaitForGameStart('Stupid');
-  if Me = Circle then begin
+  if Me = csCircle then begin
     RecordAndCalculate(CrossFirstTurn.x, CrossFirstTurn.y, his);
   end;
 
