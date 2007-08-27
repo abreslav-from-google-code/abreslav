@@ -12,7 +12,8 @@ const
   CELL_SIZE = 16;
   CROSS_COLOR = clBlue;
   CIRCLE_COLOR = clRed;
-  
+  PR_NAME = 'TicTacToe Delphi client v. 1.0';
+
 var
   field : array[0..100, 0..100] of TCellState;
   topband : Integer;
@@ -74,6 +75,7 @@ begin
   topband := 20;
 
   InitGraph(FieldWidth * CELL_SIZE, FieldHeight * CELL_SIZE + topband);
+  SetTitle(PR_NAME);
 
   if Me = Cross then begin
     mine := csCross;
@@ -94,6 +96,7 @@ begin
   DrawField;
 
   name := ReadString('<noname>', 'Enter your name:');
+  SetTitle(name + ' - ' + PR_NAME);
 
   WaitForGameStart(name);
   if Me = Circle then begin
