@@ -108,7 +108,6 @@ begin
     first := false;
     RecordAndCalculate(x, y, mine);
     DrawField;
-    Sleep(Delay div 10);
 
     hisTurn := makeTurn(x, y);
 
