@@ -133,6 +133,7 @@ end;
 
 begin
   InitGraph(FieldWidth * CELL_SIZE, FieldHeight * CELL_SIZE + topband);
+  SetTitle('Stupid :)');
   SetFontName('Arial');
   SetFontSize(8);
 
