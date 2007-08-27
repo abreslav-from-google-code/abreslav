@@ -15,6 +15,7 @@ const
 
 var
   message : String;
+  Delay : Integer = 500;
 
 procedure DrawField;
 var
@@ -107,11 +108,13 @@ begin
     first := false;
     RecordAndCalculate(x, y, mine);
     DrawField;
+    Sleep(Delay div 10);
 
     hisTurn := makeTurn(x, y);
 
     RecordAndCalculate(hisTurn.x, hisTurn.y, his);
     DrawField;
+    Sleep(Delay);
 
     case hisTurn.status of
       YourTurn: message := 'Playing...';
@@ -132,6 +135,13 @@ begin
 end;
 
 begin
+  if ParamCount > 0 then
+    try
+      Delay := StrToInt(ParamStr(1));
+    except
+
+    end;
+
   InitGraph(FieldWidth * CELL_SIZE, FieldHeight * CELL_SIZE + topband);
   SetTitle('Stupid :)');
   SetFontName('Arial');
