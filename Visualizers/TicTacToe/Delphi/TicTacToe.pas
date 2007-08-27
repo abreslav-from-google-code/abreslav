@@ -3,7 +3,7 @@ unit TicTacToe;
 interface
 
 type
-  TPlayer = (Cross, Circle);
+  TCellState = (csEmpty, csCross, csCircle);
   TPlayerStatus = (YourTurn, YouHaveWon, YouHaveLost, YourMistake);
 
 type
@@ -12,8 +12,8 @@ type
     status : TPlayerStatus;
   end;
 
-function Me : TPlayer;
-function He : TPlayer;
+function Me : TCellState;
+function He : TCellState;
 function FieldHeight : Word;
 function FieldWidth : Word;
 procedure WaitForGameStart(name : String = '<noname>');
@@ -32,20 +32,20 @@ type
 
 var
   ConnectSocket : TSocket;
-  Player : TPlayer;
-  Other : TPlayer;
+  Player : TCellState;
+  Other : TCellState;
   Width, Height : Word;
   XFirstTurn : TTurn;
 
 
 function ReadTurnData(s : TSocket) : TTurn; forward;
 
-function Me : TPlayer;
+function Me : TCellState;
 begin
   Result := Player;
 end;
 
-function He : TPlayer;
+function He : TCellState;
 begin
   Result := Other;
 end;
@@ -130,7 +130,7 @@ begin
   SetLength(nameString, size);
   read(ConnectSocket, PChar(nameString)^, size);
   // Wait for turn notification
-  if (Player = Circle) then begin
+  if (Player = csCircle) then begin
     XFirstTurn := ReadTurnData(ConnectSocket);
   end;
 end;
@@ -175,11 +175,11 @@ initialization
   read(ConnectSocket, Height, sizeof(Height));
 
   if (command = YOU_ARE_X) then begin
-    Player := Cross;
-    Other := Circle;
+    Player := csCross;
+    Other := csCircle;
   end else begin
-    Player := Circle;
-    Other := Cross;
+    Player := csCircle;
+    Other := csCross;
   end;
 
 finalization

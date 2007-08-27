@@ -5,9 +5,6 @@ uses
   DelphiGraph,
   TicTacToe in 'TicTacToe.pas';
 
-type
-  TCellState = (csEmpty, csCross, csCircle);
-
 const
   CELL_SIZE = 16;
   CROSS_COLOR = clBlue;
@@ -77,7 +74,7 @@ begin
   InitGraph(FieldWidth * CELL_SIZE, FieldHeight * CELL_SIZE + topband);
   SetTitle(PR_NAME);
 
-  if Me = Cross then begin
+  if Me = csCross then begin
     mine := csCross;
     myColor := CROSS_COLOR;
     hisColor := CIRCLE_COLOR;
@@ -99,7 +96,7 @@ begin
   SetTitle(name + ' - ' + PR_NAME);
 
   WaitForGameStart(name);
-  if Me = Circle then begin
+  if Me = csCircle then begin
     field[CrossFirstTurn.x][CrossFirstTurn.y] := csCross;
   end;
 

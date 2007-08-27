@@ -2,8 +2,8 @@ unit StupidThinker;
 
 interface
 
-type
-  TCellState = (csEmpty, csCross, csCircle);
+uses
+  TicTacToe;
 
 var
   mine, his : TCellState;
@@ -17,7 +17,7 @@ function getCellPenalty(x, y : Integer) : Integer;
 implementation
 
 uses
-  Math, TicTacToe;
+  Math;
 
 const
   MAX_SIZE = 100;
