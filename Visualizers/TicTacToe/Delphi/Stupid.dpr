@@ -25,9 +25,13 @@ begin
   FreezeScreen;
   SetBrushColor(clWhite);
   ClrScr;
+
   SetFontStyle([fsBold]);
   SetFontColor(clBlack);
-  TextOut((GetMaxX - TextWidth(message)) div 2, (topband - TextHeight(message)) div 2, message);
+  TextOut(
+    (GetMaxX - TextWidth(message)) div 2,
+    (topband - TextHeight(message)) div 2,
+    message);
   SetPenWidth(1);
   SetPenColor(clBlack);
   for x := 0 to FieldWidth - 1 do begin
@@ -87,19 +91,18 @@ begin
 
   first := true;
   while true do begin
-  {
-    while true do begin
+{    while true do begin
       WaitForMouseEvent;
       if MousePressed then
         break;
-    end;
-   }
+    end;}
+   
     if first and (mine = csCross) then begin
       Randomize;
       x := Random(FieldWidth div 2) + FieldWidth div 4;
       y := Random(FieldHeight div 2) + FieldWidth div 4;
     end else begin
-      Decide(x, y);
+      DecideRand(x, y)
     end;
     first := false;
     RecordAndCalculate(x, y, mine);
