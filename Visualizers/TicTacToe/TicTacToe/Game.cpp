@@ -20,7 +20,7 @@ void Game::clearField()
 
 void Game::playerSurrendered(CellState s)
 {
-	if (surrenderStatus == PLAY)
+	if ((surrenderStatus == PLAY) && (status == PLAY))
 	{
 		surrenderStatus = (s == CIRCLE) ? CROSS_WON : CIRCLE_WON;
 		notify();
