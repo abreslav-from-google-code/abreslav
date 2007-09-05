@@ -1359,13 +1359,15 @@ initialization
   Buffers := TObjectList.Create;
   Pictures := TObjectList.Create;
 finalization
+  cs.Enter;
   CloseGraph;
   WaitForGraph;
-  cs.Free;
   event.Free;
   keyPressEvent.Free;
   keycs.Free;
   mouseEvent.Free;
   ClearListAndFree(Buffers);
   ClearListAndFree(Pictures);
+  cs.Leave;
+  cs.Free;
 end.
