@@ -1,0 +1,69 @@
+\section{Modified Parallel Filtering Model}\label{mpfm}
+\begin{itemize}
+	\item Introduce Parallel Copy
+	\item Introduce Parallel Union
+	\item Introduce Principles of parallel Remove
+	\item Describe implementation of Parallel Remove
+\end{itemize}
+
+However, nature of such operations does not require sequential execution. Some steps can be performed in parallel which leads to lower time complexities.
+Let us start with $Union$. If we need to union $n$ tubes $T_1...T_n$ together we can first union $n/2$ pairs $(T_i, T_{i+1})$ in parallel, which results in $n/2$ tubes to be united. Applying the same operation recursively we can achieve the goal in $O(log(n))$ steps instead of $O(n)$.
+
+\subsection{Parallel $Copy$ operation}
+\PROCEDURE $Copy(T, \{T_1, ..., T_n\})$
+\begin{algorithmic}[1]
+  \IF{$n = 1$}
+	  \STATE $T_1 \gets T$
+  \ELSIF{$n \geq 2$}
+	  \STATE $Copy(T, T_1, T_2)$
+    \IF{$n > 2$}
+      \STATE $m \gets \left\lceil\frac{n-2}{2}\right\rceil$
+  	  \INPARALLELDO
+	      \PSTATE $Copy(T_1, \{T_3, \dots, T_m\})$	
+	      \PSTATE $Copy(T_2, \{T_{m+1}, \dots, T_n\})$	
+	    \ENDINPARALLELDO
+  	\ENDIF
+	\ENDIF
+\end{algorithmic}
+
+\subsection{Parallel $Union$ operation}
+\PROCEDURE $Union(\{T_1, ..., T_n\}, T)$
+\begin{algorithmic}[1]
+	\STATE $m \gets \lfloor n/2 \rfloor$
+  \FOR{$i \gets 1$ \TO $m$ \INPARALLEL}
+  	\STATE $Union(T_{2i-1}, T_{2i}, T'_i)$
+  \ENDFOR
+  \IF{$2m < n$}
+    \STATE $Union(T_n, T'_{m+1}) $
+    \STATE $m \gets m+1$
+  \ENDIF
+  \STATE $Union(\{T'_1, \dots, T'_m\}, T)$
+\end{algorithmic}
+
+\subsection{Parallel $Remove$ operation}
+{\bf procedure} $Remove(T, \{s_1, \dots, s_n\})$
+\begin{algorithmic}[1]
+	\STATE $Copy(T, \{T_1, \dots, T_n\})$
+  \FOR{$i \gets 1$ \TO $n$ \INPARALLEL}
+  	\STATE $Remove(T_i, s_i)$
+  \ENDFOR
+  \STATE $Intersect(\{T_1, \dots, T_n\}, T)$
+\end{algorithmic}
+
+\subsection{$Intersect$ operation and it's parallel version}
+
+Refer to \cite{Dantsin:2003}
+
+\PROCEDURE $Intersect(\{T_1, ..., T_n\}, T)$
+\begin{algorithmic}[1]
+	\STATE $m \gets \lfloor n/2 \rfloor$
+  \FOR{$i \gets 1$ \TO $m$ \INPARALLEL}
+  	\STATE $Intersect(T_{2i-1}, T_{2i}, T'_i)$
+  \ENDFOR
+  \IF{$2m < n$}
+    \STATE $T'_{m+1} \gets T_n$
+    \STATE $m \gets m+1$
+  \ENDIF
+  \STATE $Intersect(\{T'_1, \dots, T'_m\}, T)$
+\end{algorithmic}
+
