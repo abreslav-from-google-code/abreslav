@@ -1,0 +1,9 @@
+\contentsline {section}{\numberline {1}Introduction}{2}
+\contentsline {section}{\numberline {2}Modified Parallel Filtering Model}{3}
+\contentsline {subsection}{\numberline {2.1}Parallel $Copy$ operation}{4}
+\contentsline {subsection}{\numberline {2.2}Parallel $Union$ operation}{4}
+\contentsline {subsection}{\numberline {2.3}Parallel $Remove$ operation}{4}
+\contentsline {subsection}{\numberline {2.4}$Intersect$ operation and it's parallel version}{4}
+\contentsline {section}{\numberline {3}Algorithm implementation and analysis}{5}
+\contentsline {section}{\numberline {4}Conclusion}{5}
+\contentsline {section}{References}{6}

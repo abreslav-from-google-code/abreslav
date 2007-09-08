@@ -1,0 +1,30 @@
+\begin{thebibliography}{1}
+
+\bibitem{Amos:1997}
+Martyn Amos, Alan Gibbons, and Paul~E. Dunne.
+\newblock The complexity and viability of {DNA} computations.
+\newblock In Dan Lundh, Bjorn Olsson, and Ajit Narayanan, editors, {\em
+  Biocomputing and Emergent Computation}, pages 165--173. World Scientific,
+  1997.
+
+\bibitem{Amos:1996}
+Martyn Amos, Alan Gibbons, and David Hodgson.
+\newblock Error-resistant implementation of {DNA} computations.
+\newblock In {\em Proceedings of the Second Annual Meeting on DNA Based
+  Computers}, June 10-12 1996.
+
+\bibitem{Dantsin:2003}
+Evgeny Dantsin and Alexander Wolpert.
+\newblock A robust {DNA} computation model that captures pspace.
+\newblock {\em International Journal of Foundations of Computer Science},
+  14(5):933--951, October 2003.
+
+\bibitem{Katsanyi:2003}
+I.~Katsanyi.
+\newblock Solutions of some classical problems in various theoretical {DNA}
+  computing models.
+\newblock In {\em Proceedings of MolCoNet2, the Second Annual Meeting of
+  Molecular Computing Network}. Vienna University of Technology, November 27-29
+  2003.
+
+\end{thebibliography}

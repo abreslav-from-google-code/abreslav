@@ -1,0 +1,13 @@
+#TeXlipse project settings
+#Tue Sep 04 23:36:48 MSD 2007
+builderNum=0
+outputDir=out/
+makeIndSty=
+bibrefDir=
+outputFormat=dvi
+tempDir=tmp
+mainTexFile=main.tex
+outputFile=parallel.dvi
+langSpell=en
+markDer=true
+srcDir=src/
