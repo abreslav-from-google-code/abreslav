@@ -26,27 +26,24 @@ Paper \cite{Katsanyi:2003} proposes a \emph{normal form} of molecular program in
 
 Original forms of basic operations are implemented using elementary steps as follows\footnote{Paper \cite{Amos:1997} mention these implementation implicitly, paper \cite{Katsanyi:2003} defines them explicitly but does not consider difficulties of $Copy$ which cause slightly incorrect implementation that therefore does not destroy a proof it is used in.}.
 
-\PROCEDURE $Copy(T_0, \{T_1, ..., T_n\})$
-\begin{algorithmic}[1]
+\procedure{$Copy(T_0, \{T_1, ..., T_n\})$}{
 \FOR{$i \gets 0$ \TO $n-1$}
   \STATE $Copy(T_{i}, T_{i+1})$ 
 \ENDFOR
-\end{algorithmic}
+}
 
-\PROCEDURE $Union(\{T_1, ..., T_n\}, T)$
-\begin{algorithmic}[1]
+\procedure{$Union(\{T_1, ..., T_n\}, T)$}{
 \STATE $Union(T_1, T_2, T)$
 \FOR{$i \gets 3$ \TO $n$}
 	\STATE $Union(T_i, T)$
 \ENDFOR
-\end{algorithmic}
+}
 
-\PROCEDURE $Remove(T, S=\{s_1, ..., s_n\})$
-\begin{algorithmic}[1]
+\procedure{$Remove(T, S=\{s_1, ..., s_n\})$}{
 \FOR{$i \gets 1$ \TO $n$}
 	\STATE $Remove(T, \{s_i\})$
 \ENDFOR
-\end{algorithmic}
+}
 
 Time complexity of each of these operations is $O(n)$ \cite{Amos:1997, Katsanyi:2003}.
 

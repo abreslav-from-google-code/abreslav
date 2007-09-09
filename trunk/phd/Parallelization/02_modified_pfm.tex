@@ -1,17 +1,12 @@
 \section{Modified Parallel Filtering Model}\label{mpfm}
-\begin{itemize}
-	\item Introduce Parallel Copy
-	\item Introduce Parallel Union
-	\item Introduce Principles of parallel Remove
-	\item Describe implementation of Parallel Remove
-\end{itemize}
 
-However, nature of such operations does not require sequential execution. Some steps can be performed in parallel which leads to lower time complexities.
-Let us start with $Union$. If we need to union $n$ tubes $T_1...T_n$ together we can first union $n/2$ pairs $(T_i, T_{i+1})$ in parallel, which results in $n/2$ tubes to be united. Applying the same operation recursively we can achieve the goal in $O(log(n))$ steps instead of $O(n)$.
+The nature of basic \emph{PFM} operations does not require linear implementation. Some steps can be performed in parallel which leads to lower time complexities. For basic operations and thus for algorithms implemented in \emph{PFM}.
 
 \subsection{Parallel $Copy$ operation}
-\PROCEDURE $Copy(T, \{T_1, ..., T_n\})$
-\begin{algorithmic}[1]
+
+Here we present parallel implementation of $Copy$ operation. This implementation is based on a simple principle of going down the binary tree: the first tube is copied into two ones, each of those is copied to another two and so on.
+
+\procedure{$Copy(T, \{T_1, ..., T_n\})$}{
   \IF{$n = 1$}
 	  \STATE $T_1 \gets T$ \label{c_one}
   \ELSIF{$n = 2$}
@@ -23,52 +18,67 @@ Let us start with $Union$. If we need to union $n$ tubes $T_1...T_n$ together we
       \PSTATE $Copy(T'_2, \{T_{\lceil n/2 \rceil+1}, \dots, T_n\})$	\label{c_right}
     \ENDINPARALLELDO
 	\ENDIF
-\end{algorithmic}
+}
 
-\lemma{copy_l}{
-Provided implementation of $Copy$ ends up with result of producing $n$ copies of multiset $T$ and takes $O(log(n)))$ parallel time.
-}{
 Lines \ref{c_one} and \ref{c_two} properly handle basic cases of $Copy$ and form the recursion base.
 
 Calls made on lines \ref{c_left} and \ref{c_right} reduce problem size to $n/2$. Assuming that $Copy$ works properly for $\vec{T}$ of size $n/2$ we see that these two calls fill up vector of size $n$ with copies of original multiset.
 
 Each level of recursion reduces $n$ to $n/2$, thus any call to $Copy$ ends up in one of basic cases after $O(log(n))$ recursive calls. As any recursive call makes constant number of steps and lines \ref{c_left} and \ref{c_right} are executed in parallel the whole operation ends up in $O(lon(n))$ parallel time.
-}
 
 \subsection{Parallel $Union$ operation}
-\PROCEDURE $Union(\{T_1, ..., T_n\}, T)$
-\begin{algorithmic}[1]
-	\STATE $m \gets \lfloor n/2 \rfloor$
-  \FOR{$i \gets 1$ \TO $m$ \INPARALLEL}
+
+Parallel implementation of $Union$ operation uses the same metaphor of binary tree but unlike $Copy$ it goes \emph{up} the tree -- from leaves to the root: parent node receives a union of it's children.
+
+\procedure{$Union(\{T_1, ..., T_n\}, T)$}{
+  \IF{n = 1}
+  	\STATE $T \gets T_1$
+  	\RETURN\label{u_return}
+  \ENDIF
+	\STATE $m \gets \lfloor n/2 \rfloor$\label{u_start}
+  \FOR{$i \gets 1$ \TO $m$ \INPARALLEL}\label{u_cycle}
   	\STATE $Union(T_{2i-1}, T_{2i}, T'_i)$
   \ENDFOR
   \IF{$2m < n$}
     \STATE $Union(T_n, T'_{m+1}) $
     \STATE $m \gets m+1$
-  \ENDIF
-  \STATE $Union(\{T'_1, \dots, T'_m\}, T)$
-\end{algorithmic}
-
-\lemma{union_l}{
-Provided implementation of $Union$ ends up with result of union of multisets $T_1, \dots, T_n$ into $T$ and takes $O(log(n)))$ parallel time.
-}{
+  \ENDIF\label{u_end}
+  \STATE $Union(\{T'_1, \dots, T'_m\}, T)$ \label{u_rec}
 }
+
+Lines \ref{u_start} to \ref{u_end} produce intermediate tubes $T'_1, \dots, T'_{\lceil n/2 \rceil}$ each of which is a union of two tubes $T_k$ and $T_{k+1}$. Recursive call on line \ref{u_rec} reduces $n$ to $n/2$, thus recursion leads to $n=1$ where it ends up on line \ref{u_return} having all the tubes united in $T$.
+
+Since each level of recursion reduces $n$ to $n/2$ and {\bf for} loop on line \ref{u_cycle} is executed in parallel and takes $O(1)$ parallel time, the whole operation takes $O(log(n))$ parallel time.
+
 \subsection{Parallel $Remove$ operation}
-{\bf procedure} $Remove(T, \{s_1, \dots, s_n\})$
-\begin{algorithmic}[1]
-	\STATE $Copy(T, \{T_1, \dots, T_n\})$
-  \FOR{$i \gets 1$ \TO $n$ \INPARALLEL}
+
+Parallel implementation of $Remove$ is a little bit tricky: we cannot simply filter the same tube $T$ in parallel but we can copy it and filter individual copies. After that we need just to intersect those copies as multisets.
+
+\procedure{$Remove(T, \{s_1, \dots, s_n\})$}{
+	\STATE $Copy(T, \{T_1, \dots, T_n\})$\label{r_copy}
+  \FOR{$i \gets 1$ \TO $n$ \INPARALLEL}\label{r_loop_start}
   	\STATE $Remove(T_i, s_i)$
-  \ENDFOR
+  \ENDFOR\label{r_loop_end}
   \STATE $Intersect(\{T_1, \dots, T_n\}, T)$
-\end{algorithmic}
+}
 
-\subsection{$Intersect$ operation and it's parallel version}
+Line \ref{r_copy} creates $n$ copies of $T$, this takes $O(log(n))$ parallel time as shown above. On lines \ref{r_loop_start} to \ref{r_loop_end} each copy $T_i$ is filtered by a substring $s_i$, being run in parallel this takes $O(1)$ parallel time. Finally all the filtered multisets are intersected and produce result $T$ which has no string having a substring from $\{s_1, \dots, s_n\}$.
 
-Refer to \cite{Dantsin:2003}
+Operation $Intersect(\{T_1, \dots, T_n\}, T)$ makes multiset $T$ to be an intersection of multisets $\{T_1, \dots, T_n\}$. It's biological implementation is described in \cite{Dantsin:2003} for the case of an elementary step $Intersect(T_1, T_2, T)$. Subsection \ref{intersect} describes parallel implementation of $Intersect(\{T_1, \dots, T_n\}, T)$ which takes $O(log(n))$ parallel time.
 
-\PROCEDURE $Intersect(\{T_1, ..., T_n\}, T)$
-\begin{algorithmic}[1]
+Thus, the whole operation $Remove$ takes $O(log(n))$ parallel time.
+
+\subsection{$Intersect$ operation and it's parallel version} \label{intersect}
+
+As mentioned above, paper \cite{Dantsin:2003} describes multiset intersection as feasible laboratory operation. This operation does not need to be added to \emph{PFM} basic operation set to make the model more strong, but as we have shown above, $Remove$ basic operation can be executed much faster if we use $Intersect$ in it's implementation. Elementary $Intersect(T_1, T_2, T)$ takes two tubes $T_1$ and $T_2$ and produces their intersection $T$, during this process $T_1$ and $T_2$ are destroyed.
+
+Here we provide parallel implementation of $Intersect(\{T_1, ..., T_n\}, T)$.
+
+\procedure{$Intersect(\{T_1, ..., T_n\}, T)$}{
+	\IF{$n=1$}
+		\STATE $T \gets T_1$
+		\RETURN
+	\ENDIF
 	\STATE $m \gets \lfloor n/2 \rfloor$
   \FOR{$i \gets 1$ \TO $m$ \INPARALLEL}
   	\STATE $Intersect(T_{2i-1}, T_{2i}, T'_i)$
@@ -78,5 +88,6 @@ Refer to \cite{Dantsin:2003}
     \STATE $m \gets m+1$
   \ENDIF
   \STATE $Intersect(\{T'_1, \dots, T'_m\}, T)$
-\end{algorithmic}
+}
 
+This procedure is very similar to $Union$ and thus has the same time complexity $O(log(n))$.
