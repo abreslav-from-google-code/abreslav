@@ -4,3 +4,14 @@
 \newcommand{\INPARALLELDO}{\STATE {\bf in parallel do}}
 \newcommand{\PSTATE}{\STATE \hspace{10pt}}
 \newcommand{\ENDINPARALLELDO}{\STATE {\bf end in parallel}}
+\newcounter{lemma}
+\setcounter{lemma}{1}
+\newcommand{\lemma}[3]{\newtheorem*{#1}{Lemma \arabic{lemma}}
+\begin{#1}
+#2
+\end{#1}
+\addtocounter{lemma}{1}
+\begin{proof}
+#3
+\end{proof}
+}
