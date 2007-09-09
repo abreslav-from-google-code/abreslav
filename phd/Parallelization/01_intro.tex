@@ -1,6 +1,6 @@
 \section{Introduction}
 \begin{itemize}
-	\item General words about DNA Computing \cite{Adleman, Lipton, PaunRozenbergSalomaa}
+	\item General words about DNA Computing \cite{Amos:2002, Adleman, Lipton, PaunRozenbergSalomaa}
 	\item Words about filtering and PFM \cite{Amos:1996}
 	\item Note about operations' complexity \cite{Amos:1997}
 	\item Note about solving NP-complete problems
@@ -12,23 +12,23 @@
 The \emph{Parallel Filtering Model} (\emph{PFM}) is proposed in paper \cite{Amos:1996} and is suitable to solve NP-complete problems \cite{Amos:1996, Katsanyi:2003}. It defines four basic operations:
 \begin{itemize}
 	\item $Remove(T, \{s_1, \dots, s_n\})$ removes form multiset $T$ any string which contains at least one occurrence of some string $s_i$;
-	\item $Union(\{T_1, \dots, T_n\}, T)$ creates a multiset T which is a nultiset union of $U_i$;
+	\item $Union(\{T_1, \dots, T_n\}, T)$ creates a multiset T which is a multiset union of $U_i$;
 	\item $Copy(T, \{T_1, \dots, T_n\})$ produces a number of copies, $T_i$, of $T$;
 	\item $Select(T)$ selects an element of $T$ uniformly at random, if $T$ is empty then \emph{empty} is returned.
 \end{itemize}
-Original paper \cite{Amos:1996} assumes each of first three operations to be working \emph{in parallel}, so all the basic operations have time complexity $O(1)$. But in the paper \cite{Amos:1997} the same authors correct this assumption and denote $Remove$, $Union$ and $Copy$ as linear operations ($O(n)$). 
+Original paper \cite{Amos:1996} assumes each of first three operations to be working \emph{in parallel}, so all the basic operations have time complexity $O(1)$. But in the paper \cite{Amos:1997} the same authors correct this assumption and mention $Remove$, $Union$ and $Copy$ as having linear time complexity ($O(n)$). 
 Paper \cite{Katsanyi:2003} proposes a \emph{normal form} of molecular program in \emph{PFM}, where operations (we will refer to them as \emph{elementary steps}) work with minimum amount of data:
 \begin{itemize}
 	\item $Union(T_1, T_2, T)$ produces a union of two multisets, another form of this operation is $Union(T', T)$ where $T'$ is added to $T$ -- this can be implemented as $Union(T, T', T)$,
-	\item $Copy(T, T_1, T_2)$ creates two copies of $T$ ($T$ itself is destroyed then because of the nature of laboratory implementation \cite{Amos:1996})\footnote{Paper \cite{Amos:1996} proposes simply splitting a tube into two halves, but this way is not applicable in real practice, because we need to duplicate each strand. Paper \cite{SOME} describe a way to reach real duplication.}, another form this operation is $Copy(T, T')$ where $T'$ receives a copy of $T$ and $T$ remains existing -- this can be implemented as $Copy(T, T, T')$,
+	\item $Copy(T, T_1, T_2)$ creates two copies of $T$ ($T$ itself is destroyed then because of the nature of laboratory implementation \cite{Amos:1996})\footnote{Paper \cite{Amos:1996} proposes simply splitting a tube into two halves, but this way is not applicable in real practice, because we need to duplicate each strand. Paper \cite{Adleman:1994} describe a way to reach real duplication via \emph{PCR}.}, another form of this operation is $Copy(T, T')$ where $T'$ receives a copy of $T$ and $T$ remains existing -- this can be implemented as $Copy(T, T, T')$,
 	\item $Remove(T, s)$ (where $s$ is a single string) removes all the strings having a substring $s$.
 \end{itemize}
 
-Original forms of basic operations are implemented using elementary steps as follows\footnote{Paper \cite{Amos:1997} mention these implementation implicitly, paper \cite{Katsanyi:2003} defines them explicitly but does not consider difficulties of $Copy$ which cause slightly incorrect implementation that therefore does not destroy a proof it is used in.}.
+Original forms of basic operations are implemented using elementary steps as follows \cite{Katsanyi:2003}\footnote{Paper \cite{Amos:1997} mention these implementations implicitly, paper \cite{Katsanyi:2003} defines them explicitly but does not consider difficulties of $Copy$ which cause slightly incorrect implementation that therefore does not destroy a proof of the theorem it is used in.}.
 
-\procedure{$Copy(T_0, \{T_1, ..., T_n\})$}{
-\FOR{$i \gets 0$ \TO $n-1$}
-  \STATE $Copy(T_{i}, T_{i+1})$ 
+\procedure{$Copy(T, \{T_1, ..., T_n\})$}{
+\FOR{$i \gets 1$ \TO $n$}
+  \STATE $Copy(T, T_{i+1})$ 
 \ENDFOR
 }
 
@@ -39,7 +39,7 @@ Original forms of basic operations are implemented using elementary steps as fol
 \ENDFOR
 }
 
-\procedure{$Remove(T, S=\{s_1, ..., s_n\})$}{
+\procedure{$Remove(T, \{s_1, ..., s_n\})$}{
 \FOR{$i \gets 1$ \TO $n$}
 	\STATE $Remove(T, \{s_i\})$
 \ENDFOR
@@ -47,6 +47,8 @@ Original forms of basic operations are implemented using elementary steps as fol
 
 Time complexity of each of these operations is $O(n)$ \cite{Amos:1997, Katsanyi:2003}.
 
-In \cite{Katsanyi:2003} author uses these linear implementations to analyze complexity of some algorithms for NP-complete problems which results in polynomial estimations like $O(n^3)$ for Hamiltonian circuit problem.
+In \cite{Katsanyi:2003} author uses these linear implementations as a foundation of complexity analysis of some algorithms for NP-complete problems which results in polynomial estimations like $O(n^3)$ for Hamiltonian circuit problem.
+
+In this paper we propose parallel implementations of basic \emph{PFM} operations which lead to $O(log(n))$ time complexities for them. Using such implementations for some algorithms described in \cite{Katsanyi:2003} reduces their execution times from $O(n^3)$ to $O(log(n))$ parallel time.
 
 In section \ref{mpfm} we describe proposed parallel implementation of basic operations. In section \ref{algo} we analyze changes in complexity of algorithms for NP-complete problems proposed in \cite{Katsanyi:2003}. The last section \ref{conclusion} gives concluding notes.
