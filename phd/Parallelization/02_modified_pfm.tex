@@ -36,7 +36,7 @@ Parallel implementation of $Union$ operation uses the same metaphor of binary tr
   	\RETURN\label{u_return}
   \ENDIF
 	\STATE $m \gets \lfloor n/2 \rfloor$\label{u_start}
-  \FOR{$i \gets 1$ \TO $m$ \INPARALLEL}\label{u_cycle}
+  \FOREACH{$i = (1, 2, \dots, m)$ \INPARALLEL}\label{u_cycle}
   	\STATE $Union(T_{2i-1}, T_{2i}, T'_i)$
   \ENDFOR
   \IF{$2m < n$}
@@ -56,7 +56,7 @@ Parallel implementation of $Remove$ is a little bit tricky: we cannot simply fil
 
 \procedure{$Remove(T, \{s_1, \dots, s_n\})$}{
 	\STATE $Copy(T, \{T_1, \dots, T_n\})$\label{r_copy}
-  \FOR{$i \gets 1$ \TO $n$ \INPARALLEL}\label{r_loop_start}
+  \FOREACH{$i = (1, 2, \dots, n)$ \INPARALLEL}\label{r_loop_start}
   	\STATE $Remove(T_i, s_i)$
   \ENDFOR\label{r_loop_end}
   \STATE $Intersect(\{T_1, \dots, T_n\}, T)$
@@ -80,7 +80,7 @@ Here we provide parallel implementation of $Intersect(\{T_1, ..., T_n\}, T)$.
 		\RETURN
 	\ENDIF
 	\STATE $m \gets \lfloor n/2 \rfloor$
-  \FOR{$i \gets 1$ \TO $m$ \INPARALLEL}
+  \FOREACH{$i = (1, 2, \dots, m)$ \INPARALLEL}
   	\STATE $Intersect(T_{2i-1}, T_{2i}, T'_i)$
   \ENDFOR
   \IF{$2m < n$}
