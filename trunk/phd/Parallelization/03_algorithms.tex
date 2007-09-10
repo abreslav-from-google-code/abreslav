@@ -1,7 +1,88 @@
-\section{Algorithm implementation and analysis} \label{algo}
+\section{Example algorithm implementation and analysis} \label{algo}
 \begin{itemize}
 	\item Analyze Ham-Cir in \cite{Katsanyi:2003}
 	\item Analyze it in modified model
 	\item Notes about $log(N)$ vs $N^2 log(N)$
 	\item Describe implementation of Parallel Remove
 \end{itemize}
+
+Paper \cite{Katsanyi:2003} represents several algorithms for NP-complete problems implemented in \emph{PFM}. Here we examine complexity of one of these algorithms -- Hamiltonian circuit -- according to proposed parallel implementations of basic operations.
+
+Here we provide brief overview of notation used in \cite{Katsanyi:2003}. There is an alphabet
+$$\Sigma_n = \{p_1, p_2, \dots, p_n, a_1, a_2, \dots, a_n\}$$
+and a set
+$$T_n = \{p_1 a_{i_1} p_2 a_{i_2} \dots p_n a_{i_n} |
+1 \leq i_j \leq n (j = 1, 2, \dots, n)\}.$$
+The indexed $p$ symbols denote the \emph{positions} within a word and the indexed $a$ symbols denote integer value between $1$ and $n$. Integers are always separated by position markers.
+
+Many algorithms operate on initial multiset 
+$$P_n=\{p_1 a_{i_1} p_2 a_{i_2} \dots p_n a_{i_n} \in T^n_n | 
+         1 \leq j, j' \leq n, j \neq j' \Rightarrow i_j \neq i_{j'}\}$$ 
+which represents all permutations of $n$ distinct things. This multiset can be generated using basic operations in polynomial time \cite{Amos:1996} but actually since wide range of algorithms uses it, it might be useful to generate many instances of $P_n$ in advance and then use those instances without spending time on it's generation.
+
+For a graph $G=(V, E)$, where $V=\{v_1, \dots, v_n\}$, node sequences are represented by strings in $P_n$. The string $p_1 a_{i_1} p_2 a_{i_2} \dots p_n a_{i_n}$ represents the node sequence $v_{i_1}, v_{i_2}, \dots, v_{i_n}$. For example such a node sequence is a Hamiltonian path if and only if it is a path. That is, the consecutive nodes in the sequence must be connected by an edge in $E$.
+
+Thus, the following procedure from \cite{Amos:1996} finds Hamiltonian path in a graph.
+
+\procedure{$HamiltonianPath(V, E)$}{
+  \STATE $T \gets P_n$
+  \STATE $Remove(T, \{a_j p_i a_{j'} | 2 \leq i \leq n, 1 \leq j, j' \leq n \mbox{ and } \{j, j'\} \notin E\})$
+  \STATE $Select(T)$
+}
+
+Paper \cite{Katsanyi:2003} shows that when non-parallel implementations of basic operations are used this algorithm take $O(n^3)$ parallel time, since this is cardinality of set of strings by which $T$ is being filtered. If parallel implementations are used this complexity reduces to $O(log(n^3))=O(log(n))$ -- complexity of $Remove(T, \{s_1, \dots, s_{n^3}\})$.
+
+\subsection{Hamiltonian circuit problem}
+
+Given an $n$-node undirected graph $G = (V, E)$, where $V=\{v_1, \dots, v_n\}$ find a Hamiltonian circuit (a simple circuit that includes all vertices of $G$).
+
+The following procedure is quoted from \cite{Katsanyi:2003}.
+
+\procedure{$HamiltonianCircuit(V, E)$}{
+	\STATE $T \gets P_n$
+	\STATE $Remove(T, \{a_j p_i a_{j'} 
+	   | 2 \leq i \leq n, 1 \leq j, j' \leq n 
+	   \mbox{ and } \{v_j, v_{j'}\} \notin E\})$ \label{hc_remove}
+	\STATE $Copy(T, \{T_1, \dots, T_n\})$\
+	\FOREACH{$i = (1, 2, \dots, n)$ \INPARALLEL}
+		\STATE $Remove(T_i, \{p_1 a_j
+		  |1 \leq j \leq n \mbox{ and } j \neq i\})$ \label{hc_r1}
+		\STATE $Remove(T_i, \{p_n a_j
+		  |1 \leq j \leq n \mbox{ and } \{v_i, v_j\} \notin E\})$ \label{hc_r2}
+	\ENDFOR
+	\STATE $Union(\{T_1, \dots, T_n\}, T)$
+	\STATE $Select(T)$
+}
+
+Correctness of this algorithm is proved in \cite{Katsanyi:2003}. Time complexity in non-parallel model is $O(n^3)$, the longest operation is line \ref{hc_remove} since cardinality of set of subsrtings by which $T$ is being filtered is $O(n^3)$.
+
+Let us analyze time complexity of this algorithm using proposed parallel implementation of basic operations. Then line \ref{hc_remove} takes $O(log(n^3))=O(log(n))$ parallel time. So does the following line. Lines \ref{hc_r1} and \ref{hc_r2} take $O(log(n))$ parallel time each. So the whole {\bf for} does since it is executed in parallel. Final $Union$ takes $O(log(n))$ parallel time and $Select$ is executed in constant time. Thus, time complexity of this algorithm with parallel implementations of basic operations is $O(log(n))$.
+
+\subsection{Non-time aspects of complexity}
+Now let us look at other aspects of the algorithm's complexity. Number of DNA strands used by the algorithm is $O(n!)$ in both parallel and non-parallel implementations. Therefore in parallel implementation precise number of strands is bigger since we use $Copy$ inside $Remove$.
+
+Number of elementary steps performed by this algorithm is still $O(n^3)$.
+
+We also can examine a metric that can be thought about as \emph{number of tubes}. Maybe tubes are not a really critical resource but this metric allows to measure number of laboratory equipment (other than tubes) used to execute the algorithm. 
+
+How many tubes do we need for $HamiltonianCircuit$ procedure? This can be calculated from needs of basic operations:
+\begin{itemize}
+	\item $Copy(T, \{T_1, \dots, T_n\}$ needs $O(n)$ tubes which form a binary tree with $n$ leaves,
+	\item $Union(\{T_1, \dots, T_n, T\}$ needs the same number of tubes,
+	\item $Intersect(\{T_1, \dots, T_n, T\}$ needs $O(n)$ tubes too,
+	\item $Remove(T, \{s_1, \dots, s_n\})$ consists of $Copy$ and $Intersect$ and thus needs $O(n)$ tubes.
+\end{itemize}
+
+A call to $Remove$ on line \ref{hc_remove} needs $O(n^3)$ tubes other operations need $O(n)$ tubes each. Thus "tube-complexity" of $HamiltonianCircuit$ procedure is $O(n^3)$. 
+
+However we can reduce amount of tubes needed but we must pay for this with execution time. We can restrict $Remove$ implementation to use not more than $M$ tubes. Let us call this new operation $Remove_M(T, S)$. Having only $M$ tubes we can build a binary tree with $M/2$ leaves, so we simply take first $M/2$ items from set $S$ and filter $T$ by them. Then we take next $M/2$ and do the same and so on.
+
+\procedure{$Remove_M(T, \{s_1, \dots, s_n\})$}{
+	\STATE $count \gets 0$
+	\WHILE{$count < n$}
+		\STATE $Remove(T, \{s_{count+1}, \dots, s_{count+M}\})$
+		\STATE $count \gets count + M$
+	\ENDWHILE
+}
+
+This results in $O\left(\frac{n \cdot log(M)}{M}\right)$ parallel time. So if we restrict the algorithm to use $O(n)$ tubes, we will use $Remove_n$ instead of $Remove$ on line \ref{hc_remove} and this line will take $O( n^2 log(n))$ parallel time, which is still better when non-parallel version while using asymptotically the same number of tubes.
