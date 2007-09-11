@@ -1,4 +1,5 @@
 \newcommand{\PROCEDURE}{\noindent{\bf procedure }}
+\newcommand{\FUNCTION}{\noindent{\bf function }}
 \newcommand{\ENDPROCEDURE}{\noindent{\bf end}}
 \newcommand{\TO}{{\bf to }}
 \newcommand{\INPARALLEL}{{\bf in parallel }}
@@ -18,16 +19,19 @@
 \end{proof}
 }
 
-\newcommand{\procedure}[2]{
+\newcommand{\routine}[3]{
 
 \vspace{10pt}
 \indent\parbox{\textwidth}{
-\PROCEDURE #1
+#1#2
 \begin{algorithmic}[1]
-#2
+#3
 \end{algorithmic}
 \ENDPROCEDURE
 }
 \vspace{10pt}
 
 }
+
+\newcommand{\procedure}[2]{\routine{\PROCEDURE}{#1}{#2}}
+\newcommand{\function}[2]{\routine{\FUNCTION}{#1}{#2}}

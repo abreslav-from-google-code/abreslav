@@ -1,6 +1,6 @@
 \section{Modified Parallel Filtering Model}\label{mpfm}
 
-The nature of basic \emph{PFM} operations does not require linear implementation. Some steps can be performed in parallel which leads to lower time complexities. For basic operations and thus for algorithms implemented in \emph{PFM}.
+The nature of basic \emph{PFM} operations does not require linear implementation. Some steps can be performed in parallel which leads to lower time complexities for basic operations and thus for algorithms implemented in \emph{PFM}.
 
 \subsection{Parallel $Copy$ operation}
 
@@ -11,7 +11,7 @@ Here we present parallel implementation of $Copy$ operation. This implementation
 	  \STATE $T_1 \gets T$ \label{c_one}
   \ELSIF{$n = 2$}
 	  \STATE $Copy(T, T_1, T_2)$ \label{c_two}
-  \ELSIF{$n \geq 2$}
+  \ELSE
 	  \STATE $Copy(T, T'_1, T'_2)$
     \INPARALLELDO
       \PSTATE $Copy(T'_1, \{T_1, \dots, T_{\lceil n/2 \rceil}\})$	\label{c_left}
@@ -24,7 +24,7 @@ Lines \ref{c_one} and \ref{c_two} properly handle basic cases of $Copy$ and form
 
 Calls made on lines \ref{c_left} and \ref{c_right} reduce problem size to $n/2$. Assuming that $Copy$ works properly for $\vec{T}$ of size $n/2$ we see that these two calls fill up vector of size $n$ with copies of original multiset.
 
-Each level of recursion reduces $n$ to $n/2$, thus any call to $Copy$ ends up in one of basic cases after $O(log(n))$ recursive calls. As any recursive call makes constant number of steps and lines \ref{c_left} and \ref{c_right} are executed in parallel the whole operation ends up in $O(lon(n))$ parallel time.
+Each level of recursion reduces $n$ to $n/2$, thus any call to $Copy$ ends up in one of basic cases after $O(log(n))$ levels of recursion. As all the calls on the same level of recursion are executed in parallel (lines \ref{c_left} and \ref{c_right}) the whole operation ends up in $O(lon(n))$ parallel time.
 
 \subsection{Parallel $Union$ operation}
 
@@ -50,27 +50,11 @@ Lines \ref{u_start} to \ref{u_end} produce intermediate tubes $T'_1, \dots, T'_{
 
 Since each level of recursion reduces $n$ to $n/2$ and {\bf for} loop on line \ref{u_cycle} is executed in parallel and takes $O(1)$ parallel time, the whole operation takes $O(log(n))$ parallel time.
 
-\subsection{Parallel $Remove$ operation}
-
-Parallel implementation of $Remove$ is a little bit tricky: we cannot simply filter the same tube $T$ in parallel but we can copy it and filter individual copies. After that we need just to intersect those copies as multisets.
-
-\procedure{$Remove(T, \{s_1, \dots, s_n\})$}{
-	\STATE $Copy(T, \{T_1, \dots, T_n\})$\label{r_copy}
-  \FOREACH{$i = (1, 2, \dots, n)$ \INPARALLEL}\label{r_loop_start}
-  	\STATE $Remove(T_i, s_i)$
-  \ENDFOR\label{r_loop_end}
-  \STATE $Intersect(\{T_1, \dots, T_n\}, T)$
-}
-
-Line \ref{r_copy} creates $n$ copies of $T$, this takes $O(log(n))$ parallel time as shown above. On lines \ref{r_loop_start} to \ref{r_loop_end} each copy $T_i$ is filtered by a substring $s_i$, being run in parallel this takes $O(1)$ parallel time. Finally all the filtered multisets are intersected and produce result $T$ which has no string having a substring from $\{s_1, \dots, s_n\}$.
-
-Operation $Intersect(\{T_1, \dots, T_n\}, T)$ makes multiset $T$ to be an intersection of multisets $\{T_1, \dots, T_n\}$. It's biological implementation is described in \cite{Dantsin:2003} for the case of an elementary step $Intersect(T_1, T_2, T)$. Subsection \ref{intersect} describes parallel implementation of $Intersect(\{T_1, \dots, T_n\}, T)$ which takes $O(log(n))$ parallel time.
-
-Thus, the whole operation $Remove$ takes $O(log(n))$ parallel time.
-
 \subsection{$Intersect$ operation and it's parallel version} \label{intersect}
 
-As mentioned above, paper \cite{Dantsin:2003} describes multiset intersection as feasible laboratory operation. This operation does not need to be added to \emph{PFM} basic operation set to make the model more strong, but as we have shown above, $Remove$ basic operation can be executed much faster if we use $Intersect$ in it's implementation. Elementary $Intersect(T_1, T_2, T)$ takes two tubes $T_1$ and $T_2$ and produces their intersection $T$, during this process $T_1$ and $T_2$ are destroyed.
+To provide parallel implementation of $Remove$ operation we need an operation of multiset intersection. 
+
+``Elementary step'' $Intersect(T_1, T_2, T)$ takes two tubes $T_1$ and $T_2$ and produces their intersection $T$, during this process $T_1$ and $T_2$ are destroyed. Paper \cite{Dantsin:2003} describes it as feasible laboratory operation. This operation does not need to be added to \emph{PFM} basic operation set to make the model more strong, but will be used only inside $Remove$ operation's implementation. 
 
 Here we provide parallel implementation of $Intersect(\{T_1, ..., T_n\}, T)$.
 
@@ -91,3 +75,20 @@ Here we provide parallel implementation of $Intersect(\{T_1, ..., T_n\}, T)$.
 }
 
 This procedure is very similar to $Union$ and thus has the same time complexity $O(log(n))$.
+
+\subsection{Parallel $Remove$ operation}
+
+Parallel implementation of $Remove$ is a little bit tricky: we cannot simply filter the same tube $T$ in parallel but we can copy it and filter individual copies. After that we need just to intersect those copies as multisets.
+
+\procedure{$Remove(T, \{s_1, \dots, s_n\})$}{
+	\STATE $Copy(T, \{T_1, \dots, T_n\})$\label{r_copy}
+  \FOREACH{$i = (1, 2, \dots, n)$ \INPARALLEL}\label{r_loop_start}
+  	\STATE $Remove(T_i, s_i)$
+  \ENDFOR\label{r_loop_end}
+  \STATE $Intersect(\{T_1, \dots, T_n\}, T)$
+}
+
+Line \ref{r_copy} creates $n$ copies of $T$, this takes $O(log(n))$ parallel time as shown above. On lines \ref{r_loop_start} to \ref{r_loop_end} each copy $T_i$ is filtered by a substring $s_i$, being run in parallel this takes $O(1)$ parallel time. Finally all the filtered multisets are intersected and produce result $T$ which has no string having a substring from $\{s_1, \dots, s_n\}$. $Intersect$ takes $O(log(n))$ parallel time.
+
+Thus, the whole operation $Remove$ takes $O(log(n))$ parallel time.
+
