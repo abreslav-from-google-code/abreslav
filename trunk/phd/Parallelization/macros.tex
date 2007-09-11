@@ -7,6 +7,22 @@
 \newcommand{\PSTATE}{\STATE \hspace{10pt}}
 \newcommand{\ENDINPARALLELDO}{\STATE {\bf end in parallel}}
 \newcommand{\FOREACH}[1]{\FOR{{\bf each} #1}}
+
+\newcommand{\routine}[3]{
+\vspace{10pt}
+\indent\parbox{\textwidth}{
+#1#2
+\begin{algorithmic}[1]
+#3
+\end{algorithmic}
+\ENDPROCEDURE
+}
+\vspace{10pt}
+}
+
+\newcommand{\procedure}[2]{\routine{\PROCEDURE}{#1}{#2}}
+\newcommand{\function}[2]{\routine{\FUNCTION}{#1}{#2}}
+
 \newcounter{lemma}
 \setcounter{lemma}{1}
 \newcommand{\lemma}[3]{\newtheorem*{#1}{Lemma \arabic{lemma}}
@@ -19,19 +35,3 @@
 \end{proof}
 }
 
-\newcommand{\routine}[3]{
-
-\vspace{10pt}
-\indent\parbox{\textwidth}{
-#1#2
-\begin{algorithmic}[1]
-#3
-\end{algorithmic}
-\ENDPROCEDURE
-}
-\vspace{10pt}
-
-}
-
-\newcommand{\procedure}[2]{\routine{\PROCEDURE}{#1}{#2}}
-\newcommand{\function}[2]{\routine{\FUNCTION}{#1}{#2}}
