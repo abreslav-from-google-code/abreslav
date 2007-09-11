@@ -1,1 +1,6 @@
 \section{Conclusion}\label{conclusion}
+This paper describes parallel implementations of basic operations of \emph{PFM} which reduce each operation's execution time to $O(log(n))$ and allows to run solutions for such problems as Hamiltonian path and circuit in $O(log(n))$ parallel time.
+
+Such implementation for $Copy$ and $Union$ does not require any model extensions but for $Remove$ we need $Intersect$ operation which is anyway feasible and rather similar to $Copy$.
+
+This implementation does not asymptotically increase amount of used DNA. It also allows to keep number of used laboratory equipment (``tube-complexity'') in certain bounds, which need sacrifice of execution time but anyway keep it better than for non-parallel implementation.

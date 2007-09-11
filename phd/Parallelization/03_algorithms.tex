@@ -1,10 +1,4 @@
-\section{Example algorithm implementation and analysis} \label{algo}
-\begin{itemize}
-	\item Analyze Ham-Cir in \cite{Katsanyi:2003}
-	\item Analyze it in modified model
-	\item Notes about $log(N)$ vs $N^2 log(N)$
-	\item Describe implementation of Parallel Remove
-\end{itemize}
+\section{Hamiltonian path and circuit} \label{algo}
 
 Paper \cite{Katsanyi:2003} represents several algorithms for NP-complete problems implemented in \emph{PFM}. Here we examine complexity of one of these algorithms -- Hamiltonian circuit -- according to proposed parallel implementations of basic operations.
 
@@ -73,7 +67,7 @@ How many tubes do we need for $HamiltonianCircuit$ procedure? This can be calcul
 	\item $Remove(T, \{s_1, \dots, s_n\})$ consists of $Copy$ and $Intersect$ and thus needs $O(n)$ tubes.
 \end{itemize}
 
-A call to $Remove$ on line \ref{hc_remove} needs $O(n^3)$ tubes other operations need $O(n)$ tubes each. Thus "tube-complexity" of $HamiltonianCircuit$ procedure is $O(n^3)$. 
+A call to $Remove$ on line \ref{hc_remove} needs $O(n^3)$ tubes other operations need $O(n)$ tubes each. Thus ``tube-complexity'' of $HamiltonianCircuit$ procedure is $O(n^3)$. 
 
 However we can reduce amount of tubes needed but we must pay for this with execution time. We can restrict $Remove$ implementation to use not more than $M$ tubes. Let us call this new operation $Remove_M(T, S)$. Having only $M$ tubes we can build a binary tree with $M/2$ leaves, so we simply take first $M/2$ items from set $S$ and filter $T$ by them. Then we take next $M/2$ and do the same and so on.
 
