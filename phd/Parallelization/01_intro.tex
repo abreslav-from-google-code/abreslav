@@ -1,15 +1,12 @@
 \section{Introduction}
-\begin{itemize}
-	\item General words about DNA Computing \cite{Amos:2002, Adleman:1994,  Lipton:1994, Rozenberg:knapsack, Paun:???}
-	\item Words about filtering and PFM \cite{Amos:1996}
-	\item Note about operations' complexity \cite{Amos:1997}
-	\item Note about solving NP-complete problems
-	\item Introduce novel results
-	\item Introduce structure
-\end{itemize}
 
+Since Leonard Adleman has published his work \cite{Adleman:1994} in 1994 many additions, improvements and alternative approaches were developed \cite{ Lipton:1994, Amos:2002, Rozenberg:knapsack, Dantsin:2003, Paun:2002}. Several works including \cite{Amos:2002, Amos:2003:Book, PaunRozenbergSalomaa:1998} give good overview of the whole area.
 
-The \emph{Parallel Filtering Model} (\emph{PFM}) is proposed in paper \cite{Amos:1996} and is suitable to solve NP-complete problems \cite{Amos:1996, Katsanyi:2003}. It defines four basic operations:
+Particularly Adleman's work is a root of the family of computational models working on the same principle: selecting result of the computation from a set of all possible variants (see for example works \cite{Amos:1996, Adleman:1996,  Liu:1996, Rozenberg:2003}). Paper \cite{Katsanyi:2003} shows that these models are computationally equivalent. These models are suitable for solving NP-complete problems.
+
+This approach may be considered to be somewhat extensive since we do not construct the result but just filter out incorrect solutions. Hence algorithms for NP-complete problems in such models require exponential amount of DNA and do not scale to large problem sizes \cite{Hartmanis:1995}. But there is no exact algorithm for NP-complete problem which would have not been exponential. Even probabilistic algorithms require exponential space or time \cite{Liu:2005}. Thus we should not neglect even such ``extensive'' approaches.
+
+Here we deal with one of these models -- the \emph{Parallel Filtering Model} (\emph{PFM}) -- which is proposed in paper \cite{Amos:1996}. It defines four basic operations:
 \begin{itemize}
 	\item $Remove(T, \{s_1, \dots, s_n\})$ removes form multiset $T$ any string which contains at least one occurrence of some string $s_i$;
 	\item $Union(\{T_1, \dots, T_n\}, T)$ creates a multiset T which is a multiset union of $U_i$;
