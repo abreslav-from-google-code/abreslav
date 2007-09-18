@@ -1,8 +1,8 @@
 \section{Hamiltonian path and circuit} \label{algo}
 
-Paper \cite{Katsanyi:2003} represents several algorithms for NP-complete problems implemented in \emph{PFM}. Here we examine complexity of one of these algorithms -- Hamiltonian circuit -- according to proposed parallel implementations of basic operations.
+Paper \cite{Katsanyi:2003} represents several algorithms for NP-complete problems implemented in \emph{PFM}. Here we examine complexity of two of these algorithms -- Hamiltonian path and circuit -- according to proposed parallel implementations of basic operations.
 
-\subsection{Problem representation}
+\subsection{Notation preliminaries}
 Here we provide brief overview of notation used in \cite{Katsanyi:2003}. 
 
 There is an alphabet
@@ -17,6 +17,7 @@ $$P_n=\{p_1 a_{i_1} p_2 a_{i_2} \dots p_n a_{i_n} \in T_n |
          1 \leq j, j' \leq n, j \neq j' \Rightarrow i_j \neq i_{j'}\}$$ 
 which represents all permutations of $n$ distinct things. This multiset can be generated using basic operations in polynomial time \cite{Amos:1996} but actually since wide range of algorithms uses it, it might be useful to generate many instances of $P_n$ in advance and then use those instances without spending time on it's generation.
 
+\subsection{Hamiltonian path problem}
 For a graph $G=(V, E)$, where $V=\{v_1, \dots, v_n\}$, node sequences are represented by strings in $P_n$. The string $p_1 a_{i_1} p_2 a_{i_2} \dots p_n a_{i_n}$ represents the node sequence $v_{i_1}, v_{i_2}, \dots, v_{i_n}$. For example such a node sequence is a Hamiltonian path if and only if it is a path. That is, the consecutive nodes in the sequence must be connected by an edge in $E$.
 
 Thus, the following function from \cite{Amos:1996} finds Hamiltonian path in a graph.
