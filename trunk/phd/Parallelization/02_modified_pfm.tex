@@ -24,7 +24,7 @@ Lines \ref{c_one} and \ref{c_two} properly handle basic cases of $Copy$ and form
 
 Calls made on lines \ref{c_left} and \ref{c_right} reduce problem size to $n/2$. Assuming that $Copy$ works properly for $\vec{T}$ of size $n/2$ we see that these two calls fill up vector of size $n$ with copies of original multiset.
 
-Each level of recursion reduces $n$ to $n/2$, thus any call to $Copy$ ends up in one of basic cases after $O(log(n))$ levels of recursion. As all the calls on the same level of recursion are executed in parallel (lines \ref{c_left} and \ref{c_right}) the whole operation ends up in $O(lon(n))$ parallel time.
+Each level of recursion reduces $n$ to $n/2$, thus any call to $Copy$ ends up in one of basic cases after $O(log(n))$ levels of recursion. As all the calls on the same level of recursion are executed in parallel (lines \ref{c_left} and \ref{c_right}) the whole operation ends up in $O(log(n))$ parallel time.
 
 \subsection{Parallel $Union$ operation}
 

@@ -1,25 +1,34 @@
 %\documentclass[12pt]{article}
-\documentclass[a4paper, 17pt]{extarticle}
+\documentclass{article}
 \usepackage{algorithmic}
-\usepackage{amsmath, amsthm, amssymb}
+\usepackage{amssymb}
 
 \begin{document}
 
-\author{Andrey Breslav}
+\begin{frontmatter}
+
 \title{Parallelizing Basic Operations in Parallel Filtering Model of DNA Computations}
-\maketitle
+
+\author{Andrey Breslav}
+\address{SPbSU ITMO, 49, Kronverskiy pr, St. Petersburg, 197101, Russia}
+\ead{abreslav@gmail.com}
+
 \begin{abstract}
 \input{abstract.tex}
 \end{abstract}
+
+\begin{keyword}
+Parallel Filtering Model \sep DNA computations \sep parallel implementation
+\PACS 01.30.$-$y
+\end{keyword}
+\end{frontmatter}
+
 \thispagestyle{empty}
 
-%\newpage
 \pagestyle{plain}
 \pagenumbering{arabic}
 \setcounter{page}{1}
 
-%\tableofcontents
-%\newpage
 
 \input{macros.tex}
 \input{01_intro.tex}
@@ -30,7 +39,7 @@
 %\newpage 
 %\addcontentsline{toc}{section}{References}
 
-\bibliographystyle{unsrt}
+\bibliographystyle{elsart-num-sort}
 \bibliography{bibliography}
 
 
