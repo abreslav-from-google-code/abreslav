@@ -57,7 +57,7 @@ Correctness of this algorithm is proved in \cite{Katsanyi:2003}. Time complexity
 Let us analyze time complexity of this algorithm using proposed parallel implementation of basic operations. Then line \ref{hc_remove} takes $O(log(n^3))=O(log(n))$ parallel time. So does the following line. Lines \ref{hc_r1} and \ref{hc_r2} take $O(log(n))$ parallel time each. So the whole {\bf for} does since it is executed in parallel. Final $Union$ takes $O(log(n))$ parallel time and $Select$ is executed in constant time. Thus, time complexity of this algorithm with parallel implementations of basic operations is $O(log(n))$.
 
 \subsection{Non-time aspects of complexity}
-Now let us look at other aspects of the algorithm's complexity. Number of DNA strands used by the algorithm is $O(n!)$ in both parallel and non-parallel implementations. Therefore in parallel implementation precise number of strands is bigger since we use $Copy$ inside $Remove$.
+Now let us look at other aspects of the algorithm's complexity. Number of DNA strands used by the algorithm is $O(n!)$ in both parallel and non-parallel implementations.
 
 Number of elementary steps performed by this algorithm is still $O(n^3)$.
 
@@ -67,7 +67,7 @@ How many tubes do we need for $HamiltonianCircuit$ procedure? Each of $Copy(T, \
 
 A call to $Remove$ on line \ref{hc_remove} needs $O(n^3)$ tubes, other operations need $O(n)$ tubes each. Thus ``tube-complexity'' of $HamiltonianCircuit$ procedure is $O(n^3)$. 
 
-However we can reduce amount of tubes needed but we must pay for this with execution time. We can restrict $Remove$ implementation to use not more than $M$ tubes. Let us call this new operation $Remove_M(T, S)$. Having only $M$ tubes we can build a binary tree with $M/2$ leaves, so we simply take first $M/2$ items from set $S$ and filter $T$ by them. Then we take next $M/2$ and do the same and so on.
+However we can reduce amount of tubes needed but we must pay for this with execution time. We can restrict $Remove$ implementation to use not more than $M$ tubes. Let us call this new operation $Remove_M(T, S)$. Having only $M$ tubes we can build a binary tree with $\lceil M/2 \rceil$ leaves, so we simply take first $\lceil M/2 \rceil$ items from set $S$ and filter $T$ by them. Then we take next $\lceil M/2 \rceil$ and do the same and so on.
 
 \procedure{$Remove_M(T, \{s_1, \dots, s_n\})$}{
 	\STATE $count \gets 0$
