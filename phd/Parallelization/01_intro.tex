@@ -1,8 +1,8 @@
 \section{Introduction}
 
-Since Leonard Adleman has published his work \cite{Adleman:1994} in 1994 many additions, improvements and alternative approaches were developed \cite{Lipton:1994, Amos:2002, Rozenberg:knapsack, Dantsin:2003, Paun:2002}. Several works including \cite{Amos:2002, Amos:2003:Book, PaunRozenbergSalomaa:1998} give good overview of the whole area.
+Since Leonard Adleman has published his work \cite{Adleman:1994} in 1994 many additions, improvements and alternative approaches were developed \cite{Amos:2002, Dantsin:2003, Rozenberg:knapsack, Lipton:1994, Paun:2002}. Several works including \cite{Amos:2003:Book, Amos:2002, PaunRozenbergSalomaa:1998} give good overview of the whole area.
 
-Particularly Adleman's work is a root of the family of computational models working on the same principle: selecting result of the computation from a set of all possible variants (see for example works \cite{Amos:1996, Adleman:1996,  Liu:1996, Rozenberg:2003}). Paper \cite{Katsanyi:2003} shows that these models are computationally equivalent. These models are suitable for solving NP-complete problems.
+Particularly Adleman's work is a root of the family of computational models working on the same principle: selecting result of the computation from a set of all possible variants (see for example works \cite{Adleman:1996, Amos:1996, Liu:1996, Rozenberg:2003}). Paper \cite{Katsanyi:2003} shows that these models are computationally equivalent. These models are suitable for solving NP-complete problems.
 
 This approach may be considered to be somewhat extensive since we do not construct the result but just filter out incorrect solutions. Hence algorithms for NP-complete problems in such models require exponential amount of DNA and do not scale to large problem sizes \cite{Hartmanis:1995}. But there is no exact algorithm for NP-complete problem which would have not been exponential. Even probabilistic algorithms require exponential space or time \cite{Liu:2005}. Thus, we should not neglect even such ``extensive'' approaches.
 
@@ -13,7 +13,7 @@ Here we deal with the \emph{Parallel Filtering Model} (\emph{PFM}) which is prop
 	\item $Copy(T, \{T_1, \dots, T_n\})$ produces a number of copies, $T_i$, of $T$;
 	\item $Select(T)$ selects an element of $T$ uniformly at random, if $T$ is empty then \emph{empty} is returned.
 \end{itemize}
-Papers \cite{Amos:1997, Amos:2003:Book} describe $Remove$, $Union$ and $Copy$ as having linear time complexity ($O(n)$). 
+Papers \cite{Amos:2003:Book, Amos:1997} describe $Remove$, $Union$ and $Copy$ as having linear time complexity ($O(n)$). 
 Paper \cite{Katsanyi:2003} proposes a \emph{normal form} of molecular program in \emph{PFM}, where operations (we will refer to them as \emph{elementary steps}) work with minimum amount of data.
 \begin{itemize}
 	\item $Union(T_1, T_2, T)$ produces a union $T$ of two multisets $T_1$ and $T_2$. Another form of this operation is $Union(T', T)$ where $T'$ is added to $T$ -- this can be implemented as $Union(T, T', T)$.
