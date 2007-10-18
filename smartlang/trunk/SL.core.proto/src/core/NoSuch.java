@@ -1,0 +1,92 @@
+package core;
+
+
+public abstract class NoSuch {
+
+	public static final IMethod METHOD = new IMethod() {
+		public IType getDeclaringType() {
+			return NoSuch.TYPE;
+		}
+
+		public String getName() {
+			return "";
+		}
+
+		public IFunction lookupFunction(IType... argumentTypes) {
+			return NoSuch.FUNCTION;
+		}
+	};
+	
+	public static final IType TYPE = new ObjectType<Void>() {
+
+		@Override
+		protected FieldDescriptor[] doGetFields() {
+			return new FieldDescriptor[] {};
+		}
+
+		@Override
+		protected IMethod[] doGetMethods() {
+			return new IMethod[] {};
+		}
+
+		public Instance getDefaultValue() {
+			return NoSuch.OBJECT;
+		}
+
+		public boolean conformsTo(IType other) {
+			return false;
+		}
+
+		public IFunction getCastFrom(IType type) {
+			return NoSuch.FUNCTION;
+		}
+		
+		@Override
+		public Instance createInstance(Void data) {
+			return OBJECT;
+		}
+		
+	};
+
+	public static final Instance OBJECT = new Instance(TYPE, new Object());
+	
+	public static final FieldDescriptor FIELD = new FieldDescriptor(NoSuch.TYPE, "", NoSuch.TYPE) {
+		@Override
+		public IFunction getReadFunction() {
+			return NoSuch.FUNCTION;
+		}
+
+		@Override
+		public IFunction getWriteFunction() {
+			return NoSuch.FUNCTION;
+		}
+	};
+	
+	public static final IFunction FUNCTION = new Function(TYPE) {
+		public Instance run(Instance thiz, Instance... arguments) {
+			throw new UnsupportedOperationException();
+		}
+	};
+	
+	public static final IGenericFunction.Binary BINARY_FUNCTION = new IGenericFunction.Binary() {
+		
+		@Override
+		public Instance run2(Instance thiz, Instance arg) {
+			throw new UnsupportedOperationException();
+		}
+		
+	};
+	
+	public static final IGenericFunction.Unary UNARY_FUNCTION = new IGenericFunction.Unary() {
+	
+		@Override
+		public Instance run1(Instance thiz) {
+			throw new UnsupportedOperationException();
+		}
+		
+	};
+
+	private NoSuch() {
+	}
+
+}
