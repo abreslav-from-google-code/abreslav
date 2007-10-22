@@ -1,6 +1,6 @@
 package pascal.types;
 
-import core.FieldDescriptor;
+import core.IField;
 import core.IGenericField;
 import core.IGenericFunction;
 import core.IMethod;
@@ -105,7 +105,7 @@ public class ArrayType extends TypeImpl<ArrayType.ShiftedArray> {
 		return new IMethod[] {};
 	}
 
-	public FieldDescriptor lookupField(String name) {
+	public IField lookupField(String name) {
 		return NoSuch.FIELD;
 	}
 	

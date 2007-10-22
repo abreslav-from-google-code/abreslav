@@ -21,7 +21,7 @@ public interface IType {
 	 * @return - field with the given name,
 	 *           NoSuch.FIELD if none exists
 	 */
-	FieldDescriptor lookupField(String name);
+	IField lookupField(String name);
 
 	/**
 	 * @return a default value for this type (used for array initialization)

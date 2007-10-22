@@ -1,6 +1,6 @@
 package core;
 
-public abstract class FieldDescriptor {
+public abstract class FieldDescriptor implements IField {
 
 	private final IType fieldType;
 	private final IType declaringType;
@@ -24,6 +24,4 @@ public abstract class FieldDescriptor {
 		return name;
 	}
 	
-	public abstract IFunction getReadFunction();
-	public abstract IFunction getWriteFunction();
 }

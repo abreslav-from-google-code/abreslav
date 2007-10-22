@@ -5,23 +5,23 @@ import java.util.Map;
 
 public abstract class ObjectType<D> extends TypeImpl<D> {
 
-	private Map<String, FieldDescriptor> fields;
+	private Map<String, IField> fields;
 
-	protected final Map<String, FieldDescriptor> getFields() {
+	protected final Map<String, IField> getFields() {
 		if (fields == null) {
-			fields = new HashMap<String, FieldDescriptor>();
-			FieldDescriptor[] fieldDescriptors = doGetFields();
-			for (FieldDescriptor fieldDescriptor : fieldDescriptors) {
+			fields = new HashMap<String, IField>();
+			IField[] fieldDescriptors = doGetFields();
+			for (IField fieldDescriptor : fieldDescriptors) {
 				fields.put(fieldDescriptor.getName(), fieldDescriptor);
 			}
 		}
 		return fields;
 	}
 
-	protected abstract FieldDescriptor[] doGetFields();
+	protected abstract IField[] doGetFields();
 	
-	public final FieldDescriptor lookupField(String name) {
-		FieldDescriptor fieldDescriptor = getFields().get(name);
+	public final IField lookupField(String name) {
+		IField fieldDescriptor = getFields().get(name);
 		return (fieldDescriptor != null) 
 			? fieldDescriptor 
 			: NoSuch.FIELD;

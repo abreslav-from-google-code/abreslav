@@ -20,8 +20,8 @@ public abstract class NoSuch {
 	public static final IType TYPE = new ObjectType<Void>() {
 
 		@Override
-		protected FieldDescriptor[] doGetFields() {
-			return new FieldDescriptor[] {};
+		protected IField[] doGetFields() {
+			return new IField[] {};
 		}
 
 		@Override
@@ -50,15 +50,13 @@ public abstract class NoSuch {
 
 	public static final Instance OBJECT = new Instance(TYPE, new Object());
 	
-	public static final FieldDescriptor FIELD = new FieldDescriptor(NoSuch.TYPE, "", NoSuch.TYPE) {
-		@Override
-		public IFunction getReadFunction() {
-			return NoSuch.FUNCTION;
+	public static final IField FIELD = new FieldDescriptor(NoSuch.TYPE, "", NoSuch.TYPE) {
+		public Instance readValue(Instance host) {
+			return OBJECT;
 		}
 
-		@Override
-		public IFunction getWriteFunction() {
-			return NoSuch.FUNCTION;
+		public void writeValue(Instance host, Instance value) {
+			throw new UnsupportedOperationException();
 		}
 	};
 	

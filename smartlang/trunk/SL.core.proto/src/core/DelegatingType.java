@@ -14,7 +14,7 @@ public class DelegatingType<D, T extends IType> implements IType {
 		return delegate.getDefaultValue();
 	}
 
-	public FieldDescriptor lookupField(String name) {
+	public IField lookupField(String name) {
 		return delegate.lookupField(name);
 	}
 

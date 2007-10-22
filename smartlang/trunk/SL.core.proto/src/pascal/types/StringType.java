@@ -2,8 +2,8 @@ package pascal.types;
 
 import java.util.Arrays;
 
-import core.FieldDescriptor;
 import core.FunctionWrapper;
+import core.IField;
 import core.IFunction;
 import core.IGenericFunction;
 import core.IMethod;
@@ -157,7 +157,7 @@ public class StringType extends TypeImpl<StringType.MutableString> {
 		return EMPTY_STRING;
 	}
 
-	public FieldDescriptor lookupField(String name) {
+	public IField lookupField(String name) {
 		// TODO Auto-generated method stub
 		return null;
 	}

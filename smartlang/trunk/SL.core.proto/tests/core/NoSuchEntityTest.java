@@ -2,6 +2,7 @@ package core;
 
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertSame;
+import static org.junit.Assert.fail;
 
 import org.junit.Test;
 
@@ -14,8 +15,13 @@ public class NoSuchEntityTest {
 
 	@Test
 	public void testNoSuchFieldDescriptor() throws Exception {
-		assertSame(NoSuch.FUNCTION, NoSuch.FIELD.getReadFunction());
-		assertSame(NoSuch.FUNCTION, NoSuch.FIELD.getWriteFunction());
+		assertSame(NoSuch.OBJECT, NoSuch.FIELD.readValue(null));
+		try {
+			NoSuch.FIELD.writeValue(null, null);
+			fail();
+		} catch (UnsupportedOperationException e) {
+			
+		}
 	}
 
 	@Test
