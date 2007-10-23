@@ -4,7 +4,6 @@ import runtime.tree.IExpressionNode;
 import runtime.tree.IExpressionNodeVisitor;
 import runtime.tree.ILeftValueNode;
 import core.IField;
-import core.IType;
 
 public class FieldAccess extends MemberAccess implements ILeftValueNode {
 
@@ -17,10 +16,6 @@ public class FieldAccess extends MemberAccess implements ILeftValueNode {
 
 	public IField getField() {
 		return myField;
-	}
-
-	public IType getType() {
-		return myField.getFieldType();
 	}
 
 	public <R> R acceptExpressionNodeVisitor(IExpressionNodeVisitor<R> visitor) {

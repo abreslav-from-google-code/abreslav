@@ -4,7 +4,6 @@ import runtime.tree.IExpressionNode;
 import runtime.tree.IExpressionNodeVisitor;
 import util.SafeArray;
 import core.IFunction;
-import core.IType;
 
 public class FunctionCall extends MemberAccess {
 
@@ -27,10 +26,6 @@ public class FunctionCall extends MemberAccess {
 	
 	public IFunction getFunction() {
 		return myFunction;
-	}
-	
-	public IType getType() {
-		return myFunction.getReturnType();
 	}
 	
 	public <R> R acceptExpressionNodeVisitor(IExpressionNodeVisitor<R> visitor) {

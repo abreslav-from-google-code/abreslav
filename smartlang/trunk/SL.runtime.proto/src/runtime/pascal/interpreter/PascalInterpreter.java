@@ -1,6 +1,7 @@
 package runtime.pascal.interpreter;
 
 import pascal.types.BooleanType;
+import runtime.IEvaluatorContext;
 import runtime.tree.IStatementNode;
 import runtime.tree.IStatementNodeVisitor;
 import runtime.tree.statements.Assignment;
@@ -10,14 +11,18 @@ import runtime.tree.statements.While;
 import util.IArray;
 import core.Instance;
 
-public class Interpreter implements IStatementNodeVisitor<Void> {
+public class PascalInterpreter implements IStatementNodeVisitor<Void> {
 
-	private final ExpressionEvaluator myExpressionEvaluator = new ExpressionEvaluator();
+	private final PascalExpressionEvaluator myExpressionEvaluator;
 	
+	public PascalInterpreter(IEvaluatorContext evaluatorContext) {
+		myExpressionEvaluator = new PascalExpressionEvaluator(evaluatorContext);
+	}
+
 	public Void visitCompoundNode(Block node) {
 		IArray<IStatementNode> statements = node.getStatements();
 		for (int i = 0; i < statements.size(); i++) {
-			statements.get(i).acceptStatementNodeVisitor(this);
+			execute(statements.get(i));
 		}
 		return null;
 	}
@@ -26,8 +31,10 @@ public class Interpreter implements IStatementNodeVisitor<Void> {
 		Instance condition = myExpressionEvaluator.evaluate(node.getCondition());
 		if (BooleanType.BOOLEAN.readBooleanValue(condition)) {
 			execute(node.getThen());
-		} else {
-			execute(node.getElse());
+		} else { 
+			if (node.getElse() != null ) {
+				execute(node.getElse());
+			}
 		}
 		return null;
 	}
@@ -41,7 +48,7 @@ public class Interpreter implements IStatementNodeVisitor<Void> {
 
 	public Void visitWhileNode(While node) {
 		while (true) {
-		Instance condition = myExpressionEvaluator.evaluate(node.getCondition());
+			Instance condition = myExpressionEvaluator.evaluate(node.getCondition());
 			if (!BooleanType.BOOLEAN.readBooleanValue(condition)) {
 				break;
 			} 
