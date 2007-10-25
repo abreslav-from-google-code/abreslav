@@ -18,7 +18,10 @@ idList	:	Id (','! Id)*;
 type	:	Id;
 block	:	'begin'^ statements 'end'!;
 statement
-	:	| ('$'! Num ':'^)? nonEmptyStatement;
+	:	
+	| nonEmptyStatement
+	| '|'^ nonEmptyStatement JavaStr
+	| (String ':'^)? Num ':'^ nonEmptyStatement;
 nonEmptyStatement
 	:	assign | ifThenElse | whileDo | block;
 statements
@@ -43,5 +46,19 @@ ifThenElse	:	'if'^ expression 'then'! statement (options {k=0;}:'else'^ statemen
 whileDo 	:	'while'^ expression 'do'! statement;
 Id	:	('a'..'z' | 'A'..'Z')+; 
 Num	:	('0'..'9')+;
+String : '\"' (options{greedy=false;}:.)* '\"';
 
-WS : (' ' | '\t' | '\n' | '\r')+ {skip();} ;
+WS : (
+	(' ' | '\t' | '\n' | '\r')+ 
+	| '(*' (options{greedy=false;}:.)* '*)'
+	| '//' (options{greedy=false;}:.)* '\n'
+	)  
+	{skip();} ;
+	
+JavaStr : '{{' (options{greedy=false;}:.)* '}}';
+
+assertExpr 
+	: JavaStr
+	| Num (':'^ String)?
+	;
+ 

@@ -20,11 +20,15 @@ block
 	: ^('begin' (st+=statement)*)
 	-> block(statements={$st});
 statement 
-	: ^(':' Num statement)
-	| assign -> {$assign.st}
+	: assign -> {$assign.st}
 	| ifThenElse -> {$ifThenElse.st} 
 	| whileDo -> {$whileDo.st}
-	| block -> {$block.st};
+	| block -> {$block.st}
+	| ^('|' st=statement assertExpr)
+	-> assertedStatement(stmt={$st.st}, asrt={$assertExpr.st})
+	| ^(':' assertExpr st=statement)
+	-> assertedStatement(stmt={$st.st}, asrt={$assertExpr.st})
+	;
 assign 
 	: ^(':=' Id expression)
 	-> assign(id={$Id}, exp={$expression.st});
@@ -55,3 +59,11 @@ expression
 	-> num(value={$Num.text})
 	;
 	
+assertExpr
+	: JavaStr 
+	-> assertJavaBlock(java={$JavaStr.text}) 
+	| Num
+	-> assertNumberOfVisits(count={$Num.text})
+	| ^(':' String Num )
+	-> assertNumberOfVisits(count={$Num.text}, msg={$String.text})
+	;
