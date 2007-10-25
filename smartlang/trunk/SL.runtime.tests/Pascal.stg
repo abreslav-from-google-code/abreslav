@@ -1,0 +1,87 @@
+group Pascal;
+
+program(head, var, block) ::=
+<<
+<var>
+Block body = <block>;
+>>
+
+block(statements) ::=
+<<
+new Block(
+	<statements; separator=",\n">
+)>>
+
+assign(id, exp) ::= 
+<<
+new Assignment(
+	<id(name=(id))>,
+	<exp>
+)>>
+
+ifThenElse(cond, then, els="null") ::=
+<<
+new If(
+	<cond>,
+	<then>,
+	<els>
+)>>
+
+while(cond, body) ::=
+<<
+new While(
+	<cond>,
+	<body>
+)
+>>
+
+binaryOpMap ::= [
+	">" : "OrdinalType.GT",
+	"<" : "OrdinalType.LT",
+	"=" : "OrdinalType.EQ",
+	">=" : "OrdinalType.GE",
+	"<=" : "OrdinalType.LE",
+	"<>" : "OrdinalType.NE",
+	"+" : "IntegerType.ADD",
+	"-" : "IntegerType.SUB",
+	"*" : "IntegerType.MUL",
+	"div" : "IntegerType.DIV",
+	"mod" : "IntegerType.MOD",
+	"and" : "BooleanType.AND",
+	"or" : "BooleanType.OR",
+	"xor" : "BooleanType.XOR",
+	default : "null"
+]
+
+unaryOpMap ::= [
+	"not" : "BooleanType.NOT",
+	"-" : "IntegerType.NEG",
+	default : "null"
+]
+
+binaryOp(l, op, r) ::=
+<<
+new FunctionCall(
+	<l>,
+	<binaryOpMap.(op)>,
+	<r>
+)>>  
+
+unaryOp(op, r) ::=
+<<
+new FunctionCall(
+	<r>,
+	<unaryOpMap.(op)>
+)
+>>
+
+id(name) ::=
+<<
+new FieldAccess(
+	new InstanceAccess(unitId),
+	unitType.lookupField("<name>")
+)
+>>
+
+num(value) ::=
+"new InstanceAccess(id_<value>)"
