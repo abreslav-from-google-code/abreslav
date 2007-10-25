@@ -175,106 +175,139 @@ public class PascalInterpreterTest {
 		int unitId = context.addInstance(unitInstance);
 		int id_1 = context.addInstance(IntegerType.INTEGER.createInstance(1));
 		int id_0 = context.addInstance(IntegerType.INTEGER.createInstance(0));
-		Block body = new Block(
-				new Assignment(
-					new FieldAccess(
+
+		VisitCounters visitCounters = new VisitCounters();
+		
+		Block body = RuntimeTreeNodeFactory.INSTANCE.createBlock(
+				RuntimeTreeNodeFactory.INSTANCE.createAssignment(
+					RuntimeTreeNodeFactory.INSTANCE.createFieldAccess(
 						new InstanceAccess(unitId),
 						unitType.lookupField("a")
 					),
-					new InstanceAccess(id_1)
+					RuntimeTreeNodeFactory.INSTANCE.createInstanceAccess(id_1)
 				),
-				new If(
-					new FunctionCall(
-						new FieldAccess(
+				RuntimeTreeNodeFactory.addHandler(
+					RuntimeTreeNodeFactory.INSTANCE.createAssignment(
+						RuntimeTreeNodeFactory.INSTANCE.createFieldAccess(
+							new InstanceAccess(unitId),
+							unitType.lookupField("a")
+						),
+						RuntimeTreeNodeFactory.INSTANCE.createInstanceAccess(id_1)
+					), 
+					new IVisitHandler() {
+						public void run() {
+							{{
+							  	assertEquals("HERE", 1, 0);
+							  	if (1 > 2) {
+							  	  assertEquals(1, 1);
+							  	}
+							  }}
+						}
+					}
+				),
+				RuntimeTreeNodeFactory.addHandler(
+					RuntimeTreeNodeFactory.INSTANCE.createIf(
+						RuntimeTreeNodeFactory.INSTANCE.createFunctionCall(
+							RuntimeTreeNodeFactory.INSTANCE.createFieldAccess(
+								new InstanceAccess(unitId),
+								unitType.lookupField("a")
+							),
+							OrdinalType.GT,
+							RuntimeTreeNodeFactory.INSTANCE.createInstanceAccess(id_0)
+						),
+						RuntimeTreeNodeFactory.addHandler(
+							RuntimeTreeNodeFactory.INSTANCE.createAssignment(
+								RuntimeTreeNodeFactory.INSTANCE.createFieldAccess(
+									new InstanceAccess(unitId),
+									unitType.lookupField("a")
+								),
+								RuntimeTreeNodeFactory.INSTANCE.createFunctionCall(
+									RuntimeTreeNodeFactory.INSTANCE.createFieldAccess(
+										new InstanceAccess(unitId),
+										unitType.lookupField("a")
+									),
+									IntegerType.ADD,
+									RuntimeTreeNodeFactory.INSTANCE.createInstanceAccess(id_1)
+								)
+							), 
+							visitCounters.addCounter(1, "some")
+						),
+						null
+					), 
+					visitCounters.addCounter(1, "if")
+				),
+				RuntimeTreeNodeFactory.addHandler(
+					RuntimeTreeNodeFactory.INSTANCE.createWhile(
+						RuntimeTreeNodeFactory.INSTANCE.createFunctionCall(
+							RuntimeTreeNodeFactory.INSTANCE.createFieldAccess(
+								new InstanceAccess(unitId),
+								unitType.lookupField("a")
+							),
+							OrdinalType.GT,
+							RuntimeTreeNodeFactory.INSTANCE.createInstanceAccess(id_0)
+						),
+						RuntimeTreeNodeFactory.INSTANCE.createAssignment(
+							RuntimeTreeNodeFactory.INSTANCE.createFieldAccess(
+								new InstanceAccess(unitId),
+								unitType.lookupField("a")
+							),
+							RuntimeTreeNodeFactory.INSTANCE.createFunctionCall(
+								RuntimeTreeNodeFactory.INSTANCE.createFieldAccess(
+									new InstanceAccess(unitId),
+									unitType.lookupField("a")
+								),
+								IntegerType.SUB,
+								RuntimeTreeNodeFactory.INSTANCE.createInstanceAccess(id_1)
+							)
+						)
+					), 
+					visitCounters.addCounter(1, null)
+				),
+				RuntimeTreeNodeFactory.INSTANCE.createIf(
+					RuntimeTreeNodeFactory.INSTANCE.createFunctionCall(
+						RuntimeTreeNodeFactory.INSTANCE.createFieldAccess(
 							new InstanceAccess(unitId),
 							unitType.lookupField("a")
 						),
 						OrdinalType.GT,
-						new InstanceAccess(id_0)
+						RuntimeTreeNodeFactory.INSTANCE.createInstanceAccess(id_0)
 					),
-					new Assignment(
-						new FieldAccess(
+					RuntimeTreeNodeFactory.INSTANCE.createAssignment(
+						RuntimeTreeNodeFactory.INSTANCE.createFieldAccess(
 							new InstanceAccess(unitId),
 							unitType.lookupField("a")
 						),
-						new FunctionCall(
-							new FieldAccess(
+						RuntimeTreeNodeFactory.INSTANCE.createFunctionCall(
+							RuntimeTreeNodeFactory.INSTANCE.createFieldAccess(
 								new InstanceAccess(unitId),
 								unitType.lookupField("a")
 							),
 							IntegerType.ADD,
-							new InstanceAccess(id_1)
+							RuntimeTreeNodeFactory.INSTANCE.createInstanceAccess(id_1)
 						)
 					),
-					null
-				),
-				new While(
-					new FunctionCall(
-						new FieldAccess(
+					RuntimeTreeNodeFactory.INSTANCE.createAssignment(
+						RuntimeTreeNodeFactory.INSTANCE.createFieldAccess(
 							new InstanceAccess(unitId),
 							unitType.lookupField("a")
 						),
-						OrdinalType.GT,
-						new InstanceAccess(id_0)
-					),
-					new Assignment(
-						new FieldAccess(
-							new InstanceAccess(unitId),
-							unitType.lookupField("a")
-						),
-						new FunctionCall(
-							new FieldAccess(
-								new InstanceAccess(unitId),
-								unitType.lookupField("a")
-							),
-							IntegerType.SUB,
-							new InstanceAccess(id_1)
-						)
-					)
-				),
-				new If(
-					new FunctionCall(
-						new FieldAccess(
-							new InstanceAccess(unitId),
-							unitType.lookupField("a")
-						),
-						OrdinalType.GT,
-						new InstanceAccess(id_0)
-					),
-					new Assignment(
-						new FieldAccess(
-							new InstanceAccess(unitId),
-							unitType.lookupField("a")
-						),
-						new FunctionCall(
-							new FieldAccess(
+						RuntimeTreeNodeFactory.INSTANCE.createFunctionCall(
+							RuntimeTreeNodeFactory.INSTANCE.createFieldAccess(
 								new InstanceAccess(unitId),
 								unitType.lookupField("a")
 							),
 							IntegerType.ADD,
-							new InstanceAccess(id_1)
-						)
-					),
-					new Assignment(
-						new FieldAccess(
-							new InstanceAccess(unitId),
-							unitType.lookupField("a")
-						),
-						new FunctionCall(
-							new FieldAccess(
-								new InstanceAccess(unitId),
-								unitType.lookupField("a")
-							),
-							IntegerType.ADD,
-							new FunctionCall(
-								new InstanceAccess(id_1),
+							RuntimeTreeNodeFactory.INSTANCE.createFunctionCall(
+								RuntimeTreeNodeFactory.INSTANCE.createInstanceAccess(id_1),
 								IntegerType.NEG
 							)
 						)
 					)
 				)
 			);
+
+
 		interpreter.execute(body);
-		assertEquals(-1, IntegerType.F_THIS.readValue(unit.a));
+		visitCounters.assertCounters();
 	}
 }

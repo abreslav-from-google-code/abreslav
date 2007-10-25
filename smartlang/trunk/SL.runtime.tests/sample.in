@@ -3,12 +3,19 @@ var
   a, b : Integer;
   c : Real;
 begin
-  a := 1;
+  | a := 1 
+  {{
+  	assertVar("a", 1);
+  }};
+  "if":1:
   if a > 0 then
+    "some" : 1 :
     a := a + 1;
+  1:
   while a > 0 do
     a := a - 1;
   if a > 0 then
     a := a + 1
-  else a := a + -1;
+  else 
+  	a := a + -1;
 end.
