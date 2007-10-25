@@ -1,0 +1,47 @@
+grammar Pascal;
+options {
+  output=AST;
+  ASTLabelType=CommonTree;
+}
+@header {
+  package pascal.parser;
+}
+@lexer::header {
+  package pascal.parser;
+}
+
+program	:	head? var? block '.'!;
+head	:	'program'^ Id ';'!;
+var	:	'var'^ varDecl+;
+varDecl	:	idList ':'! type^ ';'!;
+idList	:	Id (','! Id)*;
+type	:	Id;
+block	:	'begin'^ statements 'end'!;
+statement
+	:	| ('$'! Num ':'^)? nonEmptyStatement;
+nonEmptyStatement
+	:	assign | ifThenElse | whileDo | block;
+statements
+	:	statement (';'! statement)*;
+assign	:	Id ':='^ expression;
+expression
+	:	sum (compareOp^ sum)*;
+sum	:	mul (plusOp^ mul)*;
+mul	:	factor (mulOp^ factor)*;
+factor	
+	: '('! expression ')'! 
+	| '+'! factor 
+	| '-' factor -> ^('-' '-' factor) 
+	| 'not'^ factor 
+	| Id 
+	| Num;
+compareOp
+	:	'<' | '>' | '<=' | '>=' | '=' | '<>';
+plusOp	:	'+' | '-' | 'or' | 'xor';
+mulOp	:	'*' | 'div' | 'mod' | 'and';
+ifThenElse	:	'if'^ expression 'then'! statement (options {k=0;}:'else'^ statement)?;
+whileDo 	:	'while'^ expression 'do'! statement;
+Id	:	('a'..'z' | 'A'..'Z')+; 
+Num	:	('0'..'9')+;
+
+WS : (' ' | '\t' | '\n' | '\r')+ {skip();} ;
