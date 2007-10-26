@@ -17,22 +17,52 @@ import org.antlr.stringtemplate.StringTemplateGroup;
 import pascal.parser.PascalParser.program_return;
 
 public class InterpreterTestGenerator {
+	private static final String TEST_PROJECT_ROOT = "../SL.runtime.tests/";
+	private static final String GENERATED_TESTS_FOLDER = TEST_PROJECT_ROOT + "generated_tests/";
+	private static final String SOURCE_TESTS_FOLDER = TEST_PROJECT_ROOT + "tests/";
+
 	public static void main(String[] args) throws IOException,
 			RecognitionException {
+		String packageName = "runtime.pascal.interpreter";
 
-		ANTLRFileStream stream = new ANTLRFileStream("sample.in");
+		File tests = new File(SOURCE_TESTS_FOLDER);
+		for (File file : tests.listFiles()) {
+			if (file.isDirectory()) {
+				continue;
+			}
+			String fileName = file.getName();
+			String testCaseName = uppercaseFirstLetter(fileName);
+			String classFileName = testCaseName + "Test.java";
+			
+			generateTestFile(file.getAbsolutePath(), testCaseName, packageName, classFileName);
+		}
+		
+	}
+
+	private static void generateTestFile(String fileName, String testCaseName,
+			String packageName, String classFileName) throws IOException,
+			RecognitionException, FileNotFoundException {
+		ANTLRFileStream stream = new ANTLRFileStream(fileName);
 		PascalLexer lexer = new PascalLexer(stream);
 		PascalParser parser = new PascalParser(new CommonTokenStream(lexer));
 		program_return program = parser.program();
-
+		
 		CommonTree t = (CommonTree) program.getTree();
 		
-		String testClass = generateTestClass(t, "Sample", "runtime.pascal.interpreter");
-		String path = "../SL.runtime.tests/generated_tests/runtime/pascal/interpreter/";
+		String testClass = generateTestClass(t, testCaseName, packageName);
+		String path = GENERATED_TESTS_FOLDER + packageToFolder(packageName);
 		new File(path).mkdirs();
-		FileWriter writer = new FileWriter(path + "SampleTest.java");
+		FileWriter writer = new FileWriter(path + classFileName);
 		writer.write(testClass);
 		writer.close();
+	}
+
+	private static String packageToFolder(String packageName) {		
+		return packageName.replace('.', '/') + "/";
+	}
+
+	private static String uppercaseFirstLetter(String fileName) {
+		return Character.toUpperCase(fileName.charAt(0)) + fileName.substring(1);
 	}
 
 	private static String generateTestClass(CommonTree t, String name, String pack)

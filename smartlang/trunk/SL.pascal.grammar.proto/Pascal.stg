@@ -99,7 +99,7 @@ num(value) ::=
 
 assertedStatement(stmt, asrt) ::=
 <<
-RuntimeTreeNodeFactory.addHandler(
+RuntimeTreeNodeFactory.addAfterHandler(
 	<stmt>, 
 	<asrt>
 )

@@ -1,5 +1,17 @@
 group TestClass;
 
+types ::= [
+	"Integer":"IntegerType.INTEGER",
+	"Real":"RealType.REAL",
+	default : "no such type"
+]
+
+javaTypes ::= [
+	"Integer":"Integer",
+	"Real":"Double",
+	default: "no such type"
+]
+
 testClass(name, variables, constants, tree, package) ::=
 <<
 package <package>;
@@ -33,8 +45,9 @@ public void test<name>() throws Exception {
 
 	// Creates unit type
 	final UnitType unitType = new UnitType();
-	final Instance unit = unitType.createInstance(new Unit());
-	final int unitId = context.addInstance(unit);
+	final Unit unit = new Unit();
+	final Instance unitInstance = unitType.createInstance(unit);
+	final int unitId = context.addInstance(unitInstance);
 
 	// Puts constants to the context 
 	<constants:renderConstant(); separator="\n">
@@ -62,6 +75,16 @@ unitClass(variables) ::=
 <<
 private static final class Unit {
 	<variables: {v| Instance <v.name>;}; separator="\n">
+	
+	<variables: {v| <v:renderAssertMethod()>}; separator="\n\n">
+}
+>>
+
+renderAssertMethod(v) ::=
+<<
+@SuppressWarnings("static-access")
+public <javaTypes.(v.type)> get_<v.name>() {
+	return <types.(v.type)>.F_THIS.readValue(<v.name>);
 }
 >>
 
@@ -87,12 +110,6 @@ private static final class UnitType extends ObjectType\<Unit\> {
 	}
 }
 >>
-
-types ::= [
-	"Integer":"IntegerType.INTEGER",
-	"Real":"RealType.REAL",
-	default : "no such type"
-]
 
 fieldDescriptor(var) ::=
 <<
