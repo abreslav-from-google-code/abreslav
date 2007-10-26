@@ -16,6 +16,21 @@ public class SampleTest {
 		Instance a;
 		Instance b;
 		Instance c;
+		
+		@SuppressWarnings("static-access")
+		public Integer get_a() {
+			return IntegerType.INTEGER.F_THIS.readValue(a);
+		}
+
+		@SuppressWarnings("static-access")
+		public Integer get_b() {
+			return IntegerType.INTEGER.F_THIS.readValue(b);
+		}
+
+		@SuppressWarnings("static-access")
+		public Double get_c() {
+			return RealType.REAL.F_THIS.readValue(c);
+		}
 	}
 
 	private static final class UnitType extends ObjectType<Unit> {
@@ -74,8 +89,9 @@ public class SampleTest {
 	
 		// Creates unit type
 		final UnitType unitType = new UnitType();
-		final Instance unit = unitType.createInstance(new Unit());
-		final int unitId = context.addInstance(unit);
+		final Unit unit = new Unit();
+		final Instance unitInstance = unitType.createInstance(unit);
+		final int unitId = context.addInstance(unitInstance);
 	
 		// Puts constants to the context 
 		int id_1 = context.addInstance(IntegerType.INTEGER.createInstance(1));
@@ -86,7 +102,7 @@ public class SampleTest {
 	
 		// Constructs runtime tree
 		Block body = RuntimeTreeNodeFactory.INSTANCE.createBlock(
-			RuntimeTreeNodeFactory.addHandler(
+			RuntimeTreeNodeFactory.addAfterHandler(
 				RuntimeTreeNodeFactory.INSTANCE.createAssignment(
 					RuntimeTreeNodeFactory.INSTANCE.createFieldAccess(
 						new InstanceAccess(unitId),
@@ -97,12 +113,12 @@ public class SampleTest {
 				new IVisitHandler() {
 					public void run() {
 					{{
-//					  	assertVar("a", 1);
+					  	assertEquals(1, unit.get_a());
 					  }}
 					}
 				}
 			),
-			RuntimeTreeNodeFactory.addHandler(
+			RuntimeTreeNodeFactory.addAfterHandler(
 				RuntimeTreeNodeFactory.INSTANCE.createIf(
 					RuntimeTreeNodeFactory.INSTANCE.createFunctionCall(
 						RuntimeTreeNodeFactory.INSTANCE.createFieldAccess(
@@ -112,7 +128,7 @@ public class SampleTest {
 						OrdinalType.GT,
 						RuntimeTreeNodeFactory.INSTANCE.createInstanceAccess(id_0)
 					),
-					RuntimeTreeNodeFactory.addHandler(
+					RuntimeTreeNodeFactory.addAfterHandler(
 						RuntimeTreeNodeFactory.INSTANCE.createAssignment(
 							RuntimeTreeNodeFactory.INSTANCE.createFieldAccess(
 								new InstanceAccess(unitId),
@@ -133,7 +149,7 @@ public class SampleTest {
 				), 
 				visitCounters.addCounter(1, "if")
 			),
-			RuntimeTreeNodeFactory.addHandler(
+			RuntimeTreeNodeFactory.addAfterHandler(
 				RuntimeTreeNodeFactory.INSTANCE.createWhile(
 					RuntimeTreeNodeFactory.INSTANCE.createFunctionCall(
 						RuntimeTreeNodeFactory.INSTANCE.createFieldAccess(

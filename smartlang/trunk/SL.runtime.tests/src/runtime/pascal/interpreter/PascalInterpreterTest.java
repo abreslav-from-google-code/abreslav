@@ -154,7 +154,7 @@ public class PascalInterpreterTest {
 
 			@Override
 			protected boolean visitStatement(IStatementNode node) {
-				node.setVisitHandler(handler);
+				node.setBeforeVisitHandler(handler);
 				return false;
 			}
 			
@@ -186,7 +186,7 @@ public class PascalInterpreterTest {
 					),
 					RuntimeTreeNodeFactory.INSTANCE.createInstanceAccess(id_1)
 				),
-				RuntimeTreeNodeFactory.addHandler(
+				RuntimeTreeNodeFactory.addBeforeHandler(
 					RuntimeTreeNodeFactory.INSTANCE.createAssignment(
 						RuntimeTreeNodeFactory.INSTANCE.createFieldAccess(
 							new InstanceAccess(unitId),
@@ -205,7 +205,7 @@ public class PascalInterpreterTest {
 						}
 					}
 				),
-				RuntimeTreeNodeFactory.addHandler(
+				RuntimeTreeNodeFactory.addBeforeHandler(
 					RuntimeTreeNodeFactory.INSTANCE.createIf(
 						RuntimeTreeNodeFactory.INSTANCE.createFunctionCall(
 							RuntimeTreeNodeFactory.INSTANCE.createFieldAccess(
@@ -215,7 +215,7 @@ public class PascalInterpreterTest {
 							OrdinalType.GT,
 							RuntimeTreeNodeFactory.INSTANCE.createInstanceAccess(id_0)
 						),
-						RuntimeTreeNodeFactory.addHandler(
+						RuntimeTreeNodeFactory.addBeforeHandler(
 							RuntimeTreeNodeFactory.INSTANCE.createAssignment(
 								RuntimeTreeNodeFactory.INSTANCE.createFieldAccess(
 									new InstanceAccess(unitId),
@@ -236,7 +236,7 @@ public class PascalInterpreterTest {
 					), 
 					visitCounters.addCounter(1, "if")
 				),
-				RuntimeTreeNodeFactory.addHandler(
+				RuntimeTreeNodeFactory.addBeforeHandler(
 					RuntimeTreeNodeFactory.INSTANCE.createWhile(
 						RuntimeTreeNodeFactory.INSTANCE.createFunctionCall(
 							RuntimeTreeNodeFactory.INSTANCE.createFieldAccess(

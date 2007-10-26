@@ -52,30 +52,35 @@ public class RuntimeTreeNodeFactory {
 	
 	public Block createBlock(IVisitHandler handler, IStatementNode[] arg0) {
 		Block result = createBlock(arg0);
-		result.setVisitHandler(handler);
+		result.setBeforeVisitHandler(handler);
 		return result;
 	}
 
 	public Assignment createAssignment(IVisitHandler handler, ILeftValueNode arg0, IExpressionNode arg1) {
 		Assignment result = createAssignment(arg0, arg1);
-		result.setVisitHandler(handler);
+		result.setBeforeVisitHandler(handler);
 		return result;
 	}
 
 	public If createIf(IVisitHandler handler, IExpressionNode arg0, IStatementNode arg1, IStatementNode arg2) {
 		If result = createIf(arg0, arg1, arg2);
-		result.setVisitHandler(handler);
+		result.setBeforeVisitHandler(handler);
 		return result;
 	}
 
 	public While createWhile(IVisitHandler handler, IExpressionNode arg0, IStatementNode arg1) {
 		While result = createWhile(arg0, arg1);
-		result.setVisitHandler(handler);
+		result.setBeforeVisitHandler(handler);
 		return result;
 	}
 	
-	public static <T extends IStatementNode> T addHandler(T node, IVisitHandler handler) {
-		node.setVisitHandler(handler);
+	public static <T extends IStatementNode> T addBeforeHandler(T node, IVisitHandler handler) {
+		node.setBeforeVisitHandler(handler);
+		return node;
+	}
+	
+	public static <T extends IStatementNode> T addAfterHandler(T node, IVisitHandler handler) {
+		node.setAfterVisitHandler(handler);
 		return node;
 	}
 	
