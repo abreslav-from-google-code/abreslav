@@ -1,0 +1,68 @@
+tree grammar PascalUnitTypeGenerator;
+
+options {
+  tokenVocab=Pascal;
+  ASTLabelType=CommonTree;
+}
+
+@header {
+  package pascal.parser;
+}
+
+program returns [java.util.Collection<Variable> variables, java.util.Collection<Constant> constants] 
+@init {
+	$constants = new java.util.HashSet<Constant>();
+}
+	: head? v=var? b=block[$constants]
+	{
+		$variables = v;
+	}
+	;
+head : ^('program' Id);
+var  returns [java.util.Collection<Variable> variables]
+@init {
+	$variables = new java.util.ArrayList<Variable>();
+}
+	: ^('var' variables[$variables]+)
+	{};
+	
+variables [java.util.Collection<Variable> variables]
+	: ^(typ=Id (name=Id {$variables.add(new Variable($typ.text, $name.text));})*)
+	;
+	
+block [java.util.Collection<Constant> constants]
+	: ^('begin' (statement[$constants])*)
+	;
+statement [java.util.Collection<Constant> constants]
+	: assign[$constants]
+	| ifThenElse[$constants]
+	| whileDo[$constants]
+	| block[$constants]
+	| ^('|' st=statement[$constants] assertExpr)
+	| ^(':' assertExpr st=statement[$constants])
+	;
+assign [java.util.Collection<Constant> constants]
+	: ^(':=' Id expression[$constants])
+	;
+ifThenElse [java.util.Collection<Constant> constants]
+	: ^('if' expression[$constants] th=statement[$constants])
+	| ^('else' ^('if' expression[$constants] th=statement[$constants]) el=statement[$constants])
+	;
+whileDo [java.util.Collection<Constant> constants]
+	: ^('while' expression[$constants] statement[$constants])
+	;
+expression [java.util.Collection<Constant> constants]
+    : ^(op='+' a=expression[$constants] b=expression[$constants])
+    | ^(op='-' a=expression[$constants] b=expression[$constants])
+    | ^(op='-' '-' r=expression[$constants])
+    | ^(op='<' a=expression[$constants] b=expression[$constants])
+    | ^(op='>' a=expression[$constants] b=expression[$constants])
+	| Id
+	| Num {$constants.add(new Constant("Integer", $Num.text));}
+	;
+	
+assertExpr
+	: JavaStr 
+	| Num
+	| ^(':' String Num )
+	;

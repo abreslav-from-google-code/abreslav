@@ -1,0 +1,120 @@
+group Pascal;
+
+program(head, var, block) ::=
+<<
+<var>
+Block body = <block>;
+>>
+
+factoryMethods ::= [
+	"block" : "RuntimeTreeNodeFactory.INSTANCE.createBlock",
+	"assign" : "RuntimeTreeNodeFactory.INSTANCE.createAssignment",
+	"ifThenElse" : "RuntimeTreeNodeFactory.INSTANCE.createIf",
+	"while" : "RuntimeTreeNodeFactory.INSTANCE.createWhile",
+	"func" : "RuntimeTreeNodeFactory.INSTANCE.createFunctionCall",
+	"field" : "RuntimeTreeNodeFactory.INSTANCE.createFieldAccess",
+	"instance" : "RuntimeTreeNodeFactory.INSTANCE.createInstanceAccess",
+	default : "no such method"
+]
+
+block(statements) ::=
+<<
+<factoryMethods.block>(
+	<statements; separator=",\n">
+)>>
+
+assign(id, exp) ::= 
+<<
+<factoryMethods.assign>(
+	<id(name=(id))>,
+	<exp>
+)>>
+
+ifThenElse(cond, then, els="null") ::=
+<<
+<factoryMethods.ifThenElse>(
+	<cond>,
+	<then>,
+	<els>
+)>>
+
+while(cond, body) ::=
+<<
+<factoryMethods.while>(
+	<cond>,
+	<body>
+)
+>>
+
+binaryOpMap ::= [
+	">" : "OrdinalType.GT",
+	"<" : "OrdinalType.LT",
+	"=" : "OrdinalType.EQ",
+	">=" : "OrdinalType.GE",
+	"<=" : "OrdinalType.LE",
+	"<>" : "OrdinalType.NE",
+	"+" : "IntegerType.ADD",
+	"-" : "IntegerType.SUB",
+	"*" : "IntegerType.MUL",
+	"div" : "IntegerType.DIV",
+	"mod" : "IntegerType.MOD",
+	"and" : "BooleanType.AND",
+	"or" : "BooleanType.OR",
+	"xor" : "BooleanType.XOR",
+	default : "null"
+]
+
+unaryOpMap ::= [
+	"not" : "BooleanType.NOT",
+	"-" : "IntegerType.NEG",
+	default : "null"
+]
+
+binaryOp(l, op, r) ::=
+<<
+<factoryMethods.func>(
+	<l>,
+	<binaryOpMap.(op)>,
+	<r>
+)>>  
+
+unaryOp(op, r) ::=
+<<
+<factoryMethods.func>(
+	<r>,
+	<unaryOpMap.(op)>
+)
+>>
+
+id(name) ::=
+<<
+<factoryMethods.field>(
+	new InstanceAccess(unitId),
+	unitType.lookupField("<name>")
+)
+>>
+
+num(value) ::=
+"<factoryMethods.instance>(id_<value>)"
+
+assertedStatement(stmt, asrt) ::=
+<<
+RuntimeTreeNodeFactory.addHandler(
+	<stmt>, 
+	<asrt>
+)
+>>
+
+assertJavaBlock(java) ::=
+<<
+new IVisitHandler() {
+	public void run() {
+	<java>
+	}
+}
+>>
+ 
+assertNumberOfVisits(count, msg="null") ::=
+<<
+visitCounters.addCounter(<count>, <msg>)
+>>

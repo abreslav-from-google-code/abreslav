@@ -1,0 +1,109 @@
+group TestClass;
+
+testClass(name, variables, constants, tree, package) ::=
+<<
+package <package>;
+
+import org.junit.Test;
+import static org.junit.Assert.*;
+
+import pascal.types.*;
+import runtime.SimpleEvaluatorContext;
+import runtime.tree.IVisitHandler;
+import runtime.tree.expressions.*;
+import runtime.tree.statements.*;
+import core.*;
+
+public class <name>Test {
+
+	<unitClass(variables=variables)>
+
+	<unitType(variables=variables)>
+	
+	<testMethod(name=name, constants=constants, tree=tree)>
+}
+>>
+
+testMethod(name, constants, tree) ::=
+<<
+@Test
+public void test<name>() throws Exception {
+	final SimpleEvaluatorContext context = new SimpleEvaluatorContext();
+	final PascalInterpreter interpreter = new PascalInterpreter(context);
+
+	// Creates unit type
+	final UnitType unitType = new UnitType();
+	final Instance unit = unitType.createInstance(new Unit());
+	final int unitId = context.addInstance(unit);
+
+	// Puts constants to the context 
+	<constants:renderConstant(); separator="\n">
+	
+	// Creates counters pool
+	final VisitCounters visitCounters = new VisitCounters();
+
+	// Constructs runtime tree
+	<tree>
+
+	// Executes the constructed tree
+	interpreter.execute(body);
+	
+	// Asserts on counter values
+	visitCounters.assertCounters();
+}
+>>
+
+renderConstant(const) ::=
+<<
+int id_<const.value> = context.addInstance(<types.(const.type)>.createInstance(<const.value>));
+>>
+
+unitClass(variables) ::=
+<<
+private static final class Unit {
+	<variables: {v| Instance <v.name>;}; separator="\n">
+}
+>>
+
+unitType(variables) ::=
+<<
+private static final class UnitType extends ObjectType\<Unit\> {
+	Instance.DataField\<Unit\> field = new Instance.DataField\<Unit\>();
+
+	@Override
+	protected IField[] doGetFields() {
+		return new IField[] {
+			<variables: {v| <fieldDescriptor(var=v)>}; separator=",\n"> 
+		};
+	}
+
+	@Override
+	protected IMethod[] doGetMethods() {
+		return null;
+	}
+
+	public Instance getDefaultValue() {
+		return null;
+	}
+}
+>>
+
+types ::= [
+	"Integer":"IntegerType.INTEGER",
+	"Real":"RealType.REAL",
+	default : "no such type"
+]
+
+fieldDescriptor(var) ::=
+<<
+new FieldDescriptor(<types.(var.type)>, "<var.name>", this) {
+
+	public Instance readValue(Instance host) {
+		return field.readValue(host).<var.name>;
+	}
+
+	public void writeValue(Instance host, Instance value) {
+		field.readValue(host).<var.name> = value;
+	}
+}
+>>
