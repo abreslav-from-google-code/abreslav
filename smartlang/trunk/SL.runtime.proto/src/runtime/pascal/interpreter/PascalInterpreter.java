@@ -58,9 +58,8 @@ public class PascalInterpreter implements IStatementNodeVisitor<Void> {
 	}
 
 	public void execute(IStatementNode node) {
-		if (node.getVisitHandler() != null) {
-			node.getVisitHandler().run();
-		}
+		node.getBeforeVisitHandler().run();
 		node.acceptStatementNodeVisitor(this);
+		node.getAfterVisitHandler().run();
 	}
 }
