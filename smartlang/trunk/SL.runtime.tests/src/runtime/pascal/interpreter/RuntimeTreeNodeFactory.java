@@ -1,11 +1,5 @@
 package runtime.pascal.interpreter;
 
-import java.lang.reflect.Method;
-import java.util.ArrayList;
-
-import org.antlr.stringtemplate.StringTemplate;
-import org.antlr.stringtemplate.StringTemplateGroup;
-
 import runtime.tree.IExpressionNode;
 import runtime.tree.ILeftValueNode;
 import runtime.tree.IStatementNode;
@@ -85,26 +79,4 @@ public class RuntimeTreeNodeFactory {
 		return node;
 	}
 	
-	public static void main(String[] args) {
-		Class<RuntimeTreeNodeFactory> theClass = RuntimeTreeNodeFactory.class;
-		StringTemplateGroup stg = new StringTemplateGroup("Some", ".");
-		for (Method m : theClass.getDeclaredMethods()) {
-			if (m.getName().startsWith("create")) {
-				StringTemplate st = stg.getInstanceOf("method");
-				st.setAttribute("m", m);
-				int i = 0;
-				ArrayList<String> params = new ArrayList<String>();
-				ArrayList<String> argums = new ArrayList<String>();
-				for (Class<?> type : m.getParameterTypes()) {
-					params.add(type.getSimpleName() + " arg" + i);
-					argums.add("arg" + i);
-					i++;
-				}
-				st.setAttribute("parameters", params);
-				st.setAttribute("arguments", argums);
-				System.out.println(st);
-			}
-		}
-		
-	}
 }
