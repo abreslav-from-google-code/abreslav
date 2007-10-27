@@ -27,6 +27,49 @@ public class BooleanType extends EnumeratedType {
 		
 	};
 	
+	public static final IGenericFunction.Binary OR = new IGenericFunction.Binary() {
+
+		@Override
+		public Instance run2(Instance thiz, Instance arg) {
+			assert thiz.getType().conformsTo(BOOLEAN);
+			assert arg.getType().conformsTo(BOOLEAN);
+			
+			return BOOLEAN.getValue(
+					BOOLEAN.readBooleanValue(thiz)
+					|| BOOLEAN.readBooleanValue(arg)
+			);
+		}
+		
+	};
+	
+	public static final IGenericFunction.Binary XOR = new IGenericFunction.Binary() {
+
+		@Override
+		public Instance run2(Instance thiz, Instance arg) {
+			assert thiz.getType().conformsTo(BOOLEAN);
+			assert arg.getType().conformsTo(BOOLEAN);
+			
+			return BOOLEAN.getValue(
+					BOOLEAN.readBooleanValue(thiz)
+					^ BOOLEAN.readBooleanValue(arg)
+			);
+		}
+		
+	};
+	
+	public static final IGenericFunction.Unary NOT = new IGenericFunction.Unary() {
+
+		@Override
+		public Instance run1(Instance thiz) {
+			assert thiz.getType().conformsTo(BOOLEAN);
+			
+			return BOOLEAN.getValue(
+					!BOOLEAN.readBooleanValue(thiz));
+		}
+		
+	};
+	
+
 	private BooleanType() {
 		super("false", "true");
 	}
