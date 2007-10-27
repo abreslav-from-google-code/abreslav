@@ -62,7 +62,7 @@ expression [java.util.Collection<Constant> constants]
 	;
 	
 assertExpr
-	: JavaStr 
+	: '!'? JavaStr 
 	| Num
 	| ^(':' String Num )
 	;

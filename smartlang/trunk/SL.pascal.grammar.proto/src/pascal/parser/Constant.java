@@ -49,5 +49,9 @@ public class Constant {
 		return true;
 	}
 	
-	
+	public static void main(String[] args) {
+		System.out.println(
+				"$a  = $b".replaceAll("\\$([a-zA-z0-9_]*)",	"unit.get_$1()")
+		);
+	}
 }

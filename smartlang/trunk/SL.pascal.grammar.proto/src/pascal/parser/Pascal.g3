@@ -20,8 +20,8 @@ block	:	'begin'^ statements 'end'!;
 statement
 	:	
 	| nonEmptyStatement
-	| '|'^ nonEmptyStatement JavaStr
-	| (String ':'^)? Num ':'^ nonEmptyStatement;
+	| '|'^ statement '!'? JavaStr
+	| (String ':'^)? Num ':'^ statement;
 nonEmptyStatement
 	:	assign | ifThenElse | whileDo | block;
 statements
@@ -56,9 +56,3 @@ WS : (
 	{skip();} ;
 	
 JavaStr : '{{' (options{greedy=false;}:.)* '}}';
-
-assertExpr 
-	: JavaStr
-	| Num (':'^ String)?
-	;
- 

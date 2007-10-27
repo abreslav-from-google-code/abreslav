@@ -109,11 +109,16 @@ assertJavaBlock(java) ::=
 <<
 new IVisitHandler() {
 	public void run() {
-	<java>
+		<java>
 	}
 }
 >>
- 
+
+assertJavaExpression(expr, comment) ::=
+<<
+<assertJavaBlock(java={    assertTrue("<comment>", <expr>);})>
+>>
+
 assertNumberOfVisits(count, msg="null") ::=
 <<
 visitCounters.addCounter(<count>, <msg>)

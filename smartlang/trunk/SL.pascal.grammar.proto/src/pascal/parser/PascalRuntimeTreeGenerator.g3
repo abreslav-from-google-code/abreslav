@@ -29,7 +29,7 @@ statement
 	| ^(':' assertExpr st=statement)
 	-> assertedStatement(stmt={$st.st}, asrt={$assertExpr.st})
 	;
-assign 
+assign
 	: ^(':=' Id expression)
 	-> assign(id={$Id}, exp={$expression.st});
 ifThenElse 
@@ -61,9 +61,19 @@ expression
 	
 assertExpr
 	: JavaStr 
-	-> assertJavaBlock(java={$JavaStr.text}) 
+	-> assertJavaBlock(java={$JavaStr.text.substring(2, $JavaStr.text.length() - 2).replaceAll("\\$([a-zA-z0-9_]*)", "unit.get_$1()")})
+	| '!' JavaStr
+	-> assertJavaExpression(
+		expr={$JavaStr.text.substring(2, $JavaStr.text.length() - 2).replaceAll("\\$([a-zA-z0-9_]*)", "unit.get_$1()")},
+		comment={$JavaStr.text.substring(2, $JavaStr.text.length() - 2)}
+	) 
 	| Num
 	-> assertNumberOfVisits(count={$Num.text})
 	| ^(':' String Num )
 	-> assertNumberOfVisits(count={$Num.text}, msg={$String.text})
 	;
+	
+/*
+	| ^('!' JavaStr) 
+
+*/
