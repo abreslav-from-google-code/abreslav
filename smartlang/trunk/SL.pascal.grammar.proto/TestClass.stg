@@ -3,12 +3,14 @@ group TestClass;
 types ::= [
 	"Integer":"IntegerType.INTEGER",
 	"Real":"RealType.REAL",
+	"Boolean":"BooleanType.BOOLEAN",
 	default : "no such type"
 ]
 
 javaTypes ::= [
 	"Integer":"Integer",
 	"Real":"Double",
+	"Boolean":"Integer",
 	default: "no such type"
 ]
 
@@ -68,7 +70,7 @@ public void test<name>() throws Exception {
 
 renderConstant(const) ::=
 <<
-int id_<const.value> = context.addInstance(<types.(const.type)>.createInstance(<const.value>));
+int id_<const.name> = context.addInstance(<types.(const.type)>.createInstance(<const.value>));
 >>
 
 unitClass(variables) ::=

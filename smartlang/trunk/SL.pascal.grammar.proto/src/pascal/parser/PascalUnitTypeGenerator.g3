@@ -57,11 +57,21 @@ expression [java.util.Collection<Constant> constants]
     | ^(op='*' a=expression[$constants] b=expression[$constants])
     | ^(op='div' a=expression[$constants] b=expression[$constants])
     | ^(op='mod' a=expression[$constants] b=expression[$constants])
-    | ^(op='-' '-' r=expression[$constants])
     | ^(op='<' a=expression[$constants] b=expression[$constants])
     | ^(op='>' a=expression[$constants] b=expression[$constants])
+    | ^(op='>=' a=expression[$constants] b=expression[$constants])
+    | ^(op='<=' a=expression[$constants] b=expression[$constants])
+    | ^(op='=' a=expression[$constants] b=expression[$constants])
+    | ^(op='<>' a=expression[$constants] b=expression[$constants])
+    | ^(op='and' a=expression[$constants] b=expression[$constants])
+    | ^(op='or' a=expression[$constants] b=expression[$constants])
+    | ^(op='xor' a=expression[$constants] b=expression[$constants])
+    | ^(op='-' '-' r=expression[$constants])
+    | ^(op='not' r=expression[$constants])
 	| Id
 	| Num {$constants.add(new Constant("Integer", $Num.text));}
+	| 'true' {$constants.add(new Constant("Boolean", "1", "true"));}
+	| 'false' {$constants.add(new Constant("Boolean", "0", "false"));}
 	;
 	
 assertExpr

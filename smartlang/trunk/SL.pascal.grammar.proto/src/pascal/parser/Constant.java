@@ -3,11 +3,16 @@ package pascal.parser;
 public class Constant {
 	private final String myValue;
 	private final String myType;
+	private final String myName;
 
-	public Constant(String type, String value) {
-		super();
+	public Constant(String type, String value, String name) {
 		myValue = value;
 		myType = type;
+		myName = name;
+	}
+
+	public Constant(String type, String value) {
+		this(type, value, value);
 	}
 
 	public String getType() {
@@ -18,10 +23,15 @@ public class Constant {
 		return myValue;
 	}
 
+	public String getName() {
+		return myName;
+	}
+
 	@Override
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
+		result = prime * result + ((myName == null) ? 0 : myName.hashCode());
 		result = prime * result + ((myType == null) ? 0 : myType.hashCode());
 		result = prime * result + ((myValue == null) ? 0 : myValue.hashCode());
 		return result;
@@ -36,6 +46,11 @@ public class Constant {
 		if (getClass() != obj.getClass())
 			return false;
 		final Constant other = (Constant) obj;
+		if (myName == null) {
+			if (other.myName != null)
+				return false;
+		} else if (!myName.equals(other.myName))
+			return false;
 		if (myType == null) {
 			if (other.myType != null)
 				return false;
@@ -49,9 +64,4 @@ public class Constant {
 		return true;
 	}
 	
-	public static void main(String[] args) {
-		System.out.println(
-				"$a  = $b".replaceAll("\\$([a-zA-z0-9_]*)",	"unit.get_$1()")
-		);
-	}
 }

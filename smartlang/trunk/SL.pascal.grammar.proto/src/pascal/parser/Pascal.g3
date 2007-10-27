@@ -21,7 +21,7 @@ statement
 	:	
 	| nonEmptyStatement
 	| '|'^ statement '!'? JavaStr
-	| (String ':'^)? Num ':'^ statement;
+	| Num ':'^ statement;
 nonEmptyStatement
 	:	assign | ifThenElse | whileDo | block;
 statements
@@ -36,6 +36,8 @@ factor
 	| '+'! factor 
 	| '-' factor -> ^('-' '-' factor) 
 	| 'not'^ factor 
+	| 'true'
+	| 'false'
 	| Id 
 	| Num;
 compareOp

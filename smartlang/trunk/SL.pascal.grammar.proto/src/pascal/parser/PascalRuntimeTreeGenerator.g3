@@ -53,16 +53,36 @@ expression
     -> binaryOp(l={$a.st}, op={$op.text}, r={$b.st})  
     | ^(op='mod' a=expression b=expression)
     -> binaryOp(l={$a.st}, op={$op.text}, r={$b.st})  
-    | ^(op='-' '-' r=expression)
-    -> unaryOp(r={$r.st}, op={$op.text})  
     | ^(op='<' a=expression b=expression)
     -> binaryOp(l={$a.st}, op={$op.text}, r={$b.st})
     | ^(op='>' a=expression b=expression)
     -> binaryOp(l={$a.st}, op={$op.text}, r={$b.st}) 
+    | ^(op='>=' a=expression b=expression)
+    -> binaryOp(l={$a.st}, op={$op.text}, r={$b.st}) 
+    | ^(op='<=' a=expression b=expression)
+    -> binaryOp(l={$a.st}, op={$op.text}, r={$b.st}) 
+    | ^(op='=' a=expression b=expression)
+    -> binaryOp(l={$a.st}, op={$op.text}, r={$b.st}) 
+    | ^(op='<>' a=expression b=expression)
+    -> binaryOp(l={$a.st}, op={$op.text}, r={$b.st}) 
+    | ^(op='and' a=expression b=expression)
+    -> binaryOp(l={$a.st}, op={$op.text}, r={$b.st}) 
+    | ^(op='or' a=expression b=expression)
+    -> binaryOp(l={$a.st}, op={$op.text}, r={$b.st}) 
+    | ^(op='xor' a=expression b=expression)
+    -> binaryOp(l={$a.st}, op={$op.text}, r={$b.st}) 
+    | ^(op='-' '-' r=expression)
+    -> unaryOp(r={$r.st}, op={$op.text})  
+    | ^(op='not' r=expression)
+    -> unaryOp(r={$r.st}, op={$op.text})  
 	| Id
 	-> id(name={$Id.text})
+	| 'true'
+	-> const(value={"true"})
+	| 'false'
+	-> const(value={"false"})
 	| Num
-	-> num(value={$Num.text})
+	-> const(value={$Num.text})
 	;
 	
 assertExpr
@@ -74,9 +94,7 @@ assertExpr
 		comment={"line " + $JavaStr.line + ": " +$JavaStr.text.substring(2, $JavaStr.text.length() - 2)}
 	) 
 	| Num
-	-> assertNumberOfVisits(count={$Num.text})
-	| ^(':' String Num )
-	-> assertNumberOfVisits(count={$Num.text}, msg={$String.text})
+	-> assertNumberOfVisits(count={$Num.text}, msg={"line " + $Num.line})
 	;
 	
 /*

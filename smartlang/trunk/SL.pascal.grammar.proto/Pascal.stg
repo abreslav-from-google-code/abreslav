@@ -94,7 +94,7 @@ id(name) ::=
 )
 >>
 
-num(value) ::=
+const(value) ::=
 "<factoryMethods.instance>(id_<value>)"
 
 assertedStatement(stmt, asrt) ::=
@@ -116,10 +116,10 @@ new IVisitHandler() {
 
 assertJavaExpression(expr, comment) ::=
 <<
-<assertJavaBlock(java={    assertTrue("<comment>", <expr>);})>
+<assertJavaBlock(java={assertTrue("<comment>", <expr>);})>
 >>
 
 assertNumberOfVisits(count, msg="null") ::=
 <<
-visitCounters.addCounter(<count>, <msg>)
+visitCounters.addCounter(<count>, "<msg>")
 >>
