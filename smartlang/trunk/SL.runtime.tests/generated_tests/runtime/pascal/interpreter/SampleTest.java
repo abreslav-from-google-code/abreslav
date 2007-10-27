@@ -108,15 +108,35 @@ public class SampleTest {
 						new InstanceAccess(unitId),
 						unitType.lookupField("a")
 					),
-					RuntimeTreeNodeFactory.INSTANCE.createInstanceAccess(id_1)
+					RuntimeTreeNodeFactory.INSTANCE.createFieldAccess(
+						new InstanceAccess(unitId),
+						unitType.lookupField("a")
+					)
 				), 
 				new IVisitHandler() {
 					public void run() {
-					{{
-					  	assertEquals(1, unit.get_a());
-					  }}
+						
+						  	assertNull(unit.a);
+						  
 					}
 				}
+			),
+			RuntimeTreeNodeFactory.addAfterHandler(
+				RuntimeTreeNodeFactory.addAfterHandler(
+					RuntimeTreeNodeFactory.INSTANCE.createAssignment(
+						RuntimeTreeNodeFactory.INSTANCE.createFieldAccess(
+							new InstanceAccess(unitId),
+							unitType.lookupField("a")
+						),
+						RuntimeTreeNodeFactory.INSTANCE.createInstanceAccess(id_1)
+					), 
+					new IVisitHandler() {
+						public void run() {
+							    assertTrue("$a == 1 /* 0 */", unit.get_a() == 1 /* 0 */);
+						}
+					}
+				), 
+				visitCounters.addCounter(1, null)
 			),
 			RuntimeTreeNodeFactory.addAfterHandler(
 				RuntimeTreeNodeFactory.INSTANCE.createIf(
@@ -129,28 +149,72 @@ public class SampleTest {
 						RuntimeTreeNodeFactory.INSTANCE.createInstanceAccess(id_0)
 					),
 					RuntimeTreeNodeFactory.addAfterHandler(
-						RuntimeTreeNodeFactory.INSTANCE.createAssignment(
-							RuntimeTreeNodeFactory.INSTANCE.createFieldAccess(
-								new InstanceAccess(unitId),
-								unitType.lookupField("a")
-							),
-							RuntimeTreeNodeFactory.INSTANCE.createFunctionCall(
+						RuntimeTreeNodeFactory.addAfterHandler(
+							RuntimeTreeNodeFactory.INSTANCE.createAssignment(
 								RuntimeTreeNodeFactory.INSTANCE.createFieldAccess(
 									new InstanceAccess(unitId),
 									unitType.lookupField("a")
 								),
-								IntegerType.ADD,
-								RuntimeTreeNodeFactory.INSTANCE.createInstanceAccess(id_1)
-							)
+								RuntimeTreeNodeFactory.INSTANCE.createFunctionCall(
+									RuntimeTreeNodeFactory.INSTANCE.createFieldAccess(
+										new InstanceAccess(unitId),
+										unitType.lookupField("a")
+									),
+									IntegerType.ADD,
+									RuntimeTreeNodeFactory.INSTANCE.createInstanceAccess(id_1)
+								)
+							), 
+							new IVisitHandler() {
+								public void run() {
+									    assertTrue("$a == 2", unit.get_a() == 2);
+								}
+							}
 						), 
-						visitCounters.addCounter(1, "some")
+						visitCounters.addCounter(1, null)
 					),
 					null
 				), 
-				visitCounters.addCounter(1, "if")
+				visitCounters.addCounter(1, null)
 			),
 			RuntimeTreeNodeFactory.addAfterHandler(
-				RuntimeTreeNodeFactory.INSTANCE.createWhile(
+				RuntimeTreeNodeFactory.addAfterHandler(
+					RuntimeTreeNodeFactory.INSTANCE.createWhile(
+						RuntimeTreeNodeFactory.INSTANCE.createFunctionCall(
+							RuntimeTreeNodeFactory.INSTANCE.createFieldAccess(
+								new InstanceAccess(unitId),
+								unitType.lookupField("a")
+							),
+							OrdinalType.GT,
+							RuntimeTreeNodeFactory.INSTANCE.createInstanceAccess(id_0)
+						),
+						RuntimeTreeNodeFactory.addAfterHandler(
+							RuntimeTreeNodeFactory.INSTANCE.createAssignment(
+								RuntimeTreeNodeFactory.INSTANCE.createFieldAccess(
+									new InstanceAccess(unitId),
+									unitType.lookupField("a")
+								),
+								RuntimeTreeNodeFactory.INSTANCE.createFunctionCall(
+									RuntimeTreeNodeFactory.INSTANCE.createFieldAccess(
+										new InstanceAccess(unitId),
+										unitType.lookupField("a")
+									),
+									IntegerType.SUB,
+									RuntimeTreeNodeFactory.INSTANCE.createInstanceAccess(id_1)
+								)
+							), 
+							visitCounters.addCounter(2, null)
+						)
+					), 
+					new IVisitHandler() {
+						public void run() {
+							    assertTrue("$a == 0", unit.get_a() == 0);
+						}
+					}
+				), 
+				visitCounters.addCounter(1, null)
+			),
+			RuntimeTreeNodeFactory.addAfterHandler(
+				RuntimeTreeNodeFactory.INSTANCE.createIf(
 					RuntimeTreeNodeFactory.INSTANCE.createFunctionCall(
 						RuntimeTreeNodeFactory.INSTANCE.createFieldAccess(
 							new InstanceAccess(unitId),
@@ -159,63 +223,59 @@ public class SampleTest {
 						OrdinalType.GT,
 						RuntimeTreeNodeFactory.INSTANCE.createInstanceAccess(id_0)
 					),
-					RuntimeTreeNodeFactory.INSTANCE.createAssignment(
-						RuntimeTreeNodeFactory.INSTANCE.createFieldAccess(
-							new InstanceAccess(unitId),
-							unitType.lookupField("a")
-						),
-						RuntimeTreeNodeFactory.INSTANCE.createFunctionCall(
-							RuntimeTreeNodeFactory.INSTANCE.createFieldAccess(
-								new InstanceAccess(unitId),
-								unitType.lookupField("a")
-							),
-							IntegerType.SUB,
-							RuntimeTreeNodeFactory.INSTANCE.createInstanceAccess(id_1)
-						)
+					RuntimeTreeNodeFactory.addAfterHandler(
+						RuntimeTreeNodeFactory.addAfterHandler(
+							RuntimeTreeNodeFactory.INSTANCE.createAssignment(
+								RuntimeTreeNodeFactory.INSTANCE.createFieldAccess(
+									new InstanceAccess(unitId),
+									unitType.lookupField("a")
+								),
+								RuntimeTreeNodeFactory.INSTANCE.createFunctionCall(
+									RuntimeTreeNodeFactory.INSTANCE.createFieldAccess(
+										new InstanceAccess(unitId),
+										unitType.lookupField("a")
+									),
+									IntegerType.ADD,
+									RuntimeTreeNodeFactory.INSTANCE.createInstanceAccess(id_1)
+								)
+							), 
+							new IVisitHandler() {
+								public void run() {
+									    assertTrue("$a == 1", unit.get_a() == 1);
+								}
+							}
+						), 
+						visitCounters.addCounter(0, null)
+					),
+					RuntimeTreeNodeFactory.addAfterHandler(
+						RuntimeTreeNodeFactory.addAfterHandler(
+							RuntimeTreeNodeFactory.INSTANCE.createAssignment(
+								RuntimeTreeNodeFactory.INSTANCE.createFieldAccess(
+									new InstanceAccess(unitId),
+									unitType.lookupField("a")
+								),
+								RuntimeTreeNodeFactory.INSTANCE.createFunctionCall(
+									RuntimeTreeNodeFactory.INSTANCE.createFieldAccess(
+										new InstanceAccess(unitId),
+										unitType.lookupField("a")
+									),
+									IntegerType.ADD,
+									RuntimeTreeNodeFactory.INSTANCE.createFunctionCall(
+										RuntimeTreeNodeFactory.INSTANCE.createInstanceAccess(id_1),
+										IntegerType.NEG
+									)
+								)
+							), 
+							new IVisitHandler() {
+								public void run() {
+									    assertTrue("$a == -1", unit.get_a() == -1);
+								}
+							}
+						), 
+						visitCounters.addCounter(1, null)
 					)
 				), 
 				visitCounters.addCounter(1, null)
-			),
-			RuntimeTreeNodeFactory.INSTANCE.createIf(
-				RuntimeTreeNodeFactory.INSTANCE.createFunctionCall(
-					RuntimeTreeNodeFactory.INSTANCE.createFieldAccess(
-						new InstanceAccess(unitId),
-						unitType.lookupField("a")
-					),
-					OrdinalType.GT,
-					RuntimeTreeNodeFactory.INSTANCE.createInstanceAccess(id_0)
-				),
-				RuntimeTreeNodeFactory.INSTANCE.createAssignment(
-					RuntimeTreeNodeFactory.INSTANCE.createFieldAccess(
-						new InstanceAccess(unitId),
-						unitType.lookupField("a")
-					),
-					RuntimeTreeNodeFactory.INSTANCE.createFunctionCall(
-						RuntimeTreeNodeFactory.INSTANCE.createFieldAccess(
-							new InstanceAccess(unitId),
-							unitType.lookupField("a")
-						),
-						IntegerType.ADD,
-						RuntimeTreeNodeFactory.INSTANCE.createInstanceAccess(id_1)
-					)
-				),
-				RuntimeTreeNodeFactory.INSTANCE.createAssignment(
-					RuntimeTreeNodeFactory.INSTANCE.createFieldAccess(
-						new InstanceAccess(unitId),
-						unitType.lookupField("a")
-					),
-					RuntimeTreeNodeFactory.INSTANCE.createFunctionCall(
-						RuntimeTreeNodeFactory.INSTANCE.createFieldAccess(
-							new InstanceAccess(unitId),
-							unitType.lookupField("a")
-						),
-						IntegerType.ADD,
-						RuntimeTreeNodeFactory.INSTANCE.createFunctionCall(
-							RuntimeTreeNodeFactory.INSTANCE.createInstanceAccess(id_1),
-							IntegerType.NEG
-						)
-					)
-				)
 			)
 		);
 	

@@ -74,12 +74,36 @@ public class RuntimeTreeNodeFactory {
 		return result;
 	}
 	
+	private static final class CompositeHandler implements IVisitHandler {
+
+		private final IVisitHandler myFirst;
+		private final IVisitHandler mySecond;
+		
+		public CompositeHandler(IVisitHandler first, IVisitHandler second) {
+			super();
+			myFirst = first;
+			mySecond = second;
+		}
+
+		public void run() {
+			myFirst.run();
+			mySecond.run();
+		}
+		
+	}
+	
 	public static <T extends IStatementNode> T addBeforeHandler(T node, IVisitHandler handler) {
+		if (node.getBeforeVisitHandler() != IVisitHandler.NOTHING) {
+			handler = new CompositeHandler(node.getBeforeVisitHandler(), handler);
+		}
 		node.setBeforeVisitHandler(handler);
 		return node;
 	}
 	
 	public static <T extends IStatementNode> T addAfterHandler(T node, IVisitHandler handler) {
+		if (node.getAfterVisitHandler() != IVisitHandler.NOTHING) {
+			handler = new CompositeHandler(node.getAfterVisitHandler(), handler);
+		}
 		node.setAfterVisitHandler(handler);
 		return node;
 	}

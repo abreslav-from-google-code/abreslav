@@ -3,19 +3,23 @@ var
   a, b : Integer;
   c : Real;
 begin
-  | a := 1 
-  {{
-  	assertEquals(1, unit.get_a());
+  |a := a {{
+  	assertNull(unit.a);
   }};
-  "if":1:
-  if a > 0 then
-    "some" : 1 :
-    a := a + 1;
   1:
-  while a > 0 do
-    a := a - 1;
+  | a := 1 
+  !{{$a == 1 /* 0 */}};
+  1:
   if a > 0 then
-    a := a + 1
+    1:
+    |a := a + 1 !{{$a == 2}};
+  1:
+  |while a > 0 do
+    2:a := a - 1
+  !{{$a == 0}};
+  1:
+  if a > 0 then
+    0:|a := a + 1 !{{$a == 1 }}
   else 
-  	a := a + -1;
+  	1:|a := a + -1 !{{$a == -1}};
 end.
