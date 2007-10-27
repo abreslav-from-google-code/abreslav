@@ -54,6 +54,9 @@ whileDo [java.util.Collection<Constant> constants]
 expression [java.util.Collection<Constant> constants]
     : ^(op='+' a=expression[$constants] b=expression[$constants])
     | ^(op='-' a=expression[$constants] b=expression[$constants])
+    | ^(op='*' a=expression[$constants] b=expression[$constants])
+    | ^(op='div' a=expression[$constants] b=expression[$constants])
+    | ^(op='mod' a=expression[$constants] b=expression[$constants])
     | ^(op='-' '-' r=expression[$constants])
     | ^(op='<' a=expression[$constants] b=expression[$constants])
     | ^(op='>' a=expression[$constants] b=expression[$constants])

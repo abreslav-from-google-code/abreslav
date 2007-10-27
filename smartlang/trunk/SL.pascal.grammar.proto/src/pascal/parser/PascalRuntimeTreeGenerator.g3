@@ -47,6 +47,12 @@ expression
     -> binaryOp(l={$a.st}, op={$op.text}, r={$b.st})
     | ^(op='-' a=expression b=expression)
     -> binaryOp(l={$a.st}, op={$op.text}, r={$b.st})  
+    | ^(op='*' a=expression b=expression)
+    -> binaryOp(l={$a.st}, op={$op.text}, r={$b.st})  
+    | ^(op='div' a=expression b=expression)
+    -> binaryOp(l={$a.st}, op={$op.text}, r={$b.st})  
+    | ^(op='mod' a=expression b=expression)
+    -> binaryOp(l={$a.st}, op={$op.text}, r={$b.st})  
     | ^(op='-' '-' r=expression)
     -> unaryOp(r={$r.st}, op={$op.text})  
     | ^(op='<' a=expression b=expression)
@@ -65,7 +71,7 @@ assertExpr
 	| '!' JavaStr
 	-> assertJavaExpression(
 		expr={$JavaStr.text.substring(2, $JavaStr.text.length() - 2).replaceAll("\\$([a-zA-z0-9_]*)", "unit.get_$1()")},
-		comment={$JavaStr.text.substring(2, $JavaStr.text.length() - 2)}
+		comment={"line " + $JavaStr.line + ": " +$JavaStr.text.substring(2, $JavaStr.text.length() - 2)}
 	) 
 	| Num
 	-> assertNumberOfVisits(count={$Num.text})
