@@ -94,8 +94,8 @@ public class SampleTest {
 		final int unitId = context.addInstance(unitInstance);
 	
 		// Puts constants to the context 
-		int id_1 = context.addInstance(IntegerType.INTEGER.createInstance(1));
 		int id_0 = context.addInstance(IntegerType.INTEGER.createInstance(0));
+		int id_1 = context.addInstance(IntegerType.INTEGER.createInstance(1));
 		
 		// Creates counters pool
 		final VisitCounters visitCounters = new VisitCounters();
@@ -132,11 +132,11 @@ public class SampleTest {
 					), 
 					new IVisitHandler() {
 						public void run() {
-							    assertTrue("$a == 1 /* 0 */", unit.get_a() == 1 /* 0 */);
+							assertTrue("line 11: $a == 1 /* 0 */", unit.get_a() == 1 /* 0 */);
 						}
 					}
 				), 
-				visitCounters.addCounter(1, null)
+				visitCounters.addCounter(1, "line 9")
 			),
 			RuntimeTreeNodeFactory.addAfterHandler(
 				RuntimeTreeNodeFactory.INSTANCE.createIf(
@@ -166,15 +166,15 @@ public class SampleTest {
 							), 
 							new IVisitHandler() {
 								public void run() {
-									    assertTrue("$a == 2", unit.get_a() == 2);
+									assertTrue("line 15: $a == 2", unit.get_a() == 2);
 								}
 							}
 						), 
-						visitCounters.addCounter(1, null)
+						visitCounters.addCounter(1, "line 14")
 					),
 					null
 				), 
-				visitCounters.addCounter(1, null)
+				visitCounters.addCounter(1, "line 12")
 			),
 			RuntimeTreeNodeFactory.addAfterHandler(
 				RuntimeTreeNodeFactory.addAfterHandler(
@@ -202,16 +202,16 @@ public class SampleTest {
 									RuntimeTreeNodeFactory.INSTANCE.createInstanceAccess(id_1)
 								)
 							), 
-							visitCounters.addCounter(2, null)
+							visitCounters.addCounter(2, "line 18")
 						)
 					), 
 					new IVisitHandler() {
 						public void run() {
-							    assertTrue("$a == 0", unit.get_a() == 0);
+							assertTrue("line 19: $a == 0", unit.get_a() == 0);
 						}
 					}
 				), 
-				visitCounters.addCounter(1, null)
+				visitCounters.addCounter(1, "line 16")
 			),
 			RuntimeTreeNodeFactory.addAfterHandler(
 				RuntimeTreeNodeFactory.INSTANCE.createIf(
@@ -241,11 +241,11 @@ public class SampleTest {
 							), 
 							new IVisitHandler() {
 								public void run() {
-									    assertTrue("$a == 1", unit.get_a() == 1);
+									assertTrue("line 22: $a == 1 ", unit.get_a() == 1 );
 								}
 							}
 						), 
-						visitCounters.addCounter(0, null)
+						visitCounters.addCounter(0, "line 22")
 					),
 					RuntimeTreeNodeFactory.addAfterHandler(
 						RuntimeTreeNodeFactory.addAfterHandler(
@@ -268,14 +268,14 @@ public class SampleTest {
 							), 
 							new IVisitHandler() {
 								public void run() {
-									    assertTrue("$a == -1", unit.get_a() == -1);
+									assertTrue("line 24: $a == -1", unit.get_a() == -1);
 								}
 							}
 						), 
-						visitCounters.addCounter(1, null)
+						visitCounters.addCounter(1, "line 24")
 					)
 				), 
-				visitCounters.addCounter(1, null)
+				visitCounters.addCounter(1, "line 20")
 			)
 		);
 	

@@ -1,0 +1,23 @@
+program a;
+var
+  t, f, a : Boolean;
+begin
+  1:|t := true !{{$t == 1}};
+  1:|f := false !{{$f == 0}};
+  1:|a := not t !{{$a == 0}};
+  1:|a := not f !{{$a == 1}};
+  1:|a := t and t !{{$a == 1}};
+  1:|a := t or t !{{$a == 1}};
+  1:|a := t or f !{{$a == 1}};
+  1:|a := f or t !{{$a == 1}};
+  1:|a := t xor f !{{$a == 1}};
+  1:|a := f xor t !{{$a == 1}};
+  1:|a := f and t !{{$a == 0}};
+  1:|a := t and f !{{$a == 0}};
+  1:|a := f and f !{{$a == 0}};
+  1:|a := f or f !{{$a == 0}};
+  1:|a := f xor f !{{$a == 0}};
+  1:|a := t xor t !{{$a == 0}};
+  1:|a := t xor t and f !{{$a == 1}};
+  1:|a := (t xor t) and f !{{$a == 0}};
+end.
