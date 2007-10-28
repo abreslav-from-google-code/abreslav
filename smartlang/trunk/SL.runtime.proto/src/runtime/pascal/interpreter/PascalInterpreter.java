@@ -1,7 +1,7 @@
 package runtime.pascal.interpreter;
 
 import pascal.types.BooleanType;
-import runtime.IEvaluatorContext;
+import runtime.contexts.IEvaluatorContext;
 import runtime.tree.IStatementNode;
 import runtime.tree.IStatementNodeVisitor;
 import runtime.tree.statements.Assignment;
@@ -16,7 +16,7 @@ public class PascalInterpreter implements IStatementNodeVisitor<Void> {
 	private final PascalExpressionEvaluator myExpressionEvaluator;
 	
 	public PascalInterpreter(IEvaluatorContext evaluatorContext) {
-		myExpressionEvaluator = new PascalExpressionEvaluator(evaluatorContext);
+		myExpressionEvaluator = new PascalExpressionEvaluator(evaluatorContext, this);
 	}
 
 	public Void visitCompoundNode(Block node) {
