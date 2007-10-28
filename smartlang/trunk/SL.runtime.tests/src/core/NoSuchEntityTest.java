@@ -10,12 +10,12 @@ public class NoSuchEntityTest {
 
 	@Test(expected=UnsupportedOperationException.class)
 	public void testNoSuchFunction() throws Exception {
-		NoSuch.FUNCTION.run(NoSuch.OBJECT);
+		NoSuch.FUNCTION.run(NoSuch.INSTANCE);
 	}
 
 	@Test
 	public void testNoSuchFieldDescriptor() throws Exception {
-		assertSame(NoSuch.OBJECT, NoSuch.FIELD.readValue(null));
+		assertSame(NoSuch.INSTANCE, NoSuch.FIELD.readValue(null));
 		try {
 			NoSuch.FIELD.writeValue(null, null);
 			fail();
@@ -34,18 +34,18 @@ public class NoSuchEntityTest {
 	@Test
 	public void testNoSuchType() throws Exception {
 		assertFalse(NoSuch.TYPE.conformsTo(NoSuch.TYPE));
-		assertSame(NoSuch.OBJECT, NoSuch.TYPE.getDefaultValue());
+		assertSame(NoSuch.INSTANCE, NoSuch.TYPE.getDefaultValue());
 		assertSame(NoSuch.FIELD, NoSuch.TYPE.lookupField("any"));
 		assertSame(NoSuch.METHOD, NoSuch.TYPE.lookupMethod("any"));
 	}
 	
 	@Test(expected=UnsupportedOperationException.class)
 	public void testNoSuchBinaryFunction() throws Exception {
-		NoSuch.BINARY_FUNCTION.run2(NoSuch.OBJECT, NoSuch.OBJECT);
+		NoSuch.BINARY_FUNCTION.run2(NoSuch.INSTANCE, NoSuch.INSTANCE);
 	}
 	
 	@Test(expected=UnsupportedOperationException.class)
 	public void testNoSuchUnaryFunction() throws Exception {
-		NoSuch.UNARY_FUNCTION.run1(NoSuch.OBJECT);
+		NoSuch.UNARY_FUNCTION.run1(NoSuch.INSTANCE);
 	}
 }

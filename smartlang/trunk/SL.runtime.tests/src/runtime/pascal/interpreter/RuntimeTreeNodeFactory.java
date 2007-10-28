@@ -5,7 +5,7 @@ import runtime.tree.ILeftValueNode;
 import runtime.tree.IStatementNode;
 import runtime.tree.IVisitHandler;
 import runtime.tree.expressions.FieldAccess;
-import runtime.tree.expressions.FunctionCall;
+import runtime.tree.expressions.NativeFunctionCall;
 import runtime.tree.expressions.InstanceAccess;
 import runtime.tree.statements.Assignment;
 import runtime.tree.statements.Block;
@@ -24,9 +24,9 @@ public class RuntimeTreeNodeFactory {
 		return new FieldAccess(hostObject, field);
 	}
 	
-	public FunctionCall createFunctionCall(IExpressionNode hostObject, IGenericFunction function,
+	public NativeFunctionCall createFunctionCall(IExpressionNode hostObject, IGenericFunction function,
 			IExpressionNode... arguments) {
-		return new FunctionCall(hostObject, function, arguments);
+		return new NativeFunctionCall(hostObject, function, arguments);
 	}
 	
 	public InstanceAccess createInstanceAccess(int id) {

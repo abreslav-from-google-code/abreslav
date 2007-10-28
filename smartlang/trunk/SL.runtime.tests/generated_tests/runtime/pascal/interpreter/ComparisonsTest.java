@@ -4,7 +4,7 @@ import org.junit.Test;
 import static org.junit.Assert.*;
 
 import pascal.types.*;
-import runtime.SimpleEvaluatorContext;
+import runtime.contexts.SimpleEvaluatorContext;
 import runtime.tree.IVisitHandler;
 import runtime.tree.expressions.*;
 import runtime.tree.statements.*;
