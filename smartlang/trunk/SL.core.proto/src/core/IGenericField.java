@@ -10,11 +10,6 @@ package core;
 public interface IGenericField {
 
 	/**
-	 * @return this field's type
-	 */
-	IType getFieldType();
-	
-	/**
 	 * Reads this field's value from the given instance
 	 * @param thiz - an instance to read field from
 	 * @return field's value

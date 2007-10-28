@@ -5,8 +5,8 @@ public class FieldDescriptorWrapper extends FieldDescriptor {
 	private final IGenericField myImpl;
 	
 	public FieldDescriptorWrapper(final IGenericField impl, String name,
-			IType declaringType) {
-		super(impl.getFieldType(), name, declaringType);
+			IType fieldType, IType declaringType) {
+		super(fieldType, name, declaringType);
 		myImpl = impl;
 	}
 

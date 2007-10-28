@@ -39,16 +39,10 @@ public class ArrayType extends TypeImpl<ArrayType.ShiftedArray> {
 	private static final class ArrayField implements IGenericField {
 
 		private final int index;
-		private final IType fieldType;
 
-		public ArrayField(int index, IType fieldType) {
+		public ArrayField(int index) {
 			super();
 			this.index = index;
-			this.fieldType = fieldType;
-		}
-
-		public IType getFieldType() {
-			return fieldType;
 		}
 
 		public boolean isMutable() {
@@ -61,8 +55,6 @@ public class ArrayType extends TypeImpl<ArrayType.ShiftedArray> {
 		}
 
 		public void writeValue(Instance thiz, Instance value) {
-			assert value.getType() == fieldType;
-			
 			ShiftedArray array = F_THIS.readValue(thiz);
 			array.set(index, value);
 		}
@@ -115,7 +107,7 @@ public class ArrayType extends TypeImpl<ArrayType.ShiftedArray> {
 		
 		int zindex = index - lowInt;
 		if (elementFields[zindex] == null) {
-			elementFields[zindex] = new ArrayField(index, elementType);
+			elementFields[zindex] = new ArrayField(index);
 		}
 		return elementFields[zindex];
 	}

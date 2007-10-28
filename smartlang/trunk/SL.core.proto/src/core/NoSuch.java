@@ -30,7 +30,7 @@ public abstract class NoSuch {
 		}
 
 		public Instance getDefaultValue() {
-			return NoSuch.OBJECT;
+			return NoSuch.INSTANCE;
 		}
 
 		public boolean conformsTo(IType other) {
@@ -43,16 +43,16 @@ public abstract class NoSuch {
 		
 		@Override
 		public Instance createInstance(Void data) {
-			return OBJECT;
+			return INSTANCE;
 		}
 		
 	};
 
-	public static final Instance OBJECT = new Instance(TYPE, new Object());
+	public static final Instance INSTANCE = new Instance(TYPE, new Object());
 	
 	public static final IField FIELD = new FieldDescriptor(NoSuch.TYPE, "", NoSuch.TYPE) {
 		public Instance readValue(Instance host) {
-			return OBJECT;
+			return INSTANCE;
 		}
 
 		public void writeValue(Instance host, Instance value) {
