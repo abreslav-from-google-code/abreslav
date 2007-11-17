@@ -1,6 +1,6 @@
 package core;
 
-public interface IField {
+public interface IField extends IGenericField {
 
 	IType getFieldType();
 	IType getDeclaringType();
