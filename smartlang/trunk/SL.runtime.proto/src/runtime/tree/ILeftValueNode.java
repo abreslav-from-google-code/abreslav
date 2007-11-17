@@ -1,8 +1,8 @@
 package runtime.tree;
 
-import core.IField;
+import core.IGenericField;
 
 public interface ILeftValueNode extends IExpressionNode {
-	IField getField();
+	IGenericField getField();
 	IExpressionNode getHostObject();
 }
