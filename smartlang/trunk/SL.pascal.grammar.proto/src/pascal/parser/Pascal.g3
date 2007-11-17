@@ -10,7 +10,7 @@ options {
   package pascal.parser;
 }
 
-program	:	head? var? block '.'!;
+program	:	head? subroutines var? block '.'!;
 head	:	'program'^ Id ';'!;
 var	:	'var'^ varDecl+;
 varDecl	:	idList ':'! type^ ';'!;
@@ -46,6 +46,18 @@ plusOp	:	'+' | '-' | 'or' | 'xor';
 mulOp	:	'*' | 'div' | 'mod' | 'and';
 ifThenElse	:	'if'^ expression 'then'! statement (options {k=0;}:'else'^ statement)?;
 whileDo 	:	'while'^ expression 'do'! statement;
+
+subroutines
+	: (procedure | function) *;
+procedure
+	: 'procedure'^ signature ';'! sbrBody;
+function
+	: 'function'^ signature ':'! type ';'! sbrBody;
+signature
+	: Id ('('! varDecl+ ')'!)?;
+sbrBody
+	:  var? block ';';
+
 Id	:	('a'..'z' | 'A'..'Z')+; 
 Num	:	('0'..'9')+;
 String : '\"' (options{greedy=false;}:.)* '\"';

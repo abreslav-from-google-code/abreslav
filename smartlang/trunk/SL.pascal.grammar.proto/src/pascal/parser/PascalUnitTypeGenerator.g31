@@ -7,6 +7,7 @@ options {
 
 @header {
   package pascal.parser;
+  
 }
 
 program returns [java.util.Collection<Variable> variables, java.util.Collection<Constant> constants] 
@@ -79,3 +80,11 @@ assertExpr
 	| Num
 	| ^(':' String Num )
 	;
+	
+subroutines
+	: subroutine*;
+subroutine
+	: ^('procedure' signature sbrBody)
+	| ^('function' signature Id sbrBody);
+signature
+	: ^(Id variables*);

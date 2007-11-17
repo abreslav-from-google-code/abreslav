@@ -8,72 +8,105 @@ options {
 
 @header {
   package pascal.parser;
+  import java.util.Collection;
 }
 
-program 
-	: head? var? block
-	-> program(head={$head.st}, var={$var.st}, block={$block.st});
+
+program
+	returns [
+		Collection<Variable> vars,
+		Collection<Constant> constants,
+		Collection<Subroutine> subroutines
+	]
+	@init {
+		$constants = new ArrayList<Constant>();
+	}
+	: head? subroutines[$constants] var? block[$constants]
+	{
+		$vars = $var.vars;
+		$subroutines = $subroutines.list;
+	}
+	-> program(head={$head.st}, subroutines={$subroutines.st}, var={$var.st}, block={$block.st});
+
 head : ^('program' Id);
-var : ^('var' variables+);
-variables : ^(Id (Id)*);
-block 
-	: ^('begin' (st+=statement)*)
+
+var returns [Collection<Variable> vars]
+	@init {
+		$vars = new ArrayList<Variable>();
+	}
+	: ^('var' variables[$vars]+);
+
+variables [Collection<Variable> list]
+	: ^(type=Id (name=Id 
+					{
+						$list.add(new Variable($type.text, $name.text));
+					}
+				 )*
+	    );
+
+block [Collection<Constant> c]
+	: ^('begin' (st+=statement[$c])*)
 	-> block(statements={$st});
-statement 
-	: assign -> {$assign.st}
-	| ifThenElse -> {$ifThenElse.st} 
-	| whileDo -> {$whileDo.st}
-	| block -> {$block.st}
-	| ^('|' st=statement assertExpr)
+	
+statement [Collection<Constant> c]
+	: assign[$c] -> {$assign.st}
+	| ifThenElse[$c] -> {$ifThenElse.st} 
+	| whileDo[$c] -> {$whileDo.st}
+	| block[$c] -> {$block.st}
+	| ^('|' st=statement[$c] assertExpr)
 	-> assertedStatement(stmt={$st.st}, asrt={$assertExpr.st})
-	| ^(':' assertExpr st=statement)
+	| ^(':' assertExpr st=statement[$c])
 	-> assertedStatement(stmt={$st.st}, asrt={$assertExpr.st})
 	;
-assign
-	: ^(':=' Id expression)
+	
+assign [Collection<Constant> c]
+	: ^(':=' Id expression[$c])
 	-> assign(id={$Id}, exp={$expression.st});
-ifThenElse 
-	: ^('if' expression th=statement)
+	
+ifThenElse [Collection<Constant> c]
+	: ^('if' expression[$c] th=statement[$c])
 	-> ifThenElse(cond={$expression.st}, then={$th.st})
-	| ^('else' ^('if' expression th=statement) el=statement)
+	| ^('else' ^('if' expression[$c] th=statement[$c]) el=statement[$c])
 	-> ifThenElse(cond={$expression.st}, then={$th.st}, els={$el.st}) 
 	;
-whileDo 
-	: ^('while' expression statement)
+	
+whileDo [Collection<Constant> c]
+	: ^('while' expression[$c] statement[$c])
 	-> while(cond={$expression.st}, body={$statement.st})
 	;
-expression
-    : ^(op='+' a=expression b=expression)
+	
+expression [Collection<Constant> c]
+    : ^(op='+' a=expression[$c] b=expression[$c])
     -> binaryOp(l={$a.st}, op={$op.text}, r={$b.st})
-    | ^(op='-' a=expression b=expression)
+    | ^(op='-' a=expression[$c] b=expression[$c])
     -> binaryOp(l={$a.st}, op={$op.text}, r={$b.st})  
-    | ^(op='*' a=expression b=expression)
+    | ^(op='*' a=expression[$c] b=expression[$c])
     -> binaryOp(l={$a.st}, op={$op.text}, r={$b.st})  
-    | ^(op='div' a=expression b=expression)
+    | ^(op='div' a=expression[$c] b=expression[$c])
     -> binaryOp(l={$a.st}, op={$op.text}, r={$b.st})  
-    | ^(op='mod' a=expression b=expression)
+    | ^(op='mod' a=expression[$c] b=expression[$c])
     -> binaryOp(l={$a.st}, op={$op.text}, r={$b.st})  
-    | ^(op='<' a=expression b=expression)
+    | ^(op='<' a=expression[$c] b=expression[$c])
     -> binaryOp(l={$a.st}, op={$op.text}, r={$b.st})
-    | ^(op='>' a=expression b=expression)
+    | ^(op='>' a=expression[$c] b=expression[$c])
     -> binaryOp(l={$a.st}, op={$op.text}, r={$b.st}) 
-    | ^(op='>=' a=expression b=expression)
+    | ^(op='>=' a=expression[$c] b=expression[$c])
     -> binaryOp(l={$a.st}, op={$op.text}, r={$b.st}) 
-    | ^(op='<=' a=expression b=expression)
+    | ^(op='<=' a=expression[$c] b=expression[$c])
     -> binaryOp(l={$a.st}, op={$op.text}, r={$b.st}) 
-    | ^(op='=' a=expression b=expression)
+    | ^(op='=' a=expression[$c] b=expression[$c])
     -> binaryOp(l={$a.st}, op={$op.text}, r={$b.st}) 
-    | ^(op='<>' a=expression b=expression)
+    | ^(op='<>' a=expression[$c] b=expression[$c])
     -> binaryOp(l={$a.st}, op={$op.text}, r={$b.st}) 
-    | ^(op='and' a=expression b=expression)
+    | ^(op='and' a=expression[$c] b=expression[$c])
     -> binaryOp(l={$a.st}, op={$op.text}, r={$b.st}) 
-    | ^(op='or' a=expression b=expression)
+    | ^(op='or' a=expression[$c] b=expression[$c])
     -> binaryOp(l={$a.st}, op={$op.text}, r={$b.st}) 
-    | ^(op='xor' a=expression b=expression)
+    | ^(op='xor' a=expression[$c] b=expression[$c])
     -> binaryOp(l={$a.st}, op={$op.text}, r={$b.st}) 
-    | ^(op='-' '-' r=expression)
+    | ^(op='-' '-' r=expression[$c])
     -> unaryOp(r={$r.st}, op={$op.text})  
-    | ^(op='not' r=expression)
+    | ^(op='not' r=expression[$c])
     -> unaryOp(r={$r.st}, op={$op.text})  
 	| Id
 	-> id(name={$Id.text})
@@ -97,7 +130,21 @@ assertExpr
 	-> assertNumberOfVisits(count={$Num.text}, msg={"line " + $Num.line})
 	;
 	
-/*
-	| ^('!' JavaStr) 
+subroutines [Collection<Constant> c] returns [Collection<Subroutine> list]
+	@init {
+		$list = new ArrayList<Subroutine>();
+	}
+	: (sr+=subroutine[$c] 
+		{
+			$list.add($subroutine.data);
+		}
+	   )*
+	-> subroutines(sr={$sr});
 
-*/
+subroutine [Collection<Constant> c] 
+	returns [Subroutine data]
+	@init {
+		$data = new Subroutine();
+	}
+	: ^('procedure' Id (variables[$data.args])* var? block[$c]) 
+	| ^('function' Id (variables[$data.args])* Id var? block[$c]);
