@@ -5,13 +5,13 @@ import runtime.tree.ILeftValueNode;
 import runtime.tree.IStatementNode;
 import runtime.tree.IVisitHandler;
 import runtime.tree.expressions.FieldAccess;
-import runtime.tree.expressions.NativeFunctionCall;
 import runtime.tree.expressions.InstanceAccess;
+import runtime.tree.expressions.NativeFunctionCall;
 import runtime.tree.statements.Assignment;
 import runtime.tree.statements.Block;
 import runtime.tree.statements.If;
 import runtime.tree.statements.While;
-import core.IField;
+import core.IGenericField;
 import core.IGenericFunction;
 
 public class RuntimeTreeNodeFactory {
@@ -20,7 +20,7 @@ public class RuntimeTreeNodeFactory {
 	private RuntimeTreeNodeFactory() {
 	}
 	
-	public FieldAccess createFieldAccess(IExpressionNode hostObject, IField field) {
+	public FieldAccess createFieldAccess(IExpressionNode hostObject, IGenericField field) {
 		return new FieldAccess(hostObject, field);
 	}
 	
