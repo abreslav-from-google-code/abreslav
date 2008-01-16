@@ -77,6 +77,10 @@ begin
   r := Robot.XPosition * w + w;
   b := Robot.YPosition * h + h;
   Ellipse(l, t, r, b);
+  SetBrushStyle(bsClear);
+  l := (r + l) div 2 - TextWidth(Robot.Message) div 2;
+  t := (t + b) div 2 - TextHeight(Robot.Message) div 2;
+  TextOut(l, t, Robot.Message);
   UnFreezeScreen;
 end;
 
