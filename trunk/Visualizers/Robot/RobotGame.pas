@@ -32,6 +32,7 @@ type
     procedure SetField(field : TField);
     procedure OnMove(robot : TRobot; dir : TMovingDirection); override;
     procedure OnChangeMark(robot : TRobot); override;
+    procedure OnMessageChanged(robot : TRobot); override;
   end;
 
 { TDrawingRobotListener }
@@ -39,6 +40,11 @@ type
 procedure TDrawingRobotListener.OnChangeMark(robot: TRobot);
 begin
   Redraw(FField, robot);
+end;
+
+procedure TDrawingRobotListener.OnMessageChanged(robot: TRobot);
+begin
+  Draw(FField, robot);
 end;
 
 procedure TDrawingRobotListener.OnMove(robot: TRobot;

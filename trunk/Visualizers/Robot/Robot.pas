@@ -12,6 +12,7 @@ type
   public
     procedure OnMove(robot : TRobot; dir : TMovingDirection); virtual; abstract;
     procedure OnChangeMark(robot : TRobot); virtual; abstract;
+    procedure OnMessageChanged(robot : TRobot); virtual; abstract;
   end;
   TRobot = class
   private
@@ -21,6 +22,10 @@ type
     FField : TField;
 
     FRobotListener : TRobotListener;
+    FMessage: String;
+    procedure SetMessage(const Value: String);
+    function GetInMessage: Integer;
+    procedure SetIntMessage(const Value: Integer);
   public
     constructor Create(Field : TField; X, Y : Integer; robotListener : TRobotListener = nil);
 
@@ -31,6 +36,9 @@ type
     function CanMove(dir : TMovingDirection) : Boolean;
     procedure ChangeMark;
     function IsMarked : Boolean;
+
+    property Message : String read FMessage write SetMessage;
+    property IntMessage : Integer read GetInMessage write SetIntMessage;
   end;
 
   EInvalidPositionException = class(Exception)
@@ -59,11 +67,16 @@ type
   public
     procedure OnMove(robot : TRobot; dir : TMovingDirection); override;
     procedure OnChangeMark(robot : TRobot); override;
+    procedure OnMessageChanged(robot : TRobot); override;
   end;
 
 { TDefaultRobotListener }
 
 procedure TDefaultRobotListener.OnChangeMark(robot: TRobot);
+begin
+end;
+
+procedure TDefaultRobotListener.OnMessageChanged(robot: TRobot);
 begin
 end;
 
@@ -118,6 +131,28 @@ begin
     FYPosition := FYPosition + dir2y[dir];
     FRobotListener.OnMove(Self, dir); 
   end;
+end;
+
+procedure TRobot.SetMessage(const Value: String);
+begin
+  if FMessage <> Value then begin
+    FMessage := Value;
+    FRobotListener.OnMessageChanged(Self);
+  end;
+end;
+
+function TRobot.GetInMessage: Integer;
+begin
+  try
+    Result := StrToInt(Message);
+  except
+    Result := 0;
+  end;
+end;
+
+procedure TRobot.SetIntMessage(const Value: Integer);
+begin
+  Message := IntToStr(Value);
 end;
 
 { EInvalidPositionException }

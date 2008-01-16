@@ -1,4 +1,4 @@
-program RobotTest;
+program DFS;
 {$APPTYPE CONSOLE}
 
 uses
