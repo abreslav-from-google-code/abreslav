@@ -1,0 +1,17 @@
+SableCC
+	Advantages:
+		Separates code from grammar
+		Derives basic CST structure from grammar definition
+		Supports CST to AST transformations
+		Typesafe AST
+	Drawbacks:
+		Weak expressiveness (LL(1)?)
+		Stupid lexical exclusion syntax [[0..0xffff]-[':' + ':']
+		A lot of duplication when defining CST->AST
+		Requires AST processing (?) - does not allow to work while parser works
+		Does not allow to provide translation scheme entries inside the producation left side
+		Does not support full EBNF (new nonterminal is to be defined instead of using brackets)
+		AST is not so typesafe (many things return P<Nonterminal> which is empty interface and you have to cast)
+		AST visitor is inconvinient since we have to use maps to associate results with method
+		AST classes are not customizable so we cannot build EMF AST and generted AST classes are not appropriate
+		SableCC AST -> EMF AST transformation is a bunch of stupid code
