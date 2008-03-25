@@ -15,3 +15,42 @@ SableCC
 		AST visitor is inconvinient since we have to use maps to associate results with method
 		AST classes are not customizable so we cannot build EMF AST and generted AST classes are not appropriate
 		SableCC AST -> EMF AST transformation is a bunch of stupid code
+================================================================================
+LISA
+	Advantages:
+		Semantics
+		Grammar inheritance
+		Supports code templates (for Java actions)
+		Supports AOP for Java code (to be investigated)
+			Advice seem to be rather useful :)
+			Semantic rules are weaved independently
+			NOTE: pointcut language
+		Some notion of abstract syntax and parsing abstract syntax
+		Inlining lexical expressions into grammar is allowed
+		Many parsing options: SLR, LALR and so on
+	Disadvantages:
+		Java code embedded in grammar definition
+		No set operations in lexer (only complement)
+		No UNICODE in lexer
+		Fixed directory structure
+		BNF only
+		NPE on a simple file :(
+		No ANY_CHARACTER wildcard in lexer
+		No Helpers in lexer :(
+		No way to embed code in the middle of a rule
+		Poorly documented
+================================================================================
+Coco/R
+	Advantages:
+		Java C++ C#
+		Attributed grammar
+		Embedded actions (language-dependent)
+		Literals embedded in the grammar
+		Many kinds of comments, comments can be nested (what is this?) 
+		Context-sensitive scanner
+		Pragma tokens (like compiler directives)
+	Disadvantages:
+		Language-dependent actions mixed with grammar definition
+		Some misteriuos resolvers used to resolve LL(1) conflicts
+		
+		
