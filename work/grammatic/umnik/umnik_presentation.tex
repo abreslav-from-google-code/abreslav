@@ -1,0 +1,215 @@
+\documentclass[paper=screen,10pt,unicode]{beamer}
+\usepackage[T2A]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage[russian, english]{babel}
+
+\mode<presentation>
+{
+	\usetheme{Frankfurt}
+}
+
+\author{Андрей Бреслав \\ \texttt{abreslav@gmail.com}}
+\institute[ИТМО]{СПбГУ ИТМО}
+
+\subject{Разработка технологии создания программного обеспечения,
+основанного на формальных грамматиках, поддерживающей
+модульность и повторное использование}
+\AtBeginSection[]
+{
+	\begin{frame}<beamer>
+		\frametitle{Содержание}
+		\tableofcontents[currentsection,currentsubsection]
+	\end{frame}
+}
+
+\title[Grammarware Engineering]{Разработка технологии создания программного обеспечения,
+основанного на формальных грамматиках, поддерживающей
+модульность и повторное использование}
+
+\date{\today}
+
+\begin{document}
+
+\begin{frame}
+	\titlepage
+\end{frame}
+
+\begin{frame}
+	\frametitle{Содержание}
+	\tableofcontents
+\end{frame}
+
+\section{Цели и задачи}
+\begin{frame}
+	\frametitle{Цели и задачи}
+
+	\begin{block}{Цели проекта}
+		Создание технологии разработки ПО, связанного с грамматиками, 
+		обеспечивающей внутреннее качество создаваемого ПО:
+		\begin{itemize}
+			\item модульность,
+			\item повторное использование,
+			\item разделение раличных аспектов системы.
+		\end{itemize}
+	\end{block}
+	
+	\begin{block}{Задачи}
+		\begin{itemize}
+			\item Формализация процесса разработки в виде последовательности преобразований грамматики
+			\item Разработка унифицированнго языка описания грамматик 
+			\item Разработка языка запросов к грамматикам
+			\item Разработка языков описания преобразований
+			\item Разработка библиотеки аовторно используемых описаний и преобразований
+		\end{itemize}
+	\end{block}
+\end{frame}
+\section{Описание проблемы}
+\begin{frame}
+	\frametitle{ПО, связанное с грамматиками (Grammarware)}
+	\begin{block}{Приложения}
+		\begin{itemize}
+			\item Компиляторы
+			\item Средства статического анализа кода
+			\item Форматы файлов данных
+			\item Средства преобразования кода
+			\item Средства автоматического документирования
+			\item ...
+		\end{itemize}
+	\end{block}
+	\begin{block}{Средства разработки}
+		\begin{itemize}
+			\item Генераторы компиляторов (интерпретаторов, парсеров)
+			\item Генераторы текстовых редакторов с подсветкой
+			\item \large \bf\alert{???}
+		\end{itemize}
+	\end{block}
+\end{frame}
+
+\begin{frame}
+	\frametitle{Проблемы, связанные с разработкой Grammarware}
+
+	\begin{block}{С грамматическими определениями очень трудно работать}
+		\begin{itemize}
+			\item Плохая читаемость
+			\item Смешение различных функций
+			\item Очень трудно поддерживать
+			\item Практически невозможно повторно использовать
+			\item Большое количество дублирующейся информации
+		\end{itemize}
+	\end{block}
+	\begin{block}{Результат}
+		\begin{itemize}
+			\item Многие делают все вручную
+			\item Возникает большое количество ошибок
+			\item Создание качественного ПО, работающего с грамматиками, затруднено
+		\end{itemize}
+	\end{block}
+\end{frame}
+
+\begin{frame}
+	\frametitle{Grammarware Engineering}
+
+	\begin{block}{Основатели подхода}
+		Статья P. Klint, R. L\"{a}ammel, C. Verhoef, ``Towards an engineering discipline for GRAMMARWARE'', 2005 год
+	\end{block}
+	\begin{definition}
+		\alert{Grammarware} -- программы, использующие грамматики или основанные на грамматиках.
+	\end{definition}
+	\begin{block}{Grammarware engineering}
+		\begin{itemize}
+			\item Шаблоны проектирования
+			\item Стандарты
+			\item {\bf Специализированные средства разработки }
+		\end{itemize}
+	\end{block}
+\end{frame}
+
+\section{Предлагаемый подход}
+\begin{frame}
+	\frametitle{Что такое Grammatic}
+
+	\begin{block}{Идея}
+		Программное средство для разработки Grammarware, основанное на идеях Model-Driven Development
+	\end{block}
+	\begin{block}{Какие проблемы мы будем решать}
+		\begin{itemize}
+			\item Раннее привязывание к конкретной технологии
+			\item Перегруженность грамматического определения посторонней информацией
+			\item Повторное использование грамматик
+			\item Автоматизированные манипуляции с грамматиками
+		\end{itemize}
+	\end{block}
+\end{frame}
+
+\begin{frame}
+	\frametitle{Как этого добиться}
+
+	\begin{block}{Только грамматика!}
+		\begin{itemize}
+			\item ``Чистая'' EBNF
+			\item Никакого кода семантических действий
+			\item Никаких дополнительных ограничений на класс грамматики (LL(k), LALR и т.д.)
+		\end{itemize}
+	\end{block}
+	\begin{block}{Прочие аспекты системы определяются отдельно}
+		\begin{itemize}
+			\item Проверка грамматики на корректность
+			\item Преобразование грамматики
+			\item Генерация моделей по грамматике
+			\item Генерация кода
+		\end{itemize}
+	\end{block}
+\end{frame}
+
+\begin{frame}
+	\frametitle{Как это будет работать}
+
+	\begin{block}{Запросы и преобразования}
+		\begin{itemize}
+			\item Выбрать из грамматики объекты с заданными свойствами
+			\item Преобразовать выбранные объекты
+		\end{itemize}
+	\end{block}
+	\begin{example}{Примеры запросов}
+		\begin{itemize}
+			\item Все нетерминалы, имена которых начинаются на E
+			\item Все правила, у которых в правой части по два нетерминала
+		\end{itemize}
+	\end{example}
+	\begin{block}{Преобразования}
+		\begin{itemize}
+			\item Изменение структуры грамматики
+			\item Создание объектов в какой-либо метамодели
+			\item Генерация сообщений об ошибках
+			\item Генерация текста
+		\end{itemize}
+	\end{block}
+\end{frame}
+
+\begin{frame}
+	\frametitle{Можно создавать специализированные инструменты}
+
+	\begin{block}{Примеры специализированных инструментов}
+		\begin{itemize}
+			\item Генератор парсеров
+			\item Генератор тестов для грамматик
+			\item Преобразователь грамматики в UML-диаграмму классов
+		\end{itemize}
+	\end{block}
+	\begin{block}{Составляющие специализированного инструмента}
+		\begin{itemize}
+			\item Ограничения на структуру грамматики
+			\item Ограничения на метаданные
+			\item Преобразования грамматики
+		\end{itemize}
+	\end{block}
+	\begin{block}{Вывод}
+		Grammatic может стать платформой для создания таких инструментов
+	\end{block}
+\end{frame}
+
+\section{Этапы НИОКР}
+\section{Результат НИОКР}
+\section{Коммерциализуемость}
+\end{document}
+
