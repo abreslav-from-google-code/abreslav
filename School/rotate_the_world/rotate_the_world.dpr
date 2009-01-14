@@ -31,6 +31,7 @@ var
 begin
   AssignFile(fFile, 'figures.dat');
   FigureFile.Reset(fFile);
+
   InitGraph(H, W);
   FileToList(fFile);
   drawAllFigures;

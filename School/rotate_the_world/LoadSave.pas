@@ -60,7 +60,7 @@ begin
       end;
     end;
   end;
-  CloseFile(fFile);
+  FigureFile.CloseFile(fFile);
 end;
 
 end.
