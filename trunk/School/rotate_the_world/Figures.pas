@@ -20,7 +20,7 @@ const
   MAX_POLYGON_SIZE = 100;
 
 type
-  TPolygon = record
+  TPolygon = packed record
     size : Integer;
     points : array[1..MAX_POLYGON_SIZE] of TPoint;
   end;
