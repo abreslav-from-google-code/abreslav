@@ -29,11 +29,13 @@ var
   c, p1, p2 : Tpoint;
   fFile : File;
 begin
+  InitGraph(H, W);
+  SetTitle('Rotate the world!');
+
   AssignFile(fFile, 'figures.dat');
   FigureFile.Reset(fFile);
-
-  InitGraph(H, W);
   FileToList(fFile);
+
   drawAllFigures;
   while true do begin
     getPoint(c);

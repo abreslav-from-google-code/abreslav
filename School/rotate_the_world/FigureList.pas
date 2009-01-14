@@ -102,7 +102,11 @@ end;
 
 procedure ReadPolygon(var polygon : TPolygon);
 begin
-  Read(ftPolygon, polygon, SizeOf(polygon));
+  AssertMoreFigures;
+  AssertFigureType(ftPolygon);
+  Move(FLCurrent^.Data, polygon.size, SizeOf(polygon.size));
+  Move(FLCurrent^.Data, polygon, SizeOf(polygon.size) + SizeOf(TPoint) * polygon.size);
+  Advance;
 end;
 
 procedure Write(figureType : TFigureType; const figure; size : Integer);
@@ -141,7 +145,7 @@ end;
 
 procedure WritePolygon(const polygon : TPolygon);
 begin
-  Write(ftPolygon, polygon, SizeOf(polygon));
+  Write(ftPolygon, polygon, SizeOf(polygon.size) + SizeOf(TPoint) * polygon.size);
 end;
 
 end.
