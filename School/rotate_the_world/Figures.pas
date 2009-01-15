@@ -3,15 +3,15 @@ unit Figures;
 interface
 
 type
-  TPoint = record
+  TPoint = packed record
     x, y : Real;
   end;
 
-  TSegment = record
+  TSegment = packed record
     a, b : TPoint;
   end;
 
-  TCircle = record
+  TCircle = packed record
     center : TPoint;
     radius : Real;
   end;
