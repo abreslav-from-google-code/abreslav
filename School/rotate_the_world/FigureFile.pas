@@ -60,17 +60,17 @@ implementation
 
 procedure Reset(var fFile : File);
 begin
-
+  System.Reset(fFile, 1);
 end;
 
 procedure CloseFile(var fFile : File);
 begin
-
+  System.CloseFile(fFile);
 end;
 
 function GetNextFigureType(var fFile : File) : TFigureType;
 begin
-  Result := ftError;
+  BlockRead(fFile, Result, sizeOf(Result));
 end;
 
 function HasMoreFigures(var fFile : File) : Boolean;
