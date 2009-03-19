@@ -197,6 +197,9 @@ const
   VK_PA1 = Windows.VK_PA1;
   VK_OEM_CLEAR = Windows.VK_OEM_CLEAR;
 
+const
+  INFINITE = Windows.INFINITE;
+
 type
   TPoint = Windows.TPoint;
 
