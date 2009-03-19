@@ -1,6 +1,6 @@
 unit DelphiGraph;
 
-interface
+interface                            
 
 uses
   Windows, Graphics, SysUtils;
@@ -221,13 +221,13 @@ procedure SetTitle(const title : String);
 function GetTitle : String;
 
 function CheckKeyState(vk : Word) : Boolean;
-procedure WaitForKey;
+procedure WaitForKey(milliseconds : Cardinal = INFINITE);
 function KeyPressed : Boolean;
 function CharPressed : Boolean;
 function ReadKey : Word;
 function ReadChar : Char;
 
-procedure WaitForMouseEvent;
+procedure WaitForMouseEvent(milliseconds : Cardinal = INFINITE);
 function MousePressed : Boolean;
 function GetMouseX : Integer;
 function GetMouseY : Integer;
@@ -242,6 +242,8 @@ procedure RoundRect(x1, y1, x2, y2, a, b : Integer);
 procedure MoveTo(x, y : Integer);
 procedure LineTo(x, y : Integer);
 procedure Polygon(points : array of TPoint);
+procedure SetPixel(x, y : Integer; Color : TColor);
+function GetPixel(x, y : Integer) : TColor;
 
 function TextWidth(const Text : String) : Integer;
 function TextHeight(const Text : String) : Integer;
@@ -707,7 +709,7 @@ begin
     keyPressEvent.ResetEvent;
     Exit;
   end;
-  keyPressEvent.WaitFor(INFINITE);
+  keyPressEvent.WaitFor(milliseconds);
   keyPressEvent.ResetEvent;
 end;
 
@@ -756,7 +758,7 @@ end;
 
 procedure WaitForMouseEvent;
 begin
-  mouseEvent.waitFor(INFINITE);
+  mouseEvent.waitFor(milliseconds);
   mouseEvent.ResetEvent;
 end;
 
@@ -926,6 +928,28 @@ begin
   Repaint;
 end;
 
+procedure SetPixel(x, y : Integer; Color : TColor);
+begin
+  Assert(buffer <> 0);
+  cs.Enter;
+  try
+    Windows.SetPixel(buffer, x, y, Color);
+  finally
+    cs.Leave;
+  end;
+  Repaint;
+end;
+
+function GetPixel(x, y : Integer) : TColor;
+begin
+  Assert(buffer <> 0);
+  cs.Enter;
+  try
+    Result := Windows.GetPixel(buffer, x, y);
+  finally
+    cs.Leave;
+  end;
+end;
 ///////////////////////////////////////////////////////////////////////////////
 
 procedure SelectAndDelete(obj : THandle);
@@ -944,7 +968,7 @@ begin
 end;
 
 const
-  PenStyles: array[TPenStyle] of Word =
+  PenStyles: array[psSolid..psInsideFrame] of Word =
     (PS_SOLID, PS_DASH, PS_DOT, PS_DASHDOT, PS_DASHDOTDOT, PS_NULL,
      PS_INSIDEFRAME);
 procedure SetPen;
