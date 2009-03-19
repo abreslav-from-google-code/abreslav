@@ -244,7 +244,7 @@ procedure Ellipse(x1, y1, x2, y2 : Integer);
 procedure RoundRect(x1, y1, x2, y2, a, b : Integer);
 procedure MoveTo(x, y : Integer);
 procedure LineTo(x, y : Integer);
-procedure Polygon(points : array of TPoint);
+procedure Polygon(const points : array of TPoint);
 procedure SetPixel(x, y : Integer; Color : TColor);
 function GetPixel(x, y : Integer) : TColor;
 
@@ -859,12 +859,12 @@ begin
   Repaint;
 end;
 
-procedure Polygon(points : array of TPoint);
+procedure Polygon(const points : array of TPoint);
 begin
   Assert(buffer <> 0);
   cs.Enter;
   try
-    Windows.Polygon(buffer, points, High(points) + 1);
+    Windows.Polygon(buffer, (@points)^, High(points) + 1);
   finally
     cs.Leave;
   end;
