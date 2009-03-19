@@ -6,7 +6,7 @@ uses
   Windows, Graphics, SysUtils;
 
 const
-  VERSION = '2.1 beta';
+  VERSION = '2.2 beta';
   ABOUT_TEXT =
     'DelphiGraph library version ' + VERSION + #13#10 +
     'Copyright (C) by A. Breslav'#13#10 +
