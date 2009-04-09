@@ -1343,7 +1343,9 @@ begin
           EndDialog(hDlg, 1);
           edit := GetDlgItem(hDlg, 105);
           SetLength(InputResult, GetWindowTextLength(edit));
-          GetWindowText(edit, PChar(InputResult), Length(InputResult) + 1);
+          if Length(InputResult) > 0 then begin
+            GetWindowText(edit, PChar(InputResult), Length(InputResult) + 1);
+          end;
         end;
         IDCANCEL : EndDialog(hDlg, 0);
       end;
