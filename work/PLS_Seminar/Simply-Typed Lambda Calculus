@@ -53,15 +53,28 @@ tops(
 )
 \end{code}
 
-Typing rules describe are used by \Tcg{} to search for proofs of typing judgements, which are basically trees where the proven judgement is a root and all the other vertices are \emph{properly} labeled with rules. A typing judgement is a pair 
+A \emph{typing judgement} in \Tcg{} is a pair 
 $$term : type$$
-where $term$ is a AST subtree and $type$ is term which structure is defined by typing rules.
+where $term$ is a AST subtree and $type$ is term which structure is defined by typing rules. The typing rules are used by \Tcg{} to construct proofs of typing judgements, which are basically trees where the proven judgement is a root and all the edges are \emph{properly} labeled with rules (what ``properly'' means will be explained later). 
 
+A generic typing rule consists of a set of universally quantified \emph{variables}, a list of \emph{premises}, a \emph{conclusion} and a list of \emph{parameters}. In \Tcg{} concrete syntax it is written like this:
+\begin{code}
 rule apply
-forall(f,e,s,t)
-apply(f,e) : t
-if f : fun(s,t)
-and e : s
+  forall(f,e,s,t)
+    apply(f,e) : t
+  if f : fun(s,t)
+  and e : s
+\end{code}
+
+In this example, \code{f}, \code{e}, \code{s} and \code{t} are the quantified variables, \code{apply(f,e)} is the conclusion, \code{f : fun(s, t)} and \code{e : s} are the premises. In more familiar logical notation it can be written like this:
+\tcgrule{f, e, s, t}{
+    \premise{\Gamma |- f : s \rightarrow t}
+    \premise{\Gamma |- e : s}
+}{\Gamma |- f e : t}{apply}{}
+
+So this rule expresses the typing for application. 
+
+We have written $\Gamma$ in this example to provide the most familiar notation, but in \Tcg{} context is modified by rule applications, so 
 
 rule lambda
 forall(x,e,s,t)
