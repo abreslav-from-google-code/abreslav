@@ -72,15 +72,31 @@ In this example, \code{f}, \code{e}, \code{s} and \code{t} are the quantified va
     \premise{\Gamma |- e : s}
 }{\Gamma |- f e : t}{apply}{}
 
-So this rule expresses the typing for application. 
+So this rule expresses the typing for application. To construct a proof for a judgement $f e : t$ we have to build a tree, where this judgement will be the root node and its children will be obtained by \emph{application} of this rule. So the root node will have two children having the forms of the premises, where $f$, $e$ and $t$ are already known (they appear in the initial judgement) and $s$ must be inferred. Each node in the tree is marked with the rule applied at this node, in our case the root node will be marked with \code{apply} rule. To complete the proof we must construct subtrees proving the children, so that leaves of the tree will be marked with application of rules which have no premises. This example provides a rough intuition about proof structure, we will improve it further (for formal definitions see Chapter 2 of the original thesis).
 
-We have written $\Gamma$ in this example to provide the most familiar notation, but in \Tcg{} context is modified by rule applications, so 
-
+We have written $\Gamma$ in the example above to provide the most familiar notation, but in \Tcg{} the context is ``global'' for the rule application and is being modified each time a rule is applied (the modified version is relevant to the subtree of the vertex marked with the applied rule). This is motivated by the backward style of reasoning adopted by \Tcg{}: when we apply a rule, we create new vertices in the proof tree and change our knowledge about currently available typing information. These changes are expressed by \emph{context modifiers} which are written in the premises instead of context variables like $\Gamma$. For example, here is the rule for $\lambda$-abstraction:
+\begin{code}
 rule lambda
 forall(x,e,s,t)
 lambda(x,e) : fun(s,t)
 if e : t
 under -( :.1.= x) + [ x : s ]
+\end{code}
+Here is the tree-like form of this rule:
+\tcgrule{x, e, s, t}{
+    \premise{-( :_1 = x), +[ x : s ] |- f : s \rightarrow t}
+    \premise{ |- e : s}
+}{f e : t}{apply}{}
+The context modifiers here are \code{-( :.1.= x)} and \code{+[ x : s ]}.
+
+The context modifiers are applied to the context available a the root of the subtree, so the are relative to the context of the conclusion, that is why we do not write anything denoting context under the like.
+
+The rule \code{apply} mentioned above has no context modifiers, thus in tree-like form it is written as follows:
+\tcgrule{f, e, s, t}{
+    \premise{ |- f : s \rightarrow t}
+    \premise{ |- e : s}
+}{f e : t}{apply}{}
+
 
 rule tops
 forall(es,ts)
