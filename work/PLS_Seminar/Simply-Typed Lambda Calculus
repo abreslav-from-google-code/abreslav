@@ -1,0 +1,57 @@
+
+A languages specification in \Tcg{} covers 
+ * context-free syntax;
+ * abstract syntax tree construction;
+ * typing rules;
+ * pretty-printing rules.
+
+
+We illustarte the overall approach with the simplest example: simply-typed lambda calculus.
+
+[label tokens]
+tokens
+	ID=[a-z][a-zA-Z0-9_]*
+end tokens
+
+[label file] syntax
+	file: top_wrap EOF {! run ~save: [ (input.base^".rls",
+	                               [ ("define", "save_defined") ]) ] $1 !}
+	top_wrap: tops --> tops($1)
+	tops: top       --> $1 :: []
+	| top ";;" tops --> $1 :: $3
+	top: exp --> $1
+
+[label exp] syntax
+	exp: ID               --> id[$1]
+	| exp exp             --> apply($1,$2)
+	| "\\" ID "." exp     --> lambda(id[$2],$4)
+	| "(" exp ")"         --> $2
+
+rule apply
+forall(f,e,s,t)
+apply(f,e) : t
+if f : fun(s,t)
+and e : s
+
+rule lambda
+forall(x,e,s,t)
+lambda(x,e) : fun(s,t)
+if e : t
+under -( :.1.= x) + [ x : s ]
+
+rule tops
+forall(es,ts)
+tops(es)
+if [branch] es : ts export* ...
+
+environment apply,lambda,tops
+
+----
+Polymprphic let:
+
+  rule let_poly
+  forall(x,e,e’,s,t)
+    let(x,e,e’) : t
+  if e : s
+  and e’ : t
+  under -(:.1.= x) +let_binding[x](<1: [quantify]>)
