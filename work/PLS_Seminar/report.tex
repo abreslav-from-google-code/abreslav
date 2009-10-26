@@ -218,5 +218,27 @@ where each rule expression may be
 	\item a rule extracted from the subproof of the premise number $i$ (e.g., $\langle 1 \rangle$, the premise must stay to the left of the current premise),
 	\item the \textbf{environment} which refers to all the rules present in the context.
 \end{itemize}
+
+Now we proceed to the polymorphic version of \textbf{let}. To complete the definition, we change \code{let_subproof} only slightly:
+
+\tcgrule{x,e,e',s,t}{
+    \premise{}{e' : s}
+    \premise{-(:_1 = x), +[\mathtt{let\_binding}[x]](\langle 1 : [\forall] \rangle)}{e : t}
+}{\mathbf{let}\;x = e'\;\mathbf{in}\;e : t}{let\_poly}{}
+
+Here $\langle 1 : [\forall] \rangle$ stands for ``extract the subproof of the first premise and quantify its inner variables universally''. These will be exactly $\widetilde{\alpha}$ --- the variables quantified in the type scheme $\forall \widetilde{\alpha}.s$. Note that the type scheme itself does not appear in the rule: we do not need to enrich our predicate language with universal quantification since it is successfully handled by the meta-theory. Why is the meta-theory designed in such a way that is serves exactly this purpose? The author of the original work gives a detailed explanation in the Section 4.1.3.3, to put it shortly: quantifying the free variables is a natural operation which makes a rule usable, and inner variables are the maximal set of variables which can be quantified without affecting soundness.
+
+\subsection{Recursion}
+
+To define non-trivial functions with \textbf{let}, we need recursion, which is not yet supported by our rule. To support it we can just add a context modifier to the first premise:
+
+\tcgrule{x,e,e',s,t}{
+    \premise{+[x : s]}{e' : s}
+    \premise{-(:_1 = x), +[\mathtt{let\_binding}[x]](\langle 1 : [\forall] \rangle)}{e : t}
+}{\mathbf{let}\;x = e'\;\mathbf{in}\;e : t}{let\_poly}{}
+
+By doing this we have added the assumption $x : s$ to the proof for $e' : s$, and since $x$ is being bound to $e'$ this indeed enables recursion. By now we can handle basic functionality available in \textsc{MiniML} language \cite{MiniML}. In further sections we illustrate more sophisticated features of \Tcg{} by extending the capabilities of the language. Among others, we will cover tuples and mutual recursion.
+
+\subsection{Tuples}
 \end{document}
 
