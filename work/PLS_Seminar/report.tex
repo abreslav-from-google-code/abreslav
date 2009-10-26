@@ -15,6 +15,8 @@ Context-free syntax is described by YACC-style productions \cite{YACC}, each gra
 
 The arguments passed to the \code{run} function deal with saving results and are irrelevant for our discussion.
 
+\subsection{Symply-typed $\lambda$-calculus}
+
 Following the logic of Chapter 4 of the original work, we will illustrate the main \Tcg{}'s features by examples starting from simply-typed $\lambda$-calculus. Its syntax is described by the following rules (we omit lexical definitions and documenting annotations):
 
 \begin{code}
@@ -84,12 +86,13 @@ under -( :.1.= x) + [ x : s ]
 \end{code}
 Here is the tree-like form of this rule:
 \tcgrule{x, e, s, t}{
-    \premise{-( :_1 = x), +[ x : s ] |- f : s \rightarrow t}
-    \premise{ |- e : s}
-}{f e : t}{apply}{}
-The context modifiers here are \code{-( :.1.= x)} and \code{+[ x : s ]}.
+    \premise{-( :_1 = x), +[ x : s ] |- e : t}
+}{\lambda x. e : fun(s,t)}{lambda}{}
+The context modifiers here are \code{-(:.1. = x)} and \code{+[ x : s ]}. The first one removes rules assigning a type to $x$ from the context of the conclusion, it consists of two parts: a minus sign, which denotes removal and a \emph{selector}
+$$:_1 = x$$
+which is basicallya pattern meaning that the top function symbol in terms we are going to delete is a colon and its first argument is $x$. Another context modifier in this example adds a new typing fact, $x : s$.
 
-The context modifiers are applied to the context available a the root of the subtree, so the are relative to the context of the conclusion, that is why we do not write anything denoting context under the like.
+The context modifiers are applied to the context available a the root of the subtree, so they are relative to the context of the conclusion, that is why we do not write anything denoting context under the like.
 
 The rule \code{apply} mentioned above has no context modifiers, thus in tree-like form it is written as follows:
 \tcgrule{f, e, s, t}{
@@ -97,13 +100,20 @@ The rule \code{apply} mentioned above has no context modifiers, thus in tree-lik
     \premise{ |- e : s}
 }{f e : t}{apply}{}
 
+The third rule for simply-typed $\lambda$-calculus will be the following:
+\tcgrule{es, ts}{
+\premise{|- [branch] es : ts export* ...}
+}{tops(es)}{tops}{}
+Note that the conclusion here is not a typing judgement; there is no problem: we are basically proving a theorem and our language is not limited to a single predicate ``:''. The premise contains a \code{[branch]} modifier which denotes that it must be looked for by a independent sub-search procedure; the ellipsis \code{...} is a shorthand denoting list iteration: in our AST structure \code{tops} contains a list of children, so the \code{es} variable will iterate through it item-by-item.
 
-rule tops
-forall(es,ts)
-tops(es)
-if [branch] es : ts export* ...
-
+The final spet is to construct an initial set of rules, which are available at the beinning of the proof search.  We put all our rules there:
+\begin{code}
 environment apply,lambda,tops
+\end{code}
+
+\subsection{Introducing constants}
+
+
 
 ----
 Polymprphic let:
