@@ -1,11 +1,19 @@
 \documentclass[a4paper,12pt]{article}
 \usepackage{underscore}
+\usepackage{ifthen}
+
 \newcommand{\Tcg}{\textsc{Tcg}}
 \newcommand{\code}[1]{\texttt{#1}}
-\newcommand{\premise}[1]{#1\;}
+\newcounter{premise}
+\newcommand{\premise}[1]{
+\ifthenelse{\equal{\arabic{premise}}{1}}{;\hspace{5pt}}{}
+    \setcounter{premise}{1}
+    #1
+}
 \newcommand{\tcgrule}[5]{
+	\setcounter{premise}{0}
 $$
-    \forall (#1)\;
+    \forall \left(#1\right)\;
     \begin{array}{c}
 	    #2\\
 	    \hline
@@ -55,7 +63,7 @@ The first three rules describe a sentence as a list of expressions (\code{exp}) 
  * opaque term constructors of the form \code{<class>[<value>]} -- these will be explained later.
 
 For example, here is a textual representation of the expression
-$$(\lambda f.\lambda x. f x) g y$$
+$$(\lambda f.\lambda x. f\; x)\; g\; y$$
 will be\\
 \code{(\textbackslash f.\textbackslash x.f x) g x}\\
 and an AST constructed from it is
@@ -85,10 +93,10 @@ rule apply
   and e : s
 \end{verbatim}
 
-In this example, \code{f}, \code{e}, \code{s} and \code{t} are the quantified variables, \code{apply(f,e)} is the conclusion, \code{f : fun(s, t)} and \code{e : s} are the premises. In more familiar logical notation it can be written like this:
+In this example, \code{f}, \code{e}, \code{s} and \code{t} are the quantified variables, \code{apply(f,e)} is the conclusion, \code{f:fun(s,t)} and \code{e:s} are the premises. In more familiar logical notation it can be written like this:
 \tcgrule{f, e, s, t}{
     \premise{\Gamma \vdash f : s \rightarrow t}
-    \premise{\Gamma |- e : s}
+    \premise{\Gamma \vdash e : s}
 }{\Gamma \vdash f e : t}{apply}{}
 
 So this rule expresses the typing for application. To construct a proof for a judgement $f e : t$ we have to build a tree, where this judgement will be the root node and its children will be obtained by \emph{application} of this rule. So the root node will have two children having the forms of the premises, where $f$, $e$ and $t$ are already known (they appear in the initial judgement) and $s$ must be inferred. Each node in the tree is marked with the rule applied at this node, in our case the root node will be marked with \code{apply} rule. To complete the proof we must construct subtrees proving the children, so that leaves of the tree will be marked with application of rules which have no premises. This example provides a rough intuition about proof structure, we will improve it further (for formal definitions see Chapter 2 of the original thesis).
@@ -103,7 +111,7 @@ rule lambda
 \end{verbatim}
 Here is the tree-like form of this rule:
 \tcgrule{x, e, s, t}{
-    \premise{-( :_1 = x), +[ x : s ] |- e : t}
+    \premise{-( :_1 = x), +[ x : s ] \vdash e : t}
 }{\lambda x. e : fun(s,t)}{lambda}{}
 The context modifiers here are \code{-(:.1. = x)} and \code{+[ x : s ]}. The first one removes rules assigning a type to $x$ from the context of the conclusion, it consists of two parts: a minus sign, which denotes removal and a \emph{selector}
 $$:_1 = x$$
@@ -113,13 +121,13 @@ The context modifiers are applied to the context available a the root of the sub
 
 The rule \code{apply} mentioned above has no context modifiers, thus in tree-like form it is written as follows:
 \tcgrule{f, e, s, t}{
-    \premise{ |- f : s \rightarrow t}
-    \premise{ |- e : s}
+    \premise{ \vdash f : s \rightarrow t}
+    \premise{ \vdash e : s}
 }{f e : t}{apply}{}
 
 The third rule for simply-typed $\lambda$-calculus will be the following:
 \tcgrule{es, ts}{
-\premise{|- [branch] es : ts export* ...}
+\premise{\vdash \mathtt{[branch]}\; es : ts \; \mathtt{export* ...}}
 }{tops(es)}{tops}{}
 Note that the conclusion here is not a typing judgement; there is no problem: we are basically proving a theorem and our language is not limited to a single predicate ``:''. The premise contains a \code{[branch]} modifier which denotes that it must be looked for by a independent sub-search procedure; the ellipsis \code{...} is a shorthand denoting list iteration: in our AST structure \code{tops} contains a list of children, so the \code{es} variable will iterate through it item-by-item.
 
