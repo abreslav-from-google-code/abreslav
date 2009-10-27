@@ -254,7 +254,7 @@ bind: ID "=" exp                  --> bind(id[$1],$3)
 In the AST a bind group is represented by a \emph{list} of bindings. Now we cannot write a rule of the from 
 \tcgrule{}{
     \premise{}{typings\; of\; bindings}
-    \premise{-(:_1 = x), +[\mathtt{let\_binding}[x]](\langle bindings : [\forall] \rangle)}{e : t}
+    \premise{+[\mathtt{let\_binding}[x]](\langle bindings : [\forall] \rangle)}{e : t}
 }{\mathbf{let}\;bindings\;\mathbf{in}\;e : t}{}{}
 
 because \emph{typings of bindings} is not a single premise, but a list of variable length. Instead, we can process the list by usual recursion:
@@ -270,12 +270,12 @@ $$\begin{array}{cc}
 \end{array}$$
 
 Then, the \code{let} rule will look like this:
-\tcgrule{x,bs,e,t}{
+\tcgrule{bs,e,t}{
 \premise{}{\mathtt{bind\_group}(bs)}
-    \premise{-(:_1 = x), +[\mathtt{let\_binding}[x]](\langle ??? : [\forall] \rangle)}{e : t}
+    \premise{+[???](\langle ??? : [\forall] \rangle)}{e : t}
 }{\mathbf{let}\;bs\;\mathbf{in}\;e : t}{}{}
 
-The question marks indicate that by now we do not know what to extract from the premise. Indeed, what we did in the previous example was extracting a subproof which ended with a typing judgement $e' : s$, but here the premise is not a typing judgement, judgements are ``hidden'' in its proof:
+The question marks indicate that by now we do not know what to extract from the premise and what to compose it with. Indeed, what we did in the previous example was extracting a subproof which ended with a typing judgement $e' : s$, but here the premise is not a typing judgement, judgements are ``hidden'' in its proof:
 %
 \tcgrule{}{
 \begin{array}{cl}
@@ -286,24 +286,52 @@ The question marks indicate that by now we do not know what to extract from the 
 \end{array}
 }{\mathbf{let}\;bs\;\mathbf{in}\;e : t}{}{}
 
-\Tcg{} provides a generalized for of rule extraction which is useful here: the rules may be marked with ``\textbf{export}\emph{label}'', the label will be put on the proof tree nodes; the extracting operator may be directed to extract not the whole tree but only the subtrees marked with a certain label. Not all the label in a proof tree are visible from its root, but only those which were \emph{propagated} up the tree. If a node in the tree is marked with a special label ``$*$'', it propagates labels of all the child nodes up. To be able to extract all the needed typing judgements from the proof of $\mathtt{bind\_group}(bs)$, we can do the following:
+\Tcg{} provides a generalized for of rule extraction which is useful here: the rules may be marked with ``\textbf{export} \emph{label}'', the label will be put on the proof tree nodes; the extracting operator may be directed to extract not the whole tree but only the subtrees marked with a certain label. Not all the label in a proof tree are visible from its root, but only those which were \emph{propagated} up the tree. If a node in the tree is marked with a special label ``$*$'', it propagates labels of all the child nodes up. To be able to extract all the needed typing judgements from the proof of $\mathtt{bind\_group}(bs)$, we can do the following:
 $$\begin{array}{cc}
 \tcgrule{}{
     {\vdash head\;\mathbf{export}\; \mathtt{bind}}
     \hspace{15pt}
-    {\vdash \mathtt{bind\_group}(tail)\;\mathbf{export}\;*}
-}{\mathtt{bind\_group}(head\;\mbox{\tt ::}\;tail)}{}{}
+    {\vdash {bind\_group}(tail)\;\mathbf{export}\;*}
+}{{bind\_group}(head\;\mbox{\tt ::}\;tail)}{}{}
 &
-\tcgrule{}{}{\mathtt{bind\_group}(\mbox{\tt []})}{}{}
+\tcgrule{}{}{{bind\_group}(\mbox{\tt []})}{}{}
 \end{array}$$
 
 By doing this, we label every typing judgement from $bs$ and propagate these labels up the tree when doing a recursive call. This situation is rather common, so \Tcg{} provides a shorthand for it: to handle lists we can use ellipsis (\ldots) at the premise, this will tell the system to generate the two rules given above. Now we can complete the initial rule:
-\tcgrule{x,bs,ts,e,t}{
+\tcgrule{bs,ts,e,t}{
 \premise{}{bs : ts \;\mathbf{export}\; \mathtt{bind} \; \ldots}
-\premise{-(:_1 = x), +[\mathtt{let\_binding}[x]](\langle 1 : \mathtt{bind} [\forall] \rangle)}{e : t}
+\premise{+[\mathtt{exp\_binding}](\langle 1 : \mathtt{bind} [\forall] \rangle)}{e : t}
 }{\mathbf{let}\;bs\;\mathbf{in}\;e : t}{}{}
 
-The extraction operator is now $\langle 1 : \mathtt{bind} [\forall] \rangle$, which will extract from the proof of the first premise all the subproofs labeled with \texttt{bind} and universally quantify the inner variables \emph{of the whole proof} of the first premise (this ``over-quantification'' is safe). Note that we still use forward application with the \texttt{let_binding} rule.
+The extraction operator is now $\langle 1 : \mathtt{bind} [\forall] \rangle$, which will extract from the proof of the first premise all the subproofs labeled with \texttt{bind} and universally quantify the inner variables \emph{of the whole proof} of the first premise (this ``over-quantification'' is safe). Note that the variable $ts$ is free, so it will be quantified. The auxiliary rule \code{exp_binding} is the following:
+\tcgrule{x,e,t}{\premise{}{x = e : t}}{x : t}{exp\_binding}{}
 
+We also need a rule to be able to rove judgements of the form $x = e : t$. It is straightforward:
+\tcgrule{x,e,t}{\premise{}{e : t}}{x = e : t}{binding}{}
+
+\subsection{Mutual Recursion}
+
+To typecheck a mutually recursive definition like this
+\begin{verbatim}
+  letrec even = \x. if (eq_int x) 0 then true else odd ((sub x) 1)
+     and odd = \x. if (eq_int x) 0 then false else even ((sub x) 1)
+  in even 5
+\end{verbatim}
+we need to choose fresh type variables $\alpha_1$ and $\alpha_2$ and assume $even : \alpha_1$ and $odd : \alpha_2$ before the right-hand sides of the bindings. This procedure is different from what we have seen by now in a way that it needs ``a lookahead'', in other words, we cannot look at every item in the program only once. To handle this, we write the following rules:
+\tcgrule{bs,e,t,x}{
+\premise{}{bind\_group(bs)\;\mathbf{export}*}
+\premise{-(:_1 = x \rightarrow :_1 = x); +[\mathtt{exp\_binding}](\langle 1 : \mathtt{bind} [\forall] \rangle)}{}
+\\{e : t}
+}{\mathbf{letrec}\;bs\;\mathbf{in}\;e : t}{letrec}{}
+%
+\tcgrule{bs,ts,x}{
+\premise{}{bs : ts \;\mathbf{export}\;\mathtt{fwd}\;\ldots}
+\premise{-(:_1 = x \rightarrow :_1 = x); +[\mathtt{exp\_binding}](\langle 1 : \mathtt{fwd} \rangle)}{}
+\\{bs : ts\;\mathbf{export}\;\mathtt{bind}\;\ldots}
+}{{bind\_group}(bs)}{bind\_group}{}
+
+The first premise of the rule \code{letrec} contains the most significant information: all the recursive definitions are checked there. The check itself is done by the \code{bind_group} rule, which iterates over the first premise, checks each element in $bs$ and marks the result with \code{fwd} label. These results will have the form $x = e : \alpha$ for a fresh $\alpha$ since $ts$ does not appear anywhere else in the rule, thus there is nothing to prove about such judgements, and we can make \Tcg{}'s life easier by marking them as \emph{solved goals} (done by putting ``!'' after the \code{fwd} label). The overall process precisely mimics what was discussed for the code example above: we take fresh type variables, assume typings for bound variables and check the expressions to the right of ``=''.
+
+The context modifier $-(:_1 = x \rightarrow :_1 = x)$ is a \emph{guarded} one: it is triggered by adding a rule matching $:_1 = x$ (to the left of the arrow) is added, namely, it removes all the previously existing bindings for $x$ when a new binding is added.
 \end{document}
 
