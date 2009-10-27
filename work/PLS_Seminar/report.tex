@@ -1,6 +1,7 @@
 \documentclass[a4paper,12pt]{article}
 \usepackage{underscore}
 \usepackage{ifthen}
+\usepackage{amsmath}
 
 \newcommand{\Tcg}{\textsc{Tcg}}
 \newcommand{\code}[1]{\texttt{#1}}
@@ -17,24 +18,14 @@ $$%
     \ifnotempty{#1}{%
         \forall \left(#1\right)\;%
     }%
-    \frac{%
-	    \begin{array}{l}%
+    \dfrac{%
+	    \begin{array}[b]{l}%
 	    #2%
             \end{array}%
     }{%
             #3%
     }%
     \;\ifnotempty{#4}{(\mathtt{#4}\ifnotempty{#5}{[\mathbf{#5}]})}%
-%    \ifnotempty{#1}{
-%        \forall \left(#1\right)\;
-%    }
-%    \begin{array}{c}
-%	    \begin{array}{l}
-%	    #2
-%            \end{array}\\
-%	    \hline
-%            #3
-%    \end{array}\;\ifnotempty{#4}{(\mathtt{#4}\ifnotempty{#5}{[\mathbf{#5}]})}
 $$%
 }
 \begin{document}
@@ -248,6 +239,7 @@ To define non-trivial functions with \textbf{let}, we need recursion, which is n
 By doing this we have added the assumption $x : s$ to the proof for $e' : s$, and since $x$ is being bound to $e'$ this indeed enables recursion. By now we can handle basic functionality available in \textsc{MiniML} language \cite{MiniML}. In further sections we illustrate more sophisticated features of \Tcg{} by extending the capabilities of the language. Among others, we will cover tuples and mutual recursion.
 
 \subsection{Parallel bindings}
+
 To make our language more practical, let us introduce \textbf{let} expressions binding many variables at the same time. The syntax will be the following:
 
 \begin{verbatim}
@@ -278,22 +270,40 @@ $$\begin{array}{cc}
 \end{array}$$
 
 Then, the \code{let} rule will look like this:
-\tcgrule{x,bg,e,t}{
-\premise{}{\mathtt{bind\_group}(bg)}
+\tcgrule{x,bs,e,t}{
+\premise{}{\mathtt{bind\_group}(bs)}
     \premise{-(:_1 = x), +[\mathtt{let\_binding}[x]](\langle ??? : [\forall] \rangle)}{e : t}
-}{\mathbf{let}\;bg\;\mathbf{in}\;e : t}{}{}
+}{\mathbf{let}\;bs\;\mathbf{in}\;e : t}{}{}
 
-The question marks indicate that by now we do not know what to extract from the premise. Indeed, what we did in the previous example was extracting a subproof which ended in a typing judgement $e' : s$, but here the premise is not a typing judgement, judgements are ``hidden'' in its proof:
+The question marks indicate that by now we do not know what to extract from the premise. Indeed, what we did in the previous example was extracting a subproof which ended with a typing judgement $e' : s$, but here the premise is not a typing judgement, judgements are ``hidden'' in its proof:
 %
 \tcgrule{}{
-\begin{array}{c}
-	e'_1 : s_1\;\dots\;e'_n : s_n\\
-	\vdots\\
-	\vdash {\mathtt{bind\_group}(bg)}
-\end{array}
+\begin{array}{cl}
+	e'_1 : s_1\;\dots\;e'_n : s_n&\\
+	\vdots&\\
+	\vdash {\mathtt{bind\_group}(bs)}&\;\;
     \premise{\ldots(\langle proofs\; for\; e_1\ldots e_n : [\forall] \rangle)}{e : t}
-}{\mathbf{let}\;bg\;\mathbf{in}\;e : t}{}{}
+\end{array}
+}{\mathbf{let}\;bs\;\mathbf{in}\;e : t}{}{}
 
+\Tcg{} provides a generalized for of rule extraction which is useful here: the rules may be marked with ``\textbf{export}\emph{label}'', the label will be put on the proof tree nodes; the extracting operator may be directed to extract not the whole tree but only the subtrees marked with a certain label. Not all the label in a proof tree are visible from its root, but only those which were \emph{propagated} up the tree. If a node in the tree is marked with a special label ``$*$'', it propagates labels of all the child nodes up. To be able to extract all the needed typing judgements from the proof of $\mathtt{bind\_group}(bs)$, we can do the following:
+$$\begin{array}{cc}
+\tcgrule{}{
+    {\vdash head\;\mathbf{export}\; \mathtt{bind}}
+    \hspace{15pt}
+    {\vdash \mathtt{bind\_group}(tail)\;\mathbf{export}\;*}
+}{\mathtt{bind\_group}(head\;\mbox{\tt ::}\;tail)}{}{}
+&
+\tcgrule{}{}{\mathtt{bind\_group}(\mbox{\tt []})}{}{}
+\end{array}$$
+
+By doing this, we label every typing judgement from $bs$ and propagate these labels up the tree when doing a recursive call. This situation is rather common, so \Tcg{} provides a shorthand for it: to handle lists we can use ellipsis (\ldots) at the premise, this will tell the system to generate the two rules given above. Now we can complete the initial rule:
+\tcgrule{x,bs,ts,e,t}{
+\premise{}{bs : ts \;\mathbf{export}\; \mathtt{bind} \; \ldots}
+\premise{-(:_1 = x), +[\mathtt{let\_binding}[x]](\langle 1 : \mathtt{bind} [\forall] \rangle)}{e : t}
+}{\mathbf{let}\;bs\;\mathbf{in}\;e : t}{}{}
+
+The extraction operator is now $\langle 1 : \mathtt{bind} [\forall] \rangle$, which will extract from the proof of the first premise all the subproofs labeled with \texttt{bind} and universally quantify the inner variables \emph{of the whole proof} of the first premise (this ``over-quantification'' is safe). Note that we still use forward application with the \texttt{let_binding} rule.
 
 \end{document}
 
