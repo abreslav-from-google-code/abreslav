@@ -1,0 +1,187 @@
+\documentclass[screen]{beamer}
+\usepackage{listings}
+\usepackage{color}
+\usepackage{bold-extra}
+\usepackage{wasysym}
+
+\usetheme{Warsaw}
+
+\definecolor{Brown}{cmyk}{0,0.81,1,0.60}
+\definecolor{OliveGreen}{cmyk}{0.64,0,0.95,0.40}
+\definecolor{CadetBlue}{cmyk}{0.62,0.57,0.23,0}
+\renewcommand{\ttdefault}{pcr}
+
+\begin{document}
+
+\lstset{
+  language=Java,
+  basicstyle=\ttfamily\normalsize,
+  keywordstyle=\bfseries\color{Brown},
+  commentstyle=\color{OliveGreen},
+  stringstyle=\color[rgb]{0,0,1},
+  tabsize=4
+}
+
+\begin{frame}[t,fragile]
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\frametitle{What does this program print?}%
+\begin{block}{Attempt 1}
+\begin{center}%
+\begin{lstlisting}
+public class Rec {
+private static int f(int 
+x){
+if(x<2){    return 
+	1;
+}return f(x- 
+1)+f(x-2
+);}
+public static void main(
+String[] args) {
+System.out.println(f(5));}}
+\end{lstlisting}%
+\end{center}%
+\end{block}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\end{frame}
+
+\begin{frame}[t,fragile]
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\frametitle{What does this program print?}%
+%
+\begin{block}{Attempt 2: A hint\ldots}%
+\begin{lstlisting}
+public class Rec {
+    private static int f(int x) {
+		if (x < 2) {
+			return 1;
+		}
+		return f(x - 1) + f(x - 2);
+	}
+
+	public static void main(String[] args) {
+		System.out.println(f(5));
+	}
+}
+\end{lstlisting}%
+\end{block}%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\end{frame}
+
+\begin{frame}[c,fragile]
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\frametitle{What does this class do?}%
+%
+\begin{block}{Attempt 1}%
+\begin{lstlisting}
+public static final class Oc {
+	private final Object[] e 
+					= new Object[1000000];
+	private int pe = -1;
+	private int po = 0;
+
+	public void a(Object x) {
+		e[po++] = x;
+	}
+
+	public Object b() {
+		return e[pe++];
+	}
+}
+\end{lstlisting}%
+\end{block}%
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\end{frame}
+
+\begin{frame}[c,fragile]
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\frametitle{What does this class do?}%
+%
+\begin{block}{Attempt 2: A hint\ldots}
+\begin{lstlisting}
+public static final class Queue {
+	private final Object[] myValues 
+					= new Object[BIG_VALUE];
+	private int myHead = -1;
+	private int myTail = 0;
+	
+	public void enqueue(Object x) {
+		myValues[myTail++] = x;
+	}
+	
+	public Object dequeue() {
+		return myValues[myHead++];
+	}
+}
+\end{lstlisting}%
+\end{block}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\end{frame}
+
+\begin{frame}[c,fragile]
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\frametitle{A bug fixed}%
+%
+\begin{block}{class Queue}
+\begin{lstlisting}
+	private int myHead = -1;
+	private int myTail = 0;
+	
+	public void enqueue(Object x) {
+		myValues[myTail] = x;
+		myTail++;
+	}
+	
+	public Object dequeue() {
+		myHead++;
+		return myValues[myHead];
+	}
+\end{lstlisting}%
+\end{block}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\end{frame}
+
+\begin{frame}[t,fragile]
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\frametitle{What does this function do?}%
+%
+\begin{block}{A humble two-line function \smiley}
+\begin{lstlisting}
+boolean p(int x) {
+	int y = x * (030 >> 4 << 030);
+	return y == 0;
+}
+\end{lstlisting}%		
+\end{block}
+
+\begin{block}{Hints}<2->
+	\begin{itemize}
+		\item \texttt{a << s = a * $\mathtt{2^s}$} --- bitwise shift left
+		\item \texttt{a >> s = a / $\mathtt{2^s}$} --- bitwise shift right
+		\item \texttt{0x<DIGITS>} --- hexadecimal number
+		\item \texttt{0<DIGITS>} --- octal number
+	\end{itemize}
+\end{block}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\end{frame}
+
+\begin{frame}[fragile]
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\frametitle{What we have (hopefully) learned so far}%
+%
+\begin{block}{Example 1: Fibonacci numbers}<2->
+	Format your programs properly!
+\end{block}
+\begin{block}{Example 2: Queue}<3->
+	Give understandable names to program elements!\\
+	A good program does not demand comments other than JavaDoc for interfaces.
+\end{block}
+\begin{block}{Example 3: Divisibility by 256}<4->
+	Do not outsmart yourself!\\
+	\only<5->{Use understandable code constructs.}
+\end{block}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\end{frame}
+\end{document}
