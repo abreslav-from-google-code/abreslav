@@ -3,13 +3,18 @@
 \usepackage{color}
 \usepackage{bold-extra}
 \usepackage{wasysym}
-
-\usetheme{Warsaw}
+\usepackage{beamerthemesplit}
+\usetheme{default}
 
 \definecolor{Brown}{cmyk}{0,0.81,1,0.60}
 \definecolor{OliveGreen}{cmyk}{0.64,0,0.95,0.40}
 \definecolor{CadetBlue}{cmyk}{0.62,0.57,0.23,0}
 \renewcommand{\ttdefault}{pcr}
+
+\title{Initial Examples}
+\author{Andrey Breslav}
+\institute{ITMO University, St. Petersburg / University of Tartu}
+\date{Oct. 30, 2009}
 
 \begin{document}
 
@@ -175,13 +180,35 @@ boolean p(int x) {
 \end{block}
 \begin{block}{Example 2: Queue}<3->
 	Give understandable names to program elements!\\
-	A good program does not demand comments other than JavaDoc for interfaces.
+	\begin{itemize}
+		\item<4-> A good program does not demand comments other than JavaDoc for interfaces.
+	\end{itemize}
+\end{block}
+\begin{block}{Example 3: Divisibility by 256}<5->
+	Do not outsmart yourself!\\
+	\uncover<6->{Use understandable code constructs.}
+\end{block}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\end{frame}
+
+\title{Coding Conventions for Java}
+\frame{\titlepage}
+
+\begin{frame}[fragile]
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\frametitle{The Good Style}%
+%
+\begin{block}{We have just learned that}<1->
+	A program must be \alert{understandable}.\\
+	\uncover<2->{To everybody.}
+\end{block}
+\begin{block}{That's why we need }<3->
+	Give understandable names to program elements!
 \end{block}
 \begin{block}{Example 3: Divisibility by 256}<4->
 	Do not outsmart yourself!\\
-	\only<5->{Use understandable code constructs.}
+	\uncover<5->{Use understandable code constructs.}
 \end{block}
-
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \end{frame}
 \end{document}
