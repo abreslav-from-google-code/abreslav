@@ -31,7 +31,6 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \frametitle{What does this program print?}%
 \begin{block}{Attempt 1}
-\begin{center}%
 \begin{lstlisting}
 public class Rec {
 private static int f(int 
@@ -45,7 +44,6 @@ public static void main(
 String[] args) {
 System.out.println(f(5));}}
 \end{lstlisting}%
-\end{center}%
 \end{block}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \end{frame}
@@ -196,19 +194,168 @@ boolean p(int x) {
 
 \begin{frame}[fragile]
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\frametitle{The Good Style}%
+\frametitle{Exercise 1}%
 %
-\begin{block}{We have just learned that}<1->
-	A program must be \alert{understandable}.\\
-	\uncover<2->{To everybody.}
-\end{block}
-\begin{block}{That's why we need }<3->
-	Give understandable names to program elements!
-\end{block}
-\begin{block}{Example 3: Divisibility by 256}<4->
-	Do not outsmart yourself!\\
-	\uncover<5->{Use understandable code constructs.}
+\begin{itemize}[<+->]
+	\item Groups: 4 people each
+	\item Time: 10 minutes
+	\item Task: come up with 2 rules (conventions)
+		\begin{itemize}
+			\item Clear formulations
+			\item Clear explanations
+		\end{itemize}
+\end{itemize}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\end{frame}
+
+\begin{frame}[fragile]
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\frametitle{Sun's CCJ}%
+%
+\begin{block}
+	{``Code Conventions for Java\texttrademark{} Programming Language''}
+	http://java.sun.com/docs/codeconv/
+	\begin{itemize}
+		\item A ``standard'' provided by the Sun Microsystems 
+		\item Reflects the opinion of the creators of the language
+		\item Adopted by many projects
+	\end{itemize}
 \end{block}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \end{frame}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Conventions
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%% Naming
+%%%%%%%%%%%%%%%%
+\begin{frame}[fragile]
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\frametitle{Naming Conventions: Types and Methods}%
+%
+\begin{block}{Classes and Interfaces}
+	\begin{itemize}
+		\item Class name is most likely a noun phrase
+		\item Written in CamelCase
+			\begin{itemize}
+				\item MyFavouriteClass
+			\end{itemize}
+		\item{} [Not in CCJ]: Interface names are prefixed with ``I'': IModel
+	\end{itemize}
+\end{block}
+\begin{block}{Methods}
+	\begin{itemize}
+		\item Method name is most likely a verb phrase
+		\item Starts with a lower case letter, then --- CamelCase
+			\begin{itemize}
+				\item doTheJob()
+			\end{itemize}
+		\item{} Common prefixes ``get'', ``is'', ``set''
+	\end{itemize}
+\end{block}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\end{frame}
+
+\begin{frame}[fragile]
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\frametitle{Naming Conventions: Variables and Constants}%
+%
+\begin{block}{Variables: fields, local variables, parameters}
+	\begin{itemize}
+		\item Starts with a lower case letter, then --- CamelCase
+			\begin{itemize}
+				\item counter, firstOccurrence
+			\end{itemize}
+		\item Names should never start with ``\$'' or ``\_''
+		\item{} [Not in CCJ]: field names are prefixed with ``my''
+	\end{itemize}
+\end{block}
+\begin{block}{Constants: {\bf static final}, normally {\bf public}}
+	\begin{itemize}
+		\item Uppercase letters, words separated by underscores ``\_''
+			\begin{itemize}
+				\item THE\_CONSTANT
+			\end{itemize}
+	\end{itemize}
+\end{block}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\end{frame}
+
+\begin{frame}[fragile]
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\frametitle{Naming Conventions: Packages}%
+%
+\begin{block}{Packages}
+	\begin{itemize}
+		\item Only lowercase ASCII letters
+		\item Starts with a unique domain name (reversed)
+			\begin{itemize}
+				\item org.eclipse.emf.ecore
+			\end{itemize}
+	\end{itemize}
+\end{block}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\end{frame}
+%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%% Declaration order
+%%%%%%%%%%%%%%%%
+\begin{frame}[fragile]
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\frametitle{Declaration Order: Elements of a Class}%
+%
+\begin{block}{Only one top-level class should be declared in a file}
+\end{block}
+\begin{block}{Order of elements in a class}
+	\begin{enumerate}
+		\item Nested classes
+		\item Static fields
+		\item Static methods
+		\item Constructors
+		\item Instance fields
+		\item Instance methods
+	\end{enumerate}
+\end{block}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\end{frame}
+
+\begin{frame}[fragile]
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\frametitle{Declaration Order: Inside a Method}%
+%
+\begin{block}{Only one variable per line (applies also to fields)}
+	\begin{columns}
+		\column{.5\textwidth}
+		\begin{centering}
+		Bad:\\
+		\end{centering}
+		\column{.5\textwidth}
+		Good:\\
+	\end{columns}
+\end{block}
+\begin{block}{Order of elements in a class}
+	\begin{enumerate}
+		\item Nested classes
+		\item Static fields
+		\item Static methods
+		\item Constructors
+		\item Instance fields
+		\item Instance methods
+	\end{enumerate}
+\end{block}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\end{frame}
+%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%
+\section{Whitespace}
+%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%
+\section{Control Structures}
+%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%
+\section{Simple Idioms}
 \end{document}
