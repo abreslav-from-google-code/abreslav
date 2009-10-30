@@ -324,8 +324,8 @@ boolean p(int x) {
 		\item Nested classes
 		\item Static fields
 		\item Static methods
-		\item Constructors
 		\item Instance fields
+		\item Constructors
 		\item Instance methods
 	\end{enumerate}
 \end{block}
@@ -828,19 +828,20 @@ int a = b[c++];
 \begin{itemize}[<+->]
 	\item 1 Point
 	\item Deadline: Nov. 13, Friday, 09:00
-	\item Send the source code to\\
+	\item Send the source code to
 		abreslav@ut.ee
 	\item Task:\\
 		\begin{itemize}
-		\item Write a class \texttt{Address}:
+		\item Write a class \texttt{MySet}:
 		\begin{itemize}
-			\item Street
-			\item Building
-			\item Apartment
-			\item Postal code
+			\item Implements a set of integers: each one occurs not more than once in the set
+			\item \lstinline!void add(int x)! --- adds a new element (if it is not in the set already)
+			\item \lstinline!boolean contains(int x)! --- returns true iff x is present in the set
+			\item \lstinline!String toString()! --- returns a string with all the elements of the set:
+				\texttt{[1, 2, 3]}
 		\end{itemize}
-		\item Define \texttt{equals} method to compare all fields.\\
-		\item Write a utility method which takes a list of addresses and returns the number of different entries in this list.\\
+		\item Make the operations work as fast as possible.
+		\item Do not use any classes from the library having ``Set'' in their names.
 		\item Write JUnit tests for your code.
 		\item \alert{Follow the conventions!}
 		\end{itemize}
