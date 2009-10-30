@@ -10,7 +10,18 @@
 \definecolor{OliveGreen}{cmyk}{0.64,0,0.95,0.40}
 \definecolor{CadetBlue}{cmyk}{0.62,0.57,0.23,0}
 \renewcommand{\ttdefault}{pcr}
-
+\newcommand{\badgood}[2]{%
+	\begin{columns}%
+		\column{.5\textwidth}%
+		\begin{alertblock}{Bad}%
+			#1%
+		\end{alertblock}%
+		\column{.5\textwidth}%
+		\begin{exampleblock}{Good}%
+			#2%
+		\end{exampleblock}%
+	\end{columns}%
+}%
 \title{Initial Examples}
 \author{Andrey Breslav}
 \institute{ITMO University, St. Petersburg / University of Tartu}
@@ -325,37 +336,457 @@ boolean p(int x) {
 \frametitle{Declaration Order: Inside a Method}%
 %
 \begin{block}{Only one variable per line (applies also to fields)}
-	\begin{columns}
-		\column{.5\textwidth}
-		\begin{centering}
-		Bad:\\
-		\end{centering}
-		\column{.5\textwidth}
-		Good:\\
-	\end{columns}
+	\badgood{
+		\lstinline!int a = 0, b = 3;!\\
+		$\;$\\
+	}{
+		\lstinline!int a = 0;!\\
+		\lstinline!int b = 3;!\\
+	}
 \end{block}
-\begin{block}{Order of elements in a class}
-	\begin{enumerate}
-		\item Nested classes
-		\item Static fields
-		\item Static methods
-		\item Constructors
-		\item Instance fields
-		\item Instance methods
-	\end{enumerate}
+\begin{block}{Variables are initialized upon declaration (if possible)}
+	\badgood{
+		\lstinline!int a;!
+	}{
+		\lstinline!int a = 0;!
+	}
+\end{block}
+\begin{block}{[Not in CCJ]: Variables are defined as close to their usage as possible}
+	\uncover<2>{
+		\alert{Actually CCJ recommends the opposite}
+	}
 \end{block}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \end{frame}
+
+\begin{frame}[fragile]
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\frametitle{Declaration Order: Variable Declaration Example}%
+\begin{columns}
+	\column{.5\textwidth}
+%\badgood{
+\begin{alertblock}{Bad}
+\begin{lstlisting}
+int a = 0;
+int b = 5;
+while (b > 0) {
+    a = b * b;
+    if (a > 10) {
+        c++;
+    }
+}
+\end{lstlisting}
+\end{alertblock}
+%}{
+	\column{.5\textwidth}
+\begin{exampleblock}{Good}
+\begin{lstlisting}
+int b = 5;
+while (b > 0) {
+    int a = b * b;
+    if (a > 10) {
+        c++;
+    }
+}
+\end{lstlisting}
+$\,$\\
+$\,$\\
+\end{exampleblock}
+%}
+\end{columns}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\end{frame}
+
+\begin{frame}[fragile]
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\frametitle{Declaration Order: Warning}%
+\begin{columns}
+	\column{.5\textwidth}
+%\badgood{
+\begin{alertblock}{May cause a problem}
+\begin{lstlisting}
+int b = 5;
+while (b > 0) {
+    A a = new A();
+    if (a.getV(b) > 10) {
+        c++;
+    }
+}
+\end{lstlisting}
+\end{alertblock}
+%}{
+	\column{.5\textwidth}
+\begin{exampleblock}{Safe}
+\begin{lstlisting}
+int b = 5;
+while (b > 0) {
+    int a = b * b;
+    if (a > 10) {
+        c++;
+    }
+}
+\end{lstlisting}
+\end{exampleblock}
+%}
+\end{columns}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\end{frame}
+
+\begin{frame}[fragile]
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\frametitle{Declaration Order: Declaring Arrays}%
+%
+\begin{block}{Brackets are put after the \alert{element type}}
+	\badgood{
+		\lstinline!int a[] = {1, 2, 3};!\\
+	}{
+		\lstinline!int[] a = {1, 2, 3};!\\
+	}
+\end{block}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\end{frame}
+
 %%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%% Whitespace
 %%%%%%%%%%%%%%%%
+
+\begin{frame}[fragile]
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\frametitle{Whitespace: Where to Put Spaces}%
+%
+\begin{itemize}[<+->]
+	\item Before an opening curly brace (``\{''):\\
+		\lstinline!public void method() {!
+	\item After a comma (``,''):\\
+		\lstinline!public void method(int a, int b)!
+	\item After a control operator keyword (e.g., {\bf if}):\\
+		\lstinline!if (cond) {!
+	\item After a semicolon (``;'') inside \textbf{for} loop header:\\
+		\lstinline!for (int i = 0; i < 10; i++) {!
+	\item Around binary operations (e.g., ``+'' and ``/''):\\
+		\lstinline!int a = a + b * (c - 1 / 2.0);!
+	\item In a ternary operator (\lstinline!... ? ... : ...!):\\
+		\lstinline!(a > b) ? a : b;!
+	\item After a type cast:\\
+		\lstinline!int a = (int) doubleValue;!
+\end{itemize}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\end{frame}
+
+\begin{frame}[fragile]
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\frametitle{Whitespace: Where NOT to Put Spaces}%
+%
+\begin{itemize}[<+->]
+	\item Between a method name and an opening parenthesis (``(''):\\
+		\lstinline!doIt(a)!
+	\item Between an unary operation (e.g., \texttt{++}, \texttt{--}) and its argument:\\
+		\lstinline!a++!\\
+		\lstinline!--b!\\
+	\item Between a parenthesis (``('' or ``)'') and its contents:\\
+		\lstinline!(a + b)!
+	\item Before brackets (``['' and ``]''):\\
+		\lstinline!int[] a!\\
+		\lstinline!int[][] bb!\\
+		\lstinline!a[1]!\\
+		\lstinline!bb[1][2]!
+\end{itemize}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\end{frame}
+
+\begin{frame}[fragile]
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\frametitle{Whitespace: Where to Put Newlines}%
+%
+\begin{itemize}[<+->]
+	\item Before comments
+	\item Between method declarations
+	\item Between logical blocks inside a method
+	\item Between classes
+	\item Whenever the current line is too long 
+		\begin{itemize}
+			\item indent the remainder of a wrapped line 
+			\item break lines after a comma
+\begin{lstlisting}
+doIt(a,
+     b);
+\end{lstlisting}
+			\item break lines before a binary operation
+\begin{lstlisting}
+if ((a > b)
+    && (b > c)
+    && (c > d)) {
+\end{lstlisting}
+		\end{itemize}
+\end{itemize}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\end{frame}
 %%%%%%%%%%%%%%%%
-\section{Whitespace}
+%%%%%%%%%%%%%%%% Control Structures
 %%%%%%%%%%%%%%%%
+
+\begin{frame}[fragile]
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\frametitle{Blocks and Indentation}%
+%
+\begin{itemize}[<+->]
+	\item Indentation width is 4 spaces.
+		\begin{itemize}
+			\item Or 1 TAB
+			\item \alert{Never mix TABs and spaces}
+		\end{itemize}
+	\item Bodies of control structures are always enclosed into curly braces (``\{'' and ``\}'')
+		\begin{itemize}
+			\item \alert{Even if there is only one line}
+		\end{itemize}
+	\item Block content must be indented:
+\begin{lstlisting}
+if (a > b) {
+	a = 2 * a;
+	b--;
+}
+\end{lstlisting}
+	\item Class content must be indented
+\begin{lstlisting}
+class C {
+	private final int myValue = 0;
+	...
+}
+\end{lstlisting}
+\end{itemize}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\end{frame}
+
+\begin{frame}[fragile]
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\frametitle{Conditional Operator}%
+%
+\begin{columns}
+	\column{.5\textwidth}
+Single \textbf{if}:
+\begin{lstlisting}
+if (condition) {
+
+}
+
+if (condition) {
+
+} else {
+
+}
+\end{lstlisting}
+	\column{.5\textwidth}
+``Cascade'' \textbf{if}:
+\begin{lstlisting}
+if (condition1) {
+
+} else if (condition2) {
+
+} else {
+
+}
+\end{lstlisting}
+$\;$\\
+$\;$\\
+\end{columns}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\end{frame}
+
+\begin{frame}[fragile]
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\frametitle{When to Use the If Cascade}%
+%
+\begin{itemize}[<+->]
+	\item It's needed to check several \alert{related} coditions
+	\item We cannot use {\bf \texttt{switch}}: 
+\begin{lstlisting}
+if (a > b) {
+...
+} else if (a < b) {
+...
+} else if (a == b) {
+...
+}
+\end{lstlisting}
+\end{itemize}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\end{frame}
+
+\begin{frame}[fragile]
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\frametitle{Switch}%
+%
+\begin{lstlisting}
+switch (condition) {
+case ABC:
+    statements;
+    /* falls through */
+case DEF:
+    statements;
+    break;
+case XYZ:
+    statements;
+    break;
+default:
+    statements;
+    break;
+}
+\end{lstlisting}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\end{frame}
+
+\begin{frame}[fragile]
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\frametitle{Loops}%
+%
+%\begin{columns}
+%	\column{.5\textwidth}
+Precondition:
+\begin{lstlisting}
+while (condition) {
+    // ...
+}
+\end{lstlisting}
+%	\column{.5\textwidth}
+Postcondition:
+\begin{lstlisting}
+do {
+    // ...
+} while (условие);
+\end{lstlisting}
+%\end{columns}
+For:
+\begin{lstlisting}
+for (int i = 0; i < 10; i++) {
+    // ...
+}
+\end{lstlisting}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\end{frame}
+
+\begin{frame}[fragile]
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\frametitle{Exception Handling}%
+\begin{lstlisting}
+try {
+
+} catch (ExceptionClass e) {
+
+} finally {
+
+}
+\end{lstlisting}
+
+\begin{itemize}
+	\item<2-> Never throw or catch
+		\begin{itemize}[<3->]
+			\item \texttt{java.lang.NullPointerException}
+			\item \texttt{java.lang.ClassCastException}
+			\item \texttt{java.lang.RuntimeException}
+			\item \texttt{java.lang.Exception}
+			\item \texttt{java.lang.Throwable}
+		\end{itemize}
+	\item<4-> Never catch \texttt{java.lang.Error}
+\end{itemize}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\end{frame}
 %%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%% Simple Idioms
 %%%%%%%%%%%%%%%%
-\section{Control Structures}
-%%%%%%%%%%%%%%%%
-%%%%%%%%%%%%%%%%
-%%%%%%%%%%%%%%%%
-\section{Simple Idioms}
+\frame{
+\only<1>{\Huge Idiots}
+\only<2>{\Huge Idio\alert{m}s}
+}
+
+\begin{frame}[fragile]
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\frametitle{Immediately Returning Ifs}%
+\begin{columns}
+	\column{.5\textwidth}
+%\badgood{
+\begin{alertblock}{Bad}
+\begin{lstlisting}
+if (cond) {
+    return true;
+} else {
+    return false;
+}
+\end{lstlisting}
+\end{alertblock}
+%}{
+	\column{.5\textwidth}
+\begin{exampleblock}{Good}<2>
+\begin{lstlisting}
+return cond;
+\end{lstlisting}
+$\;$\\
+$\;$\\
+$\;$\\
+$\;$\\
+\end{exampleblock}
+%}
+\end{columns}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\end{frame}
+
+\begin{frame}[fragile]
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\frametitle{Redundant Else}%
+\begin{columns}
+	\column{.5\textwidth}
+%\badgood{
+\begin{alertblock}{Not Recommended}
+\begin{lstlisting}
+if (cond) {
+   ...
+   ...
+   return;
+} else {
+  doIt();
+}
+\end{lstlisting}
+\end{alertblock}
+%}{
+	\column{.5\textwidth}
+\begin{exampleblock}{Recommended}<2>
+\begin{lstlisting}
+if (cond) {
+   ...
+   ...
+   return;
+}
+doIt();
+\end{lstlisting}
+$\;$\\
+\end{exampleblock}
+%}
+\end{columns}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\end{frame}
+
+\begin{frame}[fragile]
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\frametitle{Do NOT Use Expressions with Side-Effects}%
+\begin{alertblock}{Bad}
+\begin{lstlisting}
+int a = b = c = 0;
+\end{lstlisting}
+\end{alertblock}
+
+\begin{alertblock}{Very Bad}
+\begin{lstlisting}
+if (a = b) {
+  ...
+}
+\end{lstlisting}
+
+\begin{alertblock}{Bad}
+\begin{lstlisting}
+int a = b[c++];
+\end{lstlisting}
+\end{alertblock}
+\end{alertblock}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\end{frame}
+
 \end{document}
