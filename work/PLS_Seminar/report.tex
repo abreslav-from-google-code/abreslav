@@ -28,8 +28,35 @@ $$%
     \;\ifnotempty{#4}{(\mathtt{#4}\ifnotempty{#5}{[\mathbf{#5}]})}%
 $$%
 }
+
+\title{A Generator for Type Checkers\\ \small{A Ph.D. thesis by Holger Gast, 2004}}
+\author{Andrey Breslav}
+
 \begin{document}
-A languages specification in \Tcg{} covers 
+
+\maketitle
+
+\section{Introduction}
+
+We have tools for parsers, because of automata theory
+We want tools for ``static semantics'', we can build them because of type theory and proof theory
+There were some attempts: see \cite{Tcg}, Chapter 5.
+Here's another attempt The \textsc{Type Check Generator} (\Tcg{}) \cite{Tcg}
+
+\section{Approach Overview}
+
+ Recall the Curry-Howard correspondence.
+ types encode statements about program properties, and the program is correct if we can prove these statements
+ Type-checking-as-proof-search
+ In TCG ``typing'' annotations are just terms (the main requirement is having unifiers) and a type checker specification
+ is basically a set of inference rules and proof search rules.
+ A parser builds an AST and collects associated goals to be proven. Then, it runs a typechecker which searches for proofs of the collected goals by backward reasoning, these profs must be constructed with respect to the specified inference rules. The typechecker uses a generic proof search strategy which can be slightly customized by the typing specification.
+ A depth-first backtracking search for a complete proof with respect to the information encoded in the rules.
+
+ In this report we mainly illustrate the usage of \Tcg{} by giving examples of typing rules (based on MiniML language \cite{MiniML}).
+ Since \Tcg{} rules include inference and proof search instructions, the same set of examples will illustrate the main techniques used to direct the proof construction.
+
+A language specification in \Tcg{} covers 
 \begin{itemize}
 	\item context-free syntax;
 	\item abstract syntax tree (AST) construction;
@@ -38,18 +65,18 @@ A languages specification in \Tcg{} covers
 	\item pretty-printing rules.
 \end{itemize}
 
-Context-free syntax is described by YACC-style productions \cite{YACC}, each grammar must have a start symbol called \code{file}. Productions may be annotated with AST building instructions (after \code{-->} sign) or a block of code to be executed after the production has been matched (in \code{\{!} \ldots \code{!\}} brackets). The \code{file} symbol is responsible for running type analysis, which is usually done by invoking \code{run} command:
+Context-free syntax is described by YACC-style productions each grammar must have a start symbol called \code{file}. Productions may be annotated with AST building instructions (after \code{-->} sign) or a block of code to be executed after the production has been matched (in \code{\{!} \ldots{} \code{!\}} brackets). The \code{file} symbol is responsible for running type analysis, which is usually done by invoking the \code{run} command:
 
 \begin{verbatim}
 	file: top_wrap EOF {! run ~save: [ (input.base^".rls",
 	                               [ ("define", "save_defined") ]) ] $1 !}
 \end{verbatim}
 
-The arguments passed to the \code{run} function deal with saving results and are irrelevant for our discussion.
+The arguments passed to the \code{run} command deal with saving results and are irrelevant for our discussion.
 
 \subsection{Symply-Typed $\lambda$-Calculus}
 
-Following the logic of Chapter 4 of the original work, we will illustrate the main \Tcg{}'s features by examples starting from simply-typed $\lambda$-calculus. Its syntax is described by the following rules (we omit lexical definitions and documenting annotations):
+Following the logic of Chapter 4 of the original work \cite{Gast04}, we will illustrate the main \Tcg{}'s features by examples starting from simply-typed $\lambda$-calculus. Its syntax is described by the following rules (we omit lexical definitions and documenting annotations):
 
 \begin{verbatim}
 top_wrap: tops        --> tops($1)
@@ -63,17 +90,19 @@ exp: ID               --> id[$1]
    | "(" exp ")"      --> $2
 \end{verbatim}
 
-The first three rules describe a sentence as a list of expressions (\code{exp}) separated by double-semicolons (\code{";;"}). The last rule describes a $\lambda$-expression in a usual way: as a variable, application, abstraction or bracketed expression. As mentioned before, instructions after \code{-->} symbols serve for AST-construction; there are several types of such instructions:
- * item references of the form \code{\$<number>} -- reference items on the left-hand side;
- * node constructors of the form \code{<node_type>(<children>)};
- * list constructors of the form \code{head::tail}, where \code{[]} denotes the empty list;
- * opaque term constructors of the form \code{<class>[<value>]} -- these will be explained later.
+The first three rules describe a sentence as a list of expressions (\code{exp}) separated by double-semicolons (\code{";;"}). The last rule describes a $\lambda$-expression in a usual way: as a variable, application, abstraction or bracketed expression. As mentioned before, instructions after the \code{-->} symbols serve for AST-construction; there are several types of such instructions:
+\begin{itemize}
+ \item item references of the form \code{\$<number>} --- reference items on the left-hand side;
+ \item node constructors of the form \code{<node_type>(<children>)};
+ \item list constructors of the form \code{head::tail}, where \code{[]} denotes the empty list;
+ \item opaque term constructors of the form \code{<class>[<value>]} -- these will be explained later.
+\end{itemize}
 
-For example, here is a textual representation of the expression
+For example, a textual representation of the expression 
 $$(\lambda f.\lambda x. f\; x)\; g\; y$$
-will be\\
-\code{(\textbackslash f.\textbackslash x.f x) g x}\\
-and an AST constructed from it is
+will be 
+``\code{(\textbackslash f.\textbackslash x.f x) g x}'', 
+and an AST constructed from it is%
 \begin{verbatim}
 tops(
     apply(
@@ -89,9 +118,9 @@ tops(
 
 A \emph{typing judgement} in \Tcg{} is a pair 
 $$term : type$$
-where $term$ is a AST subtree and $type$ is term which structure is defined by typing rules. The typing rules are used by \Tcg{} to construct proofs of typing judgements, which are basically trees where the proven judgement is a root and all the edges are \emph{properly} labeled with rules (what ``properly'' means will be explained later). 
+where $term$ is an AST subtree and $type$ is a term which structure is defined by typing rules. The typing rules are used by \Tcg{} to construct proofs of typing judgements, which are basically trees where the proven judgement is a root and all the edges are \emph{properly} labeled with rules (what ``properly'' means will be explained later). 
 
-A generic typing rule consists of a set of universally quantified \emph{variables}, a list of \emph{premises}, a \emph{conclusion} and a list of \emph{parameters}. In \Tcg{} concrete syntax it is written like this:
+A generic typing rule consists of a set of universally quantified \emph{variables}, a list of \emph{premises}, a \emph{conclusion} and a list of \emph{parameters}. In \Tcg{}'s concrete syntax it is written like this:
 \begin{verbatim}
 rule apply
   forall(f,e,s,t)
@@ -100,14 +129,14 @@ rule apply
   and e : s
 \end{verbatim}
 
-In this example, \code{f}, \code{e}, \code{s} and \code{t} are the quantified variables, \code{apply(f,e)} is the conclusion, \code{f:fun(s,t)} and \code{e:s} are the premises. In more familiar logical notation it can be written like this:
+In this example, \code{f}, \code{e}, \code{s} and \code{t} are the quantified variables, \code{apply(f,e)} is the conclusion, \code{f:fun(s,t)} and \code{e:s} are the premises. In the more familiar notation it can be written like this:
 \tcgrule{f, e, s, t}{
     \Gamma \vdash f : s \rightarrow t
     \hspace{20pt}
     \Gamma \vdash e : s
 }{\Gamma \vdash f\; e : t}{apply}{}
 
-So this rule expresses the typing for application. To construct a proof for a judgement $f e : t$ we have to build a tree, where this judgement will be the root node and its children will be obtained by \emph{application} of this rule. So the root node will have two children having the forms of the premises, where $f$, $e$ and $t$ are already known (they appear in the initial judgement) and $s$ must be inferred. Each node in the tree is marked with the rule applied at this node, in our case the root node will be marked with \code{apply} rule. To complete the proof we must construct subtrees proving the children, so that leaves of the tree will be marked with application of rules which have no premises. This example provides a rough intuition about proof structure, we will improve it further (for formal definitions see Chapter 2 of the original thesis).
+This rule expresses the typing for an application. To construct a proof for a judgement $f\;e : t$ we have to build a tree, where this judgement will be the root node and its children will be obtained by \emph{application} of this rule. So the root node will have two children having the forms of the premises, where $f$, $e$ and $t$ are already known (they appear in the initial judgement) and $s$ must be inferred. Each node in the tree is marked with the rule applied at this node, in our case the root node will be marked with \code{apply} rule. To complete the proof we must construct subtrees proving the children, so that leaves of the tree will be marked with application of rules which have no premises. This example provides a rough intuition about proof structure, we will improve it further (for formal definitions see Chapter 2 of the original thesis).
 
 We have written $\Gamma$ in the example above to provide the most familiar notation, but in \Tcg{} the context is ``global'' for the rule application and is being modified each time a rule is applied (the modified version is relevant to the subtree of the vertex marked with the applied rule). This is motivated by the backward style of reasoning adopted by \Tcg{}: when we apply a rule, we create new vertices in the proof tree and change our knowledge about currently available typing information. These changes are expressed by \emph{context modifiers} which are written in the premises instead of context variables like $\Gamma$. For example, here is the rule for $\lambda$-abstraction:
 \begin{verbatim}
@@ -333,5 +362,26 @@ we need to choose fresh type variables $\alpha_1$ and $\alpha_2$ and assume $eve
 The first premise of the rule \code{letrec} contains the most significant information: all the recursive definitions are checked there. The check itself is done by the \code{bind_group} rule, which iterates over the first premise, checks each element in $bs$ and marks the result with \code{fwd} label. These results will have the form $x = e : \alpha$ for a fresh $\alpha$ since $ts$ does not appear anywhere else in the rule, thus there is nothing to prove about such judgements, and we can make \Tcg{}'s life easier by marking them as \emph{solved goals} (done by putting ``!'' after the \code{fwd} label). The overall process precisely mimics what was discussed for the code example above: we take fresh type variables, assume typings for bound variables and check the expressions to the right of ``=''.
 
 The context modifier $-(:_1 = x \rightarrow :_1 = x)$ is a \emph{guarded} one: it is triggered by adding a rule matching $:_1 = x$ (to the left of the arrow) is added, namely, it removes all the previously existing bindings for $x$ when a new binding is added.
+
+\section{Conclusion}
+
+We did not cover imperative languages, object-oriented features, generic programming and stuff like that.
+
+The approach works for large variety of type systems. The original work shows comparison with \dots
+
+The overall question is how far all this is from raw Prolog, there's no direct comparison in the thesis. But there's a comparison with TYPOL, it shows\dots
+
+The ability of subproof extraction is a distinguishing feature of \Tcg{}: we can turn a part of a proof int a rule.
+
+\Tcg{} handles not only a proof-construction part of the type analysis but also a constraint-generation part.
+
+The thesis describes a library of reusable typing rules.
+
+\begin{thebibliography}{99}
+	\bibitem[G04]{Tcg} H. Gast, A Generator for Type Checkers, \textit{Ph.D. Thesis}, Eberhard-Karls-Universit\"at T\"ubingen, 2004.
+	\bibitem[CDDK86]{MiniML} D. Cl\'{e}ment, J. Despeyroux, T. Despeyroux, and G. Kahn. A Simple Applicative Language: Mini-ML. \textit{In Proceedings of the 1986 ACM Conference on LISP and Functional Programming}, pages 13–26, Cambridge, Massachusetts, USA, August 1986. ACM.
+	\bibitem[BCD98]{TYPOL} P. Borras, D. Cl\ ́ement, Th. Despeyroux, J. Incerpi, G. Kahn, B. Lang, and V. Pascual. CENTAUR: the system. \textit{ACM SIGPLAN Notices}, 24(2):14–24, February 1989.
+
+\end{thebibliography}
 \end{document}
 
