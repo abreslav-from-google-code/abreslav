@@ -2,6 +2,7 @@
 \usepackage{underscore}
 \usepackage{ifthen}
 \usepackage{amsmath}
+\usepackage{graphicx}
 
 \newcommand{\Tcg}{\textsc{Tcg}}
 \newcommand{\code}[1]{\texttt{#1}}
@@ -53,6 +54,17 @@ Here's another attempt The \textsc{Type Check Generator} (\Tcg{}) \cite{Tcg}
  A parser builds an AST and collects associated goals to be proven. Then, it runs a typechecker which searches for proofs of the collected goals by backward reasoning, these profs must be constructed with respect to the specified inference rules. The typechecker uses a generic proof search strategy which can be slightly customized by the typing specification.
  A depth-first backtracking search for a complete proof with respect to the information encoded in the rules.
 
+\begin{figure}[htp]
+\centering
+\includegraphics[width=.7\textwidth]{generator.png}
+\caption{The \Tcg{} Generator}
+\end{figure}
+
+\begin{figure}[htp]
+\centering
+\includegraphics[width=.7\textwidth]{runtime.png}
+\caption{The \Tcg{} Type Checker at Run Time}
+\end{figure}
  In this report we mainly illustrate the usage of \Tcg{} by giving examples of typing rules (based on MiniML language \cite{MiniML}).
  Since \Tcg{} rules include inference and proof search instructions, the same set of examples will illustrate the main techniques used to direct the proof construction.
 
@@ -376,6 +388,8 @@ The ability of subproof extraction is a distinguishing feature of \Tcg{}: we can
 \Tcg{} handles not only a proof-construction part of the type analysis but also a constraint-generation part.
 
 The thesis describes a library of reusable typing rules.
+
+Error reporting will be difficult to implement.
 
 \begin{thebibliography}{99}
 	\bibitem[G04]{Tcg} H. Gast, A Generator for Type Checkers, \textit{Ph.D. Thesis}, Eberhard-Karls-Universit\"at T\"ubingen, 2004.
