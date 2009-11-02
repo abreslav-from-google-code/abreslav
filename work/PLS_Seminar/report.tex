@@ -39,20 +39,31 @@ $$%
 
 \section{Introduction}
 
-We have tools for parsers, because of automata theory
-We want tools for ``static semantics'', we can build them because of type theory and proof theory
-There were some attempts: see \cite{Tcg}, Chapter 5.
-Here's another attempt The \textsc{Type Check Generator} (\Tcg{}) \cite{Tcg}
+Tools for generating parsers for different types of context-free grammars have been available for decades. They serve for automating the routine task of developing a parser and make it less error-prone by working with high-level specifications, which are (in most cases, partially) declarative and checkable for consistence.
+
+However, a context-free syntax does not capture all the features of a programming language. There remains the ``non-context-free syntax'' or ``static semantics'', which is checked by hand-written code. But one is unlikely to say that the type theory is underdeveloped compared to automata theory, thus we should expect availability of type-checker generators as well as parser generators. And these tools might be a big advantage for implementing non-context-free static checks.
+
+This report is based on a Ph.D. thesis by H. Gast ``A Generator for Type Checkers'' \cite{Tcg}. Chapter 5 of the thesis examines the related work in detail, and we will not go into it here. The only thing we have to mention is that there were attempts to create such tools before, but most of them suffer from being more of domain-specific \emph{programming} languages than \emph{declarative} specification languages. The \textsc{Type Check Generator} (\Tcg{}) tool described in the thesis makes a significant advance towards the declarative style.
+
+
 
 \section{Approach Overview}
 
- Recall the Curry-Howard correspondence.
- types encode statements about program properties, and the program is correct if we can prove these statements
- Type-checking-as-proof-search
- In TCG ``typing'' annotations are just terms (the main requirement is having unifiers) and a type checker specification
- is basically a set of inference rules and proof search rules.
- A parser builds an AST and collects associated goals to be proven. Then, it runs a typechecker which searches for proofs of the collected goals by backward reasoning, these profs must be constructed with respect to the specified inference rules. The typechecker uses a generic proof search strategy which can be slightly customized by the typing specification.
- A depth-first backtracking search for a complete proof with respect to the information encoded in the rules.
+We use types in programming languages to enforce certain properties of our programs at compile time. Types themselves (provided as annotation or inferred) can be thought of as statements about those properties, which the compiler (to be precise --- the type-checker subsystem of the compiler) proves in some way.
+
+In \Tcg{} the type checking process is modeled as a search for explicit proofs of statements associated with an Abstract Syntax Tree (AST) of a program. The proofs are built with respect to inference rules specified by the user; in fact, the rules form the core part of a declarative specification of a type system in \Tcg{}. This approach is, of course, related to the Curry-Howard correspondence, but only in a broad sense: \Tcg{} builds proofs using the AST structure but not strictly according to it. 
+
+A language of types used in \Tcg{} is limited only by very general requirements like having most general unifiers. Strictly speaking, we cannot always identify a type within a \Tcg{} statement, since a \emph{typing relation} ($e : t$) does not have to be present in it. And where present, types may have almost arbitrarily complicated structure. This structure, as well as the structure of proofs is described by \emph{typing rules} (specified by a user) which are basically inference rules of a proof system. 
+
+Proofs are constructed by a procedure based on a depth-first backtracking search, which is basically a backwards reasoning facilitated by a sound set of operations over proofs which the user may trigger by referring to them in the typing rules (the proof structure along with the operations are formally described in Chapter 2 of \cite{Tcg}).
+
+Beside the typing rules themselves, a \Tcg{} specification describes
+\begin{itemize}
+	\item context-free syntax;
+	\item abstract syntax tree (AST) construction;
+	\item pretty-printing rules.
+\end{itemize}
+At generation time (Figure 1) the translator produces a parser and an initial context for the proof search.
 
 \begin{figure}[htp]
 \centering
@@ -60,22 +71,18 @@ Here's another attempt The \textsc{Type Check Generator} (\Tcg{}) \cite{Tcg}
 \caption{The \Tcg{} Generator}
 \end{figure}
 
+At runtime (Figure 2) the parser builds an AST and collects associated goals to be proven. Then it runs an ``interpreter'' which searches for proofs of the collected goals.
+
 \begin{figure}[htp]
 \centering
 \includegraphics[width=.7\textwidth]{runtime.png}
 \caption{The \Tcg{} Type Checker at Run Time}
 \end{figure}
- In this report we mainly illustrate the usage of \Tcg{} by giving examples of typing rules (based on MiniML language \cite{MiniML}).
- Since \Tcg{} rules include inference and proof search instructions, the same set of examples will illustrate the main techniques used to direct the proof construction.
 
-A language specification in \Tcg{} covers 
-\begin{itemize}
-	\item context-free syntax;
-	\item abstract syntax tree (AST) construction;
-	\item typing rules;
-	\item proof search instructions;
-	\item pretty-printing rules.
-\end{itemize}
+In this report we mainly illustrate the usage of \Tcg{} by giving examples of typing rules (aiming at implementing a type checker for the \textsc{MiniML} language \cite{MiniML}).
+Since \Tcg{} rules include proof search instructions, the same set of examples will illustrate the main techniques used to direct the proof construction. Formal definitions of the rule language are given in Chapter 3 of \cite{Tcg}.
+
+\section{\Tcg{} In Action}
 
 Context-free syntax is described by YACC-style productions each grammar must have a start symbol called \code{file}. Productions may be annotated with AST building instructions (after \code{-->} sign) or a block of code to be executed after the production has been matched (in \code{\{!} \ldots{} \code{!\}} brackets). The \code{file} symbol is responsible for running type analysis, which is usually done by invoking the \code{run} command:
 
@@ -86,9 +93,11 @@ Context-free syntax is described by YACC-style productions each grammar must hav
 
 The arguments passed to the \code{run} command deal with saving results and are irrelevant for our discussion.
 
+The rest of this section follows the logic and structure of the Chapter 4 of the original work \cite{Tcg}, explaining the formalism and other aspects of \Tcg{} by giving examples which start with the classical simply-typed $\lambda$-calculus and go through all the features of the \textsc{MiniML} language \cite{MiniML}.
+
 \subsection{Symply-Typed $\lambda$-Calculus}
 
-Following the logic of Chapter 4 of the original work \cite{Gast04}, we will illustrate the main \Tcg{}'s features by examples starting from simply-typed $\lambda$-calculus. Its syntax is described by the following rules (we omit lexical definitions and documenting annotations):
+The context-free syntax of the simply-typed $\lambda$-calculus is described by the following rules (we omit lexical definitions and documenting annotations):
 
 \begin{verbatim}
 top_wrap: tops        --> tops($1)
@@ -141,7 +150,7 @@ rule apply
   and e : s
 \end{verbatim}
 
-In this example, \code{f}, \code{e}, \code{s} and \code{t} are the quantified variables, \code{apply(f,e)} is the conclusion, \code{f:fun(s,t)} and \code{e:s} are the premises. In the more familiar notation it can be written like this:
+In this example, \code{f}, \code{e}, \code{s} and \code{t} are the quantified variables, \code{apply(f,e)} is the conclusion, \code{f:fun(s,t)} and \code{e:s} are the premises. In the more familiar notation of inference rules it can be written like this:
 \tcgrule{f, e, s, t}{
     \Gamma \vdash f : s \rightarrow t
     \hspace{20pt}
@@ -176,7 +185,7 @@ The rule \code{apply} mentioned above has no context modifiers, thus in tree-lik
 
 The third rule for simply-typed $\lambda$-calculus will be the following:
 \tcgrule{es, ts}{
-\premise{}{\mathtt{[branch]}\; es : ts \; \mathtt{export* ...}}
+\premise{}{\mathtt{[branch]}\; es : ts \; \mathbf{export} * \ldots}
 }{tops(es)}{tops}{}
 Note that the conclusion here is not a typing judgement; there is no problem: we are basically proving a theorem and our language is not limited to a single predicate ``:''. The premise contains a \code{[branch]} modifier which denotes that it must be looked for by a independent sub-search procedure; the ellipsis \code{...} is a shorthand denoting list iteration: in our AST structure \code{tops} contains a list of children, so the \code{es} variable will iterate through it item-by-item.
 
@@ -277,11 +286,13 @@ To define non-trivial functions with \textbf{let}, we need recursion, which is n
     \premise{-(:_1 = x), +[\mathtt{let\_binding}[x]](\langle 1 : [\forall] \rangle)}{e : t}
 }{\mathbf{let}\;x = e'\;\mathbf{in}\;e : t}{let\_poly}{}
 
-By doing this we have added the assumption $x : s$ to the proof for $e' : s$, and since $x$ is being bound to $e'$ this indeed enables recursion. By now we can handle basic functionality available in \textsc{MiniML} language \cite{MiniML}. In further sections we illustrate more sophisticated features of \Tcg{} by extending the capabilities of the language. Among others, we will cover tuples and mutual recursion.
+By doing this we have added the assumption $x : s$ to the proof for $e' : s$, and since $x$ is being bound to $e'$ this indeed enables recursion. 
+
+By now we can handle all the basic functionality available in a functional language. In further subsections we illustrate more sophisticated features of \Tcg{} by extending the capabilities of the language with more convenient mechanisms like multi-binding \code{let} and mutual recursion.
 
 \subsection{Parallel bindings}
 
-To make our language more practical, let us introduce \textbf{let} expressions binding many variables at the same time. The syntax will be the following:
+To make our language more practical, let us introduce \code{let} expressions binding many variables at the same time. The syntax will be the following:
 
 \begin{verbatim}
 exp: "let" bind_group "in" exp    --> let($2,$4)
