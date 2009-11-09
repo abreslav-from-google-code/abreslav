@@ -30,12 +30,16 @@ $$%
 $$%
 }
 
-\title{A Generator for Type Checkers\\ \small{A Ph.D. thesis by Holger Gast, 2004}}
+\title{A Generator for Type Checkers}
 \author{Andrey Breslav}
 
 \begin{document}
 
 \maketitle
+
+\begin{abstract}
+	This report presents \Tcg{}, a system for generating type checkers from declarative specifications (developed by H. Gast in his PhD thesis in 2004). The system models type checking process as a proof search for typing judgements. It is expressive enough to describe type systems of different kinds of programming languages: from simply-typed $\lambda$\mbox{-}calculus to object-oriented imperative languages. We illustrate the usage of the system by developing a type checker specification for the \textsc{MiniML} language, which captures the key features of ML, including type inference, polymorphic definitions and mutual recursion. 
+\end{abstract}
 
 \section{Introduction}
 
@@ -401,13 +405,16 @@ We have illustrated the usage of \Tcg{} by developing a type system for the \tex
 
 The original paper \cite{Tcg} provides many interesting examples, which we did not cover, such as imperative languages, object-oriented languages and a language for stating generic algorithms with explicit requirements on their parameter types. These examples show that the approach works for large variety of type systems, not only functional languages with Hindley-Milner type inference. 
 
-The original paper also provides comparison with other approaches to type system specification (Chapter 5), such as TYPOL, \textsc{TinkerType}, constraints solving and logical frameworks (\textsc{Isabelle}). These comparisons bring the evidence of \Tcg{} being, on the one hand, much less of a (logical) programming languages than previous solutions, on the other hand,  an fully specialized integrated framework as opposed to constraint solvers and logical frameworks. On the ``technical'' level the ability of subproof extraction is a distinguishing feature of \Tcg{}.
+The original paper also provides comparison with other approaches to type system specification (Chapter 5), such as TYPOL \cite{Typol}, \textsc{TinkerType} \cite{Tinker}, constraints solving and logical frameworks (\textsc{Isabelle} \cite{Isabelle}). These comparisons bring the evidence of \Tcg{} being, on the one hand, much less of a (logical) programming languages than previous solutions, on the other hand,  an fully specialized integrated framework as opposed to constraint solvers and logical frameworks. On the ``technical'' level the ability of subproof extraction is a distinguishing feature of \Tcg{}.
 
 A major disadvantage which may prevent this approach from being used in practice might be the lack of comprehensible error reporting: when no proof is found (which means that the program is not correct), a type checker must complain with a helpful error message mentioning the reason of the problem; this aspect was not studied in the \cite{Tcg}.
 
 \begin{thebibliography}{99}
 	\bibitem[G04]{Tcg} H. Gast, A Generator for Type Checkers, \textit{Ph.D. Thesis}, Eberhard-Karls-Universit\"at T\"ubingen, 2004.
 	\bibitem[CDDK86]{MiniML} D. Cl\'{e}ment, J. Despeyroux, T. Despeyroux, and G. Kahn. A Simple Applicative Language: Mini-ML. \textit{In Proceedings of the 1986 ACM Conference on LISP and Functional Programming}, pages 13–26, Cambridge, Massachusetts, USA, August 1986. ACM.
+	\bibitem[BCD89]{Typol} P. Borras, D. Cle ́ment, Th. Despeyroux, J. Incerpi, G. Kahn, B. Lang, and V. Pascual. CENTAUR: the system. \textit{ACM SIGPLAN Notices}, 24(2):14–24, February 1989.
+	\bibitem[LP03]{Tinker} M. Levin and B. Pierce. TinkerType: A language for playing with formal systems. \textit{Journal of Functional Programming}, 13(2), March 2003.
+	\bibitem[P94]{Isabelle} L. Paulson. Isabelle – A Generic Theorem Prover. \textit{Number 828 in Lecture Notes in Computer Science}. Springer-Verlag, Berlin Heidelberg, 1994.
 \end{thebibliography}
 \end{document}
 
