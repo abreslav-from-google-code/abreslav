@@ -1,0 +1,119 @@
+PROGRAMMING LANGUAGES SEMINAR
+
+Referee name   : Andrey Breslav
+Referee e-mail : abreslav@gmail.com
+
+--------------------------------------------------------------
+
+REFEREED PAPER
+Author  : Vesal Vojdani
+Title   : Static Data Race Analysis
+
+OVERALL MARK  (1-5)    :
+
+The defult marking scale is 1-5 (5 highest positive, 1 "fail").
+Some items may have additional explanations when to use which marks.
+If there is a comment field, please add a short explananation of your
+mark (1-2 sentences).
+
+TITLE (1-5)     : 5
+[Is the title clear and succinct describing the subject of the paper?]
+COMMENT:
+
+STRUCTURE (1-5)  :
+[Does the paper have all required components; is the main text
+suitably structured?]
+COMMENT:
+
+ABSTRACT (1-5)     : 5
+[Is the abstract generally understandable; does it fulfill its purpose?]
+COMMENT:
+
+INTRODUCTION (1-5) : 5
+[Does the introduction give an adequate overview, motivation, problem
+description, etc?]
+COMMENT:
+
+REFERENCES (1-5):
+[Is the bibliography accurate and up-to-date; are all references
+referred somewhere in the text; etc?]
+COMMENT:
+
+
+ACCESSIBILITY (1-5)     :
+   5 - is accessible only for a specialist in the given specific area
+   4 - is accessible for a person having a good general overview in the area
+   3 - understandable for any CS/IT master student interested on Prog.Languages
+   2 - understandable for any CS/IT student
+   1 - understandable for general audience
+
+READABILITY (1-5)     :
+   5: very good
+   4: basically well written
+   3: readable
+   2: poor, needs considerable work
+   1: unacceptably bad
+
+
+DENSITY (1-5)     :
+[Is the length of the paper suitable for the content; or is the paper
+too light-weight (eg. 20 pages where 2 would be enough); or too tensly
+"packed" (too much materila for the given length)]
+COMMENT:
+
+LANGUAGE (1-5):
+COMMENT:
+
+--------------------------------------------------------------
+
+REFEREE
+
+COMPETENCE (1-5) :
+   5 - expert (eg. I have written a paper in similar topic)
+   4 - well informed (eg. I had participated in lectures/seminars on a similar topic)
+   3 - moderately familiar (eg. I have read a paper in a similar topic)
+   2 - informed outsider (eg. I have a basic knowledge in the general area)
+   1 - stranger (eg. the topic is completely alien to me)
+
+CONFIDENCE (1-5)  :
+   5 - I'm completely sure that all given marks are fair and correct
+   3 - I'm quite sure that most marks are fair and correct
+   1 - I wish and hope that my marks are fairer than tossing a coin
+
+TIME SPENT (in hours): 
+
+UNDERSTANDING (1-5)   :
+   5 - all details were clair and understandable
+   3 - understood the main idea, but not all details
+   1 - couldn't understand almost anything
+
+--------------------------------------------------------------
+
+REFEREE REPORT
+
+Short overview of the paper (one/two paragraphs about the content;
+doesn't give an evaluation, but demonstrates your understanding of the
+paper).
+
+A general assessment of the paper, pointing out positive and negative
+aspects.
+
+Concrete recommendations for improvments (incl. minimal requirements
+for the final version).
+
+Other comments.
+
+Typos:
+
+As these type systems are are usually formulated
+but it naturally not the only problem
+
+The locations ρx and ρy are consistently correlated with the locks m1 and m2 ,
+respectively. --- the picture shows that \rho_y is correlated with m_2 in case of t1 and with m_1 in case of t_2. From the next sentence it follows that the author has probably ment \rho_z instead of \rho_y, but according to the figure, for \rho_z the correlated sets also have an empty intersection.
+
+
+
+
+
+
+
