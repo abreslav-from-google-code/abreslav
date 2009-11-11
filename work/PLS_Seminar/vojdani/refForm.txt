@@ -111,6 +111,11 @@ but it naturally not the only problem
 The locations ρx and ρy are consistently correlated with the locks m1 and m2 ,
 respectively. --- the picture shows that \rho_y is correlated with m_2 in case of t1 and with m_1 in case of t_2. From the next sentence it follows that the author has probably ment \rho_z instead of \rho_y, but according to the figure, for \rho_z the correlated sets also have an empty intersection.
 
+The flow-sensitive computation of the locksets is essentially achieve through a data flow analysis over the control flow graph of the program
+
+"type-system" does not seem to be a conventional spelling of the term
+
+this involves the copying the constraint sets, which can be quite large
 
 
 
