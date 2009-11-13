@@ -117,8 +117,23 @@ The flow-sensitive computation of the locksets is essentially achieve through a 
 
 this involves the copying the constraint sets, which can be quite large
 
+as soon as there if flow between two lock labels
 
+Inst-Fun Inst: C |- is missing in the first rule; |- alone -- in the second.
 
+The type of the munge() function --- contains a cartesian product symbol which was not explained before.
 
+It also accumulates accessed memory locations relative to the entry point
 
+{os} --- the meaning is unclear
+
+{(v, ({m}, ∅), write)} --- here it must be not v but (*v)
+
+the main thread may only accesses the array when the workers do not
+
+the analysis of the heap is currently a highly active are of research
+
+Similarly, near the end of an objects life-time
+
+Type-base flow analysis: from polymorphic subtyping to CFL-reachability --- may be it's "type-based"?
 

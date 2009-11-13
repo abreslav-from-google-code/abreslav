@@ -1,0 +1,182 @@
+PROGRAMMING LANGUAGES SEMINAR
+
+Referee name   : Andrey Breslav
+Referee e-mail : abreslav@gmail.com
+
+--------------------------------------------------------------
+
+REFEREED PAPER
+Author  : Sander Sõnajalg
+Title   : Program Analysis Techniques for Method Call Devirtualization in Object-Oriented Languages
+
+
+OVERALL MARK  (1-5)    : 3
+
+The defult marking scale is 1-5 (5 highest positive, 1 "fail").
+Some items may have additional explanations when to use which marks.
+If there is a comment field, please add a short explananation of your
+mark (1-2 sentences).
+
+TITLE (1-5)     : 5
+[Is the title clear and succinct describing the subject of the paper?]
+COMMENT:
+
+STRUCTURE (1-5)  : 5
+[Does the paper have all required components; is the main text
+suitably structured?]
+COMMENT:
+
+ABSTRACT (1-5)     : 3
+[Is the abstract generally understandable; does it fulfill its purpose?]
+COMMENT:
+Abstract does not clearly describe the content of the paper. Looks more like the first paragraph of an introduction.
+
+INTRODUCTION (1-5) : 5
+[Does the introduction give an adequate overview, motivation, problem
+description, etc?]
+COMMENT:
+
+REFERENCES (1-5): 4
+[Is the bibliography accurate and up-to-date; are all references
+referred somewhere in the text; etc?]
+COMMENT: No actively used bibliography is newer than 9 years old, the most part of the report relies on the work done in the middle nineties.
+
+
+ACCESSIBILITY (1-5)     : 2
+   5 - is accessible only for a specialist in the given specific area
+   4 - is accessible for a person having a good general overview in the area
+   3 - understandable for any CS/IT master student interested on Prog.Languages
+   2 - understandable for any CS/IT student
+   1 - understandable for general audience
+
+READABILITY (1-5)     : 3
+   5: very good
+   4: basically well written
+   3: readable
+   2: poor, needs considerable work
+   1: unacceptably bad
+
+
+DENSITY (1-5)     : 2
+[Is the length of the paper suitable for the content; or is the paper
+too light-weight (eg. 20 pages where 2 would be enough); or too tensly
+"packed" (too much materila for the given length)]
+COMMENT: The paper is very light-weight, most concepts presented are trivial and deserve almost no explanation.
+
+LANGUAGE (1-5): 3
+COMMENT: Many articles are left out, some words, expressions and tenses are misused.
+
+--------------------------------------------------------------
+
+REFEREE
+
+COMPETENCE (1-5) : 5 (I have supervised a project on similar topic)
+   5 - expert (eg. I have written a paper in similar topic)
+   4 - well informed (eg. I had participated in lectures/seminars on a similar topic)
+   3 - moderately familiar (eg. I have read a paper in a similar topic)
+   2 - informed outsider (eg. I have a basic knowledge in the general area)
+   1 - stranger (eg. the topic is completely alien to me)
+
+CONFIDENCE (1-5)  : 5
+   5 - I'm completely sure that all given marks are fair and correct
+   3 - I'm quite sure that most marks are fair and correct
+   1 - I wish and hope that my marks are fairer than tossing a coin
+
+TIME SPENT (in hours): 2
+
+UNDERSTANDING (1-5)   : 5
+   5 - all details were clair and understandable
+   3 - understood the main idea, but not all details
+   1 - couldn't understand almost anything
+
+--------------------------------------------------------------
+
+REFEREE REPORT
+
+Short overview of the paper (one/two paragraphs about the content;
+doesn't give an evaluation, but demonstrates your understanding of the
+paper).
+
+A general assessment of the paper, pointing out positive and negative
+aspects.
+
+The author spends 8 pages for explaining two trivial analyses which are inapplicable for languages with dynamic class loading, but 
+
+Concrete recommendations for improvments (incl. minimal requirements
+for the final version).
+
+Other comments.
+
+Seems like the author does not distinguish inheritance from using virtual functions. In fact, many (in some cases -- almost all) functions in a hierarchy may be nonvirtual.
+
+From that follows that the more accurate call graph is the one containing less nodes and edges. --- It's arguable if any nodes can be excluded
+
+As none of the subclasses override hasRightToVote(),
+the dynamic method invocation can be replaced with a static procedure call
+to Estonian#hasRightToVote()
+ --- this is not true since Java allows dynamic class loading. Overall, this analysis is actually irrelevant to Java programs. The cited paper speaks about C++, for which this analysis is sound.
+
+For each call site,
+the global set of instantiated types is intersected with the local set of possible
+call targets found by CHA, hopefully further reducing the number of candidate
+target types. --- this analysis is also unsound for Java, due to the same reason.
+
+Combined with the dynamic class loading capability of the JVM platform, it
+now really is impossible to estimate which types are instantiated during the
+runtime. --- It was impossible even before, since the author didn't claim that the analyses involve any assumptions or checks of absence of a class-loading code. Feasibility of such assumptions are, in fact, arguable.
+
+There are still ways to work around this though, for example, the JIT
+compiler of the virtual machine could memorize all the types of objects which
+it has actually instantiated. --- by the current moment. Should it invalidate all the call sites after instantiating a certain class for the first time?
+
+                                               The directed edges of the graph
+represent all kinds of assignments, the rules being roughly: -- what happens to expressions, passed as arguments or returned?
+
+Then the type propagation graph is initialized by nd-
+ing all object instantiation statements (e.g. new MyClass()) from the code --- again, unsound for Java.
+
+
+and especially during the runtime --- how can we think of a Java-like platform performing compilation on an end-user's machine, but not at run time?
+
+For a compiled and linked language like C++ --- Java is also a compiled language. The difference is in the target platform: Java is normally compiled into JVM Byte Code, while C++ is normally compiled into executable machine instructions.
+
+
+For a compiled and linked language like C++, the implementation of techniques
+like CHA and RTA would be quite straight-forward, as the whole program is
+available for the compiler to analyse during the compilation. Also for C++-
+style languages, as native code generation doesn't happen during the runtime
+and won't thus aect the end-user, it is much more feasible to apply various
+expensive optimizations during compilation. --- this paragraph repeats a previously mentioned point.
+
+The author seems to be assuming no non-private methods accepting parameters in the programs under discussion.
+
+
+Typos:
+
+C++ of the compiled languages
+
+any of it's subclasses
+
+The runtime type class can override the non-private instance method
+
+sends ) --- full stop missing
+
+examplified
+
+
+They main goal is to find the set of
+
+proposed by [9] --- in
+
+Node C.m.p denotes the argument or the local variable p of method m of
+class C. --- parameter
+
+                         Processing of a node involves copying all the types
+from its ReachingTypesset to the ReachingTypessets --- visible spaces needed
+
+If the compilation happens in the end-user's machine --- on
+
+Decleared-type analysis
+
+
+
