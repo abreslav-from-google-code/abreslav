@@ -97,59 +97,35 @@ Short overview of the paper (one/two paragraphs about the content;
 doesn't give an evaluation, but demonstrates your understanding of the
 paper).
 
+The paper reports on techniques for devirtualizing function calls in object-oriented languages like Java and C++.
+It starts with a fairly detailed presentation of the problem, then presents three techniques:
+1) Class Hierarchy Analysis, which essentially looks for calls to methods which are never overriden in the class hierarchy under the static type of the receiver object;
+2) Rapid Type Analysis, which looks for all object creation statements in the program and excludes those which are never instantiated from the hierarchy considered by (1);
+3) Variable-Type Analysis, which performs a control-flow independent analysis of possible run-time types of object references in the program and devirtualizes calls for which receivers may have only one possible run-time type.
+
+The report proceeds with some reasoning about the applicability of the presented techniques, JIT-compiled languages are concluded to introduce more challenges for devirtualization due to their capability of loading classes at run time, compared to C++-like languages.
+The presented techniques are reported to be able to detect not less than 50% of all devirtualizable call sites in some benchmark programs.
+The conclusion mentions the existence of more sophisticated analyses like points-to analyses or fragment class analysis.
+
 A general assessment of the paper, pointing out positive and negative
 aspects.
 
-The author spends 8 pages for explaining two trivial analyses which are inapplicable for languages with dynamic class loading, but 
+The upside of the paper is that it might understandable for almost everyone who knows what a compiler is and what OO-languages are (if we ignore some downsides).
+
+The main downsides are the following:
+ * the author illustrates the techniques based on the closed-world assumption using the Java programming language, for which this assumption does not hold, as the author claims in the concluding section; this is very confusing for the reader;
+ * there is much duplication in the latter half of the paper: the same points are argued several times with the same reasons;
+ * the language must be polished.
+
 
 Concrete recommendations for improvments (incl. minimal requirements
 for the final version).
 
-Other comments.
+The main body of the paper (Sections 3-5) must be refactored in order to avoid false claims like applicability of static hierarchy analyses for Java. I have to point out that the very presence of any class-loading code in the compiled program is not necessary for the close-world assumption to be false. It is enough to have a public method with accepts an object as parameter. A class with such a method might be loaded into an arbitrary environment, which may contribute a bunch of new classes to whatever hierarchy.
 
-Seems like the author does not distinguish inheritance from using virtual functions. In fact, many (in some cases -- almost all) functions in a hierarchy may be nonvirtual.
+Section 6 should be abridged to avoid self-duplication.
 
-From that follows that the more accurate call graph is the one containing less nodes and edges. --- It's arguable if any nodes can be excluded
-
-As none of the subclasses override hasRightToVote(),
-the dynamic method invocation can be replaced with a static procedure call
-to Estonian#hasRightToVote()
- --- this is not true since Java allows dynamic class loading. Overall, this analysis is actually irrelevant to Java programs. The cited paper speaks about C++, for which this analysis is sound.
-
-For each call site,
-the global set of instantiated types is intersected with the local set of possible
-call targets found by CHA, hopefully further reducing the number of candidate
-target types. --- this analysis is also unsound for Java, due to the same reason.
-
-Combined with the dynamic class loading capability of the JVM platform, it
-now really is impossible to estimate which types are instantiated during the
-runtime. --- It was impossible even before, since the author didn't claim that the analyses involve any assumptions or checks of absence of a class-loading code. Feasibility of such assumptions are, in fact, arguable.
-
-There are still ways to work around this though, for example, the JIT
-compiler of the virtual machine could memorize all the types of objects which
-it has actually instantiated. --- by the current moment. Should it invalidate all the call sites after instantiating a certain class for the first time?
-
-                                               The directed edges of the graph
-represent all kinds of assignments, the rules being roughly: -- what happens to expressions, passed as arguments or returned?
-
-Then the type propagation graph is initialized by nd-
-ing all object instantiation statements (e.g. new MyClass()) from the code --- again, unsound for Java.
-
-
-and especially during the runtime --- how can we think of a Java-like platform performing compilation on an end-user's machine, but not at run time?
-
-For a compiled and linked language like C++ --- Java is also a compiled language. The difference is in the target platform: Java is normally compiled into JVM Byte Code, while C++ is normally compiled into executable machine instructions.
-
-
-For a compiled and linked language like C++, the implementation of techniques
-like CHA and RTA would be quite straight-forward, as the whole program is
-available for the compiler to analyse during the compilation. Also for C++-
-style languages, as native code generation doesn't happen during the runtime
-and won't thus aect the end-user, it is much more feasible to apply various
-expensive optimizations during compilation. --- this paragraph repeats a previously mentioned point.
-
-The author seems to be assuming no non-private methods accepting parameters in the programs under discussion.
-
+It is also desirable to place the listings and figures closer to the places in the text which refer to them. Although it might not be always possible.
 
 Typos:
 
@@ -163,20 +139,14 @@ sends ) --- full stop missing
 
 examplified
 
-
 They main goal is to find the set of
 
 proposed by [9] --- in
 
-Node C.m.p denotes the argument or the local variable p of method m of
-class C. --- parameter
+Node C.m.p denotes the argument or the local variable p of method m of class C. --- parameter
 
-                         Processing of a node involves copying all the types
-from its ReachingTypesset to the ReachingTypessets --- visible spaces needed
+Processing of a node involves copying all the types from its ReachingTypesset to the ReachingTypessets --- visible spaces needed
 
 If the compilation happens in the end-user's machine --- on
 
 Decleared-type analysis
-
-
-
