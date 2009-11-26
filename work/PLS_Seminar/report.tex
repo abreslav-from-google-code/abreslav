@@ -74,7 +74,7 @@ At generation time (Figure 1) the translator produces a parser and an initial co
 
 \begin{figure}[htp]
 \centering
-\includegraphics[width=.7\textwidth]{generator.png}
+\includegraphics[width=.7\textwidth]{generator}
 \caption{The \Tcg{} Generator}
 \end{figure}
 
@@ -82,7 +82,7 @@ At runtime (Figure 2) the parser builds an AST and collects associated goals to 
 
 \begin{figure}[htp]
 \centering
-\includegraphics[width=.7\textwidth]{runtime.png}
+\includegraphics[width=.7\textwidth]{runtime}
 \caption{The \Tcg{} Type Checker at Run Time}
 \end{figure}
 
@@ -244,11 +244,11 @@ For the monomorphic version of let expression (\code{let x = e in e'}) it is suf
 \premise{-(:_1 = x), +[x : s]}{e : t}
 }{\mathbf{let}\;x = e'\;\mathbf{in}\;e : t}{mono\_let}{}
 
-In case of polymorphism, which means that $x$ may be typed with $\forall \widetilde{\alpha}.s$, this approach will not work directly, since we need to quantify all the \emph{inner variables} of the type scheme $s$, which are the variable which appear freely in the proof of $e' : s$ and do not appear in other parts of the proof tree. The operators presented by now do not allow to do this, so \Tcg{} introduces more tools which are expressive enough to cover it (and much more): \emph{rule extraction} and \emph{forward application}. To illustrate these techniques, we will first reformulate the above rule \code{mono\_let} and then extend it to a polymorphic version.
+In case of polymorphism, which means that $x$ may be typed with $\forall \widetilde{\alpha}.s$, this approach will not work directly, since we need to quantify all the \emph{inner variables} of the type scheme $s$, namely the variables which appear freely in the proof of $e' : s$ and do not appear in other parts of the proof tree. The operators presented by now do not allow to do this, so \Tcg{} introduces tools which are expressive enough to cover it (and much more): \emph{rule extraction} and \emph{forward application}. To illustrate these techniques, we will first reformulate the above rule \code{mono\_let} and then extend it to a polymorphic version.
 
-Rule extraction basically takes a (possibly incomplete) subproof and turns it into a new rule: the root of the subproof becomes a conclusion, and the leafs become premises. If the subproof was complete, then there will be no premises in the rule (all the premises will be empty). This operation corresponds to the idea of memorizing subproofs as lemmata and re-using them in different parts of the proof. Thus we are going to extract a proof of $e' : s$ and then use it in the proof for the second premise (and later for the proof of $\forall x : \widetilde{\alpha}.s$).
+\emph{Rule extraction} basically takes a (possibly incomplete) subproof and turns it into a new rule: the root of the subproof becomes a conclusion, and the leafs become premises. If the subproof was complete, then there will be no premises in the rule (all the premises will be empty). This operation corresponds to the idea of memorizing subproofs as lemmata and re-using them in different parts of the proof. Thus we are going to extract a proof of $e' : s$ and then use it in the proof for the second premise (and later for the proof of $\forall x : \widetilde{\alpha}.s$).
 
-By now we can easily prove $e' : s$, but what we need for the second premise is $x : s$. This is where forward application comes into the stage: it allows to combine two rules into one if the premise of the second rule unify with the conclusion of the first one.
+The newly extracted rule helps in proving $e' : s$, but what we need for the second premise is $x : s$. This is where \emph{forward application} comes into the stage: it allows to combine two rules into one if the premise of the second rule unify with the conclusion of the first one.
 $$
 \left.\begin{array}{r}
 	\tcgrule{}{\ldots}{e' : s}{}{}\\
@@ -263,7 +263,7 @@ $$
 $$
 This operation easily generalizes to more than one premise of the second rule.
 
-Now we can reformulate \code{mono_let} in this manner: in the context modifier for the second premise, we will extract the proof of the first premise and apply the forward reasoning.
+Now we can reformulate \code{mono_let} in this manner: in the context modifier for the second premise we will extract the proof of the first premise and perform the forward application, which joins the extracted subproof with the auxiliary rule \code{let_binding}.
 \tcgrule{x,e,e',s,t}{
     \premise{}{e' : s}
     \premise{-(:_1 = x), +[\mathtt{let\_binding}[x]](\langle 1 \rangle)}{e : t}
@@ -271,14 +271,15 @@ Now we can reformulate \code{mono_let} in this manner: in the context modifier f
 
 The auxiliary rule \code{let_binding} looks like this:
 \tcgrule{e,t}{\premise{}{e : t}}{\mathbf{y} : t}{let\_binding}{y}
+This rule is not used on its own, only with forward application; thus, it is not a normal inference rule for the proof system.
 
 Let us explain the new pieces of notation now. First, we have a \emph{rule reference} in the context modifier of the first premise:
 $$\mathtt{let\_binding}[x]$$
-this simply adds the rule \code{let_binding} to the context, passing $x$ to it as an argument. As you can see, the rule has a formal parameter $\mathbf{y}$; this parameter must be instantiated with a term upon the rule application; in our case it is instantiated with the term $x$.
+this simply adds the rule \code{let_binding} to the context, passing $x$ to it as an argument. The rule has a formal parameter $\mathbf{y}$; this parameter must be instantiated with a term upon the rule application; in our case it is instantiated with the term $x$.
 
 The rule reference is followed by a forward application:
 $$[\mathtt{let\_binding}[x]](\langle 1 \rangle)$$
-this notation means ``extract the proof of the first premise and apply forward reasoning to it at the rule $\mathtt{let\_binding}[x]$''. The generic syntax for this operation will be
+this notation means ``extract the proof of the first premise ($\langle 1 \rangle$) and perform forward application on it and the rule $\mathtt{let\_binding}[x]$''. The generic syntax for forward application operation will be
 $$rule\_expression(rule\_expressions)$$
 where each rule expression may be 
 \begin{itemize}
