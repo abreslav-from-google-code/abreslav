@@ -205,7 +205,7 @@ The third rule for simply-typed $\lambda$-calculus will be the following:
 \tcgrule{es, ts}{
 \premise{}{\mathtt{[branch]}\; es : ts \; \mathbf{export} * \ldots}
 }{tops(es)}{tops}{}
-Note that the conclusion here is not a typing judgement; there is no problem: we are basically proving a theorem and our language is not limited to a single predicate ``:''. The premise contains a \code{[branch]} modifier which denotes that it must be looked for by a independent sub-search procedure; the ellipsis \code{...} is a shorthand denoting list iteration: in our AST structure \code{tops} contains a list of children, so the \code{es} variable will iterate through it item-by-item.
+Note that the conclusion here is not a typing judgement; there is no problem: we are basically proving a theorem and our language is not limited to a single predicate ``:''. The premise contains a \code{[branch]} modifier which denotes that it must be looked for by a independent sub-search procedure; the ellipsis \code{...} is a shorthand denoting list iteration: in our AST structure \code{tops} contains a list of children, so the \code{es} variable will iterate through it item-by-item. The meaning of \textbf{export} directive will be explained later.
 
 The final step is to construct an initial set of rules, which are available at the beginning of the proof search.  We put all our rules there:
 \begin{verbatim}
@@ -295,7 +295,7 @@ Now we proceed to the polymorphic version of \textbf{let}. To complete the defin
     \premise{-(:_1 = x), +[\mathtt{let\_binding}[x]](\langle 1 : [\forall] \rangle)}{e : t}
 }{\mathbf{let}\;x = e'\;\mathbf{in}\;e : t}{let\_poly}{}
 
-Here $\langle 1 : [\forall] \rangle$ stands for ``extract the subproof of the first premise and quantify its inner variables universally''. These will be exactly $\widetilde{\alpha}$ --- the variables quantified in the type scheme $\forall \widetilde{\alpha}.s$. Note that the type scheme itself does not appear in the rule: we do not need to enrich our predicate language with universal quantification since it is successfully handled by the meta-theory. Why is the meta-theory designed in such a way that is serves exactly this purpose? The author of the original work gives a detailed explanation in the Section 4.1.3.3, to put it shortly: quantifying the free variables is a natural operation which makes a rule usable, and inner variables are the maximal set of variables which can be quantified without affecting soundness.
+Here $\langle 1 : [\forall] \rangle$ stands for ``extract the subproof of the first premise and quantify its inner variables universally''. These will be exactly $\widetilde{\alpha}$ --- the variables quantified in the type scheme $\forall \widetilde{\alpha}.s$. Note that the type scheme itself does not appear in the rule: we do not need to enrich our predicate language with universal quantification since it is successfully handled by the meta-theory. Why is the meta-theory designed in such a way that it serves exactly this purpose? The author of the original work gives a detailed explanation in the Section 4.1.3.3, to put it shortly: quantifying the free variables is a natural operation which makes a rule usable, and inner variables are the maximal set of variables which can be quantified without affecting soundness.
 
 \subsection{Recursion}
 
@@ -340,13 +340,13 @@ $$\begin{array}{cc}
 \tcgrule{}{}{\mathtt{bind\_group}(\mbox{\tt []})}{}{}
 \end{array}$$
 
-Then, the \code{let} rule will look like this:
+Then, the \code{let} rule will look like this (by $???$ we deonte parts of the rule which will be refined later):
 \tcgrule{bs,e,t}{
 \premise{}{\mathtt{bind\_group}(bs)}
     \premise{+[???](\langle ??? : [\forall] \rangle)}{e : t}
 }{\mathbf{let}\;bs\;\mathbf{in}\;e : t}{}{}
 
-The question marks indicate that by now we do not know what to extract from the premise and what to compose it with. Indeed, what we did in the previous example was extracting a subproof which ended with a typing judgement $e' : s$, but here the premise is not a typing judgement, judgements are ``hidden'' in its proof:
+By now we did not show what to extract from the premise and what to compose it with (by forward application). Indeed, what we did in the previous example was extracting a subproof which ended with a typing judgement $e' : s$, but here the premise is not a typing judgement, judgements are ``hidden'' in its proof:
 %
 \tcgrule{}{
 \begin{array}{cl}
