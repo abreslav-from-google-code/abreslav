@@ -38,7 +38,7 @@ $$%
 \maketitle
 
 \begin{abstract}
-	This report presents \Tcg{}, a system for generating type checkers from declarative specifications (developed by H. Gast in his PhD thesis in 2004). The system models type checking process as a proof search for typing judgements. It is expressive enough to describe type systems of different kinds of programming languages: from simply-typed $\lambda$\mbox{-}calculus to object-oriented imperative languages. We illustrate the usage of the system by developing a type checker specification for the \textsc{MiniML} language, which captures the key features of ML, including type inference, polymorphic definitions and mutual recursion. 
+	This report presents \Tcg{}, a system for generating type checkers from declarative specifications (developed by H. Gast in his PhD thesis in 2004). The system models type checking process as a proof search for typing judgements. It is expressive enough to describe type systems of different kinds of programming languages: from simply-typed $\lambda$\mbox{-}calculus to object-oriented imperative languages. The usage of the system is illustrated with a type checker specification for the \textsc{MiniML} language, which captures the key features of ML, including type inference, polymorphic definitions and mutual recursion. 
 \end{abstract}
 
 \section{Introduction}
@@ -55,11 +55,12 @@ This report is based on a Ph.D. thesis by H. Gast ``A Generator for Type Checker
 
 We use types in programming languages to enforce certain properties of our programs at compile time. Types themselves (provided as annotations or inferred) can be thought of as statements about those properties, which the compiler (to be precise, the type checker subsystem of the compiler) ensures in some way.
 
-In \Tcg{} the type checking process is modeled as a search for explicit proofs of statements associated with an Abstract Syntax Tree (AST) of a program. The proofs are built with respect to inference rules specified by a user; in fact, the rules form the core part of a declarative specification of a type system in \Tcg{}. This approach is, of course, related to the Curry-Howard correspondence, but only in a broad sense: \Tcg{} builds proofs using the AST structure but necessarily not strictly according to it. 
+In \Tcg{} the type checking process is modeled as a search for explicit proofs of statements associated with an Abstract Syntax Tree (AST) of a program. The proofs are built with respect to inference rules specified by a user; in fact, the rules form the core part of a declarative specification of a type system in \Tcg{}. This approach is, of course, related to the Curry-Howard correspondence, but only in a broad sense: \Tcg{} builds proofs using the AST structure but not necessarily strictly according to it. 
 
 A language of types used in \Tcg{} is limited only by very general requirements like having most general unifiers (for formal definitions see Chapter 2 of \cite{Tcg}). Strictly speaking, we cannot always identify a type within a \Tcg{} statement, since a \emph{typing relation} ($e : t$) does not have to be present in it. The types, where present, may have almost arbitrarily complicated structure. This structure, as well as the structure of proofs, is described by \emph{typing rules} (specified by a user) which are basically inference rules of a proof system. 
 
-Proofs are constructed by a procedure based on a depth-first backtracking search, which is basically a backwards reasoning facilitated by a sound set of operations over proofs which the user may trigger by referring to them in the typing rules (the proof structure along with the operations are formally described in Chapter 2 of \cite{Tcg}).
+A generic typing rule consists of a set of universally quantified \emph{variables}, a list of \emph{premises}, a \emph{conclusion} and a list of \emph{parameters}: 
+\tcgrule{variables}{premise_1 \quad \dots \quad premise_n}{conclusion}{rule\_name}{parameters}
 
 Beside the typing rules themselves, a \Tcg{} specification describes
 \begin{itemize}
@@ -85,7 +86,11 @@ At runtime (Figure 2) the parser builds an AST and collects associated goals to 
 \caption{The \Tcg{} Type Checker at Run Time}
 \end{figure}
 
-In this report we mainly illustrate the usage of \Tcg{} by giving examples of typing rules (aiming at implementing a type checker for the \textsc{MiniML} language \cite{MiniML}).
+The basic proof search works roughly as follows: it starts with an \emph{initial goal} (see Figure 2), a term which has to be proven; then, it looks for a typing rule which conclusion unifies with the goal; if such a rule exists, it is \emph{instantiated}: the quantified variables are bound and the rule application marks a node in a proof tree, the premises of the rule become new goals to be proven. If for some goal there's no rule applicable, the procedure backtracks. 
+
+This process basically implements a backwards reasoning with respect to the inference rules. To make the procedure more efficient and powerful, \Tcg{} provides a number of extensions to it, such as passing parameters to rules, which the user may trigger by referring to them explicitly in the rule definitions (these techniques are illustrated below). The formal proof calculus which provides a theoretical foundation for the proof search is described in Chapter 2 of \cite{Tcg}.
+
+In this report we mainly illustrate the usage of \Tcg{} by giving examples of typing rules (aiming at implementing a type checker for the \textsc{MiniML} language \cite{MiniML} as it is done in Chapter 4 of \cite{Tcg}).
 Since \Tcg{} rules include proof search instructions, the same set of examples illustrates the main techniques used to direct the proof construction. Formal definitions of the rule language are given in Chapter 3 of \cite{Tcg}.
 
 
@@ -102,7 +107,7 @@ file: top_wrap EOF {! run ~save:
 
 The arguments passed to the \code{run} command deal with saving results and are irrelevant for our discussion.
 
-The rest of this section follows the logic and structure of the Chapter 4 of the original work \cite{Tcg}, which studies applications of \Tcg{}. 
+The rest of this section presents the case study given in Chapter 4 of the original work \cite{Tcg}. 
 
 \subsection{Simply-Typed $\lambda$-Calculus}
 
@@ -152,9 +157,9 @@ tops(
 
 We will refer to pairs of the form
 $$term : type$$
-as \emph{typing judgements}, where $term$ is an AST subtree and $type$ is a term which structure is defined by typing rules. The typing rules are used by \Tcg{} to construct proofs of typing judgements, which are basically trees where the proven judgement is a root and all the edges are \emph{properly} labeled with rules (what ``properly'' means will be explained later). 
+as \emph{typing judgements}, where $term$ is an AST subtree and $type$ is a term structured according to typing rules. The typing rules are used by \Tcg{} to construct proofs of typing judgements, which are basically trees where the proven judgement is a root and all the edges are \emph{properly} labeled with rules (what ``properly'' means will be explained later). 
 
-A generic typing rule consists of a set of universally quantified \emph{variables}, a list of \emph{premises}, a \emph{conclusion} and a list of \emph{parameters}. In \Tcg{}'s concrete syntax it is written like this:
+As we said before, a generic typing rule consists of a set of universally quantified \emph{variables}, a list of \emph{premises}, a \emph{conclusion} and a list of \emph{parameters}. In \Tcg{}'s concrete syntax it is written like this:
 \begin{verbatim}
 rule apply
   forall(f,e,s,t)
@@ -241,7 +246,7 @@ For the monomorphic version of let expression (\code{let x = e in e'}) it is suf
 
 In case of polymorphism, which means that $x$ may be typed with $\forall \widetilde{\alpha}.s$, this approach will not work directly, since we need to quantify all the \emph{inner variables} of the type scheme $s$, which are the variable which appear freely in the proof of $e' : s$ and do not appear in other parts of the proof tree. The operators presented by now do not allow to do this, so \Tcg{} introduces more tools which are expressive enough to cover it (and much more): \emph{rule extraction} and \emph{forward application}. To illustrate these techniques, we will first reformulate the above rule \code{mono\_let} and then extend it to a polymorphic version.
 
-Rule extraction basically just takes a (possibly incomplete) subproof and turns it into a new rule: the root of the subproof becomes a conclusion, and the leafs become premises. If the subproof was complete, then there will be no premises in the rule (all the premises will be empty). This operation corresponds to the idea of memorizing subproofs as lemmata and re-using them in different parts of the proof. Thus we are going to extract a proof of $e' : s$ and then use it in the proof for the second premise (and later for the proof of $\forall x : \widetilde{\alpha}.s$).
+Rule extraction basically takes a (possibly incomplete) subproof and turns it into a new rule: the root of the subproof becomes a conclusion, and the leafs become premises. If the subproof was complete, then there will be no premises in the rule (all the premises will be empty). This operation corresponds to the idea of memorizing subproofs as lemmata and re-using them in different parts of the proof. Thus we are going to extract a proof of $e' : s$ and then use it in the proof for the second premise (and later for the proof of $\forall x : \widetilde{\alpha}.s$).
 
 By now we can easily prove $e' : s$, but what we need for the second premise is $x : s$. This is where forward application comes into the stage: it allows to combine two rules into one if the premise of the second rule unify with the conclusion of the first one.
 $$
