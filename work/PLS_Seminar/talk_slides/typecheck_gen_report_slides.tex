@@ -1,8 +1,17 @@
-\documentclass[a4paper,12pt]{article}
+\documentclass[screen]{beamer}
+\usepackage{listings}
+\usepackage{color}
+\usepackage{bold-extra}
+\usepackage{wasysym}
+\usepackage{beamerthemesplit}
+\usepackage{graphicx}
+\usetheme{default}
+
 \usepackage{underscore}
 \usepackage{ifthen}
 \usepackage{amsmath}
 \usepackage{graphicx}
+\usepackage{url}
 
 \newcommand{\Tcg}{\textsc{Tcg}}
 \newcommand{\code}[1]{\texttt{#1}}
@@ -30,26 +39,35 @@ $$%
 $$%
 }
 
-\title{A report on ``A Generator for Type Checkers'' by H. Gast}
+\title{A Generator for Type Checkers}
+\subtitle{A report on the PhD thesis by H. Gast (2004)}
 \author{Andrey Breslav}
+\institute{ITMO University, St. Petersburg / University of Tartu}
+
 
 \begin{document}
 
-\maketitle
+\frame{\titlepage}
 
-\begin{abstract}
-	This report presents \Tcg{}, a system for generating type checkers from declarative specifications (developed by H. Gast in his PhD thesis in 2004). The system models type checking process as a proof search for typing judgements. It is expressive enough to describe type systems of different kinds of programming languages: from simply-typed $\lambda$\mbox{-}calculus to object-oriented imperative languages. The usage of the system is illustrated with a type checker specification for the \textsc{MiniML} language, which captures the key features of ML, including type inference, polymorphic definitions and mutual recursion. 
-\end{abstract}
+\begin{frame}[t,fragile]
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\frametitle{A workflow of a compiler}%
 
-\section{Introduction}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\end{frame}
 
-Tools for generating parsers from different types of context-free grammars have been available for decades. They serve for automating the routine task of developing a parser and make it less error-prone by working with high-level specifications, which are (in most cases, partially) declarative and checkable for consistence.
+\begin{frame}[t,fragile]
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\frametitle{Workflow of \Tcg{}}%
 
-However, a context-free syntax does not capture all the features of a programming language. There remains the ``non-context-free syntax'' or ``static semantics'' that is checked by hand-written code. Since the type theory does not seem underdeveloped compared to automata theory, we should expect availability of type checker generators as well as parser generators. And these tools might be a big advantage for implementing non-context-free static checks.
+\begin{figure}[htp]
+\centering
+\includegraphics[width=.7\textwidth]{../generator}
+\caption{The \Tcg{} Generator}
+\end{figure}
 
-This report is based on a Ph.D. thesis by H. Gast ``A Generator for Type Checkers'' \cite{Tcg}. Chapter 5 of the thesis examines the related work in detail, and we will not go into it here. The only thing we have to mention is that there were attempts to create such tools before, but most of them suffer from being more of domain-specific \emph{programming} languages than \emph{declarative} specification languages. The \textsc{Type Check Generator} (\Tcg{}) tool described in the thesis makes a significant advance towards the declarative style.
-
-
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\end{frame}
 
 \section{Approach Overview}
 
@@ -74,7 +92,7 @@ At generation time (Figure 1) the translator produces a parser and an initial co
 
 \begin{figure}[htp]
 \centering
-\includegraphics[width=.7\textwidth]{generator}
+\includegraphics[width=.7\textwidth]{../generator}
 \caption{The \Tcg{} Generator}
 \end{figure}
 
@@ -82,7 +100,7 @@ At runtime (Figure 2) the parser builds an AST and collects associated goals to 
 
 \begin{figure}[htp]
 \centering
-\includegraphics[width=.7\textwidth]{runtime}
+\includegraphics[width=.7\textwidth]{../runtime}
 \caption{The \Tcg{} Type Checker at Run Time}
 \end{figure}
 
@@ -422,5 +440,14 @@ A major disadvantage which may prevent this approach from being used in practice
 	\bibitem[LP03]{Tinker} M. Levin and B. Pierce. TinkerType: A language for playing with formal systems. \textit{Journal of Functional Programming}, 13(2), March 2003.
 	\bibitem[P94]{Isabelle} L. Paulson. Isabelle – A Generic Theorem Prover. \textit{Number 828 in Lecture Notes in Computer Science}. Springer-Verlag, Berlin Heidelberg, 1994.
 \end{thebibliography}
-\end{document}
 
+
+\frame{
+	\frametitle{The original work}
+
+	Holger Gast, \emph{The Generator for Type Checkers}, University~of~T\"ubingen, 2004
+
+	\footnotesize\url{http://www-pu.informatik.uni-tuebingen.de/users/gast/tcg.html}
+}
+
+\end{document}
