@@ -139,7 +139,7 @@ For example, a textual representation of the expression
 $$(\lambda f.\lambda x. f\; x)\; g\; y$$
 will be 
 \begin{center}
-\code{(\textbackslash f.\textbackslash x.f x) g x},
+\code{(\textbackslash f.\textbackslash x.f x) g y},
 \end{center}
 and an AST constructed from it is%
 \begin{verbatim}
@@ -149,8 +149,8 @@ tops(
             lambda(id[f], 
                 lambda(id[x], 
                     apply(id[f], id[x]))),
-            g),
-        x)
+            id[g]),
+        id[y])
     ::[]
 )
 \end{verbatim}
@@ -199,7 +199,7 @@ The rule \code{apply} mentioned above has no context modifiers, thus in tree-lik
 \tcgrule{f, e, s, t}{
     \premise{}{f : s \rightarrow t}
     \premise{}{e : s}
-}{f e : t}{apply}{}
+}{f\,e : t}{apply}{}
 
 The third rule for simply-typed $\lambda$-calculus will be the following:
 \tcgrule{es, ts}{
