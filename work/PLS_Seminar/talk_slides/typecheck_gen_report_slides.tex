@@ -318,6 +318,158 @@ environment apply,lambda,tops
 \end{frame}
 
 \frame{
+	More proof demonstration
+}
+
+\begin{frame}[fragile]
+	\frametitle{A simple extension: Constants}
+	Syntax:
+\begin{verbatim}
+    INT     --> int[$1]
+  | "false" --> bool["false"]
+  | "true"  --> bool["true"]
+\end{verbatim}
+Typing rules:
+\tcgrule{i}{}{\mathtt{int[}i\mathtt{]}:\mathtt{int}}{int\_const}{}
+\tcgrule{i}{}{\mathtt{bool[}i\mathtt{]}:\mathtt{bool}}{bool\_const}{}
+\end{frame}
+
+\begin{frame}[fragile]
+	\frametitle{Built-in constructs}
+Built-in function:
+	\tcgrule{}{}{add : int \rightarrow int \rightarrow int}{add\_function}{}
+Conditional operator:
+\tcgrule{e_1,e_2,e_3,t}{
+\premise{}{e_1 : bool}
+\premise{}{e_2 : t}
+\premise{}{e_3 : t}
+}{\mathbf{if}\; e_1\; \mathbf{then}\; e_2\; \mathbf{else}\; e_3\; \mathbf{endif} : t}{if\_expr}{}
+\end{frame}
+
+\frame{
+	\frametitle{Monomorphic \textbf{let}}
+
+	Notation:
+		\begin{center}\code{let x = e in e'}\end{center}
+	Meaning:
+		\begin{center}$(\lambda x.e')\,e$\end{center}
+	Typing rule:
+\tcgrule{x,e,e',s,t}{
+\premise{}{e' : s}
+\premise{-(:_1 = x), +[x : s]}{e : t}
+}{\mathbf{let}\;x = e'\;\mathbf{in}\;e : t}{mono\_let}{}	
+}
+
+\frame{
+	\frametitle{Rule extraction}
+	
+
+}
+
+\frame{
+	\frametitle{Forward application}
+	
+$$
+\left.\begin{array}{r}
+	\tcgrule{}{\ldots}{e' : s}{}{}\\
+	+\hspace{14pt}\\
+	\tcgrule{e,t}{e : t}{x : t}{}{}
+\end{array}
+\right\}
+\Rightarrow 
+\begin{array}{l}
+	\tcgrule{}{\ldots}{x : t}{}{}
+\end{array}
+$$
+}
+
+\frame{
+	\frametitle{Notation for forward application}
+$$rule\_expression(rule\_expressions)$$
+where each rule expression may be 
+\begin{itemize}
+	\item an inline rule (e.g., $x : s$), 
+	\item a reference (e.g., $\mathtt{let\_binding}[x]$), 
+	\item a rule extracted from the subproof of the premise number $i$ (e.g., $\langle 1 \rangle$, the premise must stay to the left of the current premise),
+	\item the \textbf{environment} which refers to all the rules present in the context.
+\end{itemize}
+}
+
+\frame{
+	\frametitle{Reformulation of monomorphic \textbf{let}}
+	
+\tcgrule{x,e,e',s,t}{
+    \premise{}{e' : s}
+    \premise{-(:_1 = x), +[\mathtt{let\_binding}[x]](\langle 1 \rangle)}{e : t}
+}{\mathbf{let}\;x = e'\;\mathbf{in}\;e : t}{let'}{}
+
+Auxiliary rule:
+\tcgrule{e,t}{\premise{}{e : t}}{\mathbf{y} : t}{let\_binding}{y}
+
+}
+
+\frame{
+	\frametitle{Polymorphic \textbf{let} and recursion}
+
+\tcgrule{x,e,e',s,t}{
+    \premise{}{e' : s}
+    \premise{-(:_1 = x), +[\mathtt{let\_binding}[x]](\langle 1 : [\forall] \rangle)}{e : t}
+}{\mathbf{let}\;x = e'\;\mathbf{in}\;e : t}{let\_p}{}
+\uncover<2>{
+Recursion:
+\tcgrule{x,e,e',s,t}{
+    \premise{+[x : s]}{e' : s}
+    \premise{-(:_1 = x), +[\mathtt{let\_binding}[x]](\langle 1 : [\forall] \rangle)}{e : t}
+}{\mathbf{let}\;x = e'\;\mathbf{in}\;e : t}{let\_r}{}
+}
+}
+
+\begin{frame}[fragile]
+	\frametitle{Parallel bindings}
+	Syntax:
+\begin{verbatim}
+exp: "let" bind_group "in" exp    --> let($2,$4)
+
+bind_group: bind                  --> $1 :: []
+          | bind "and" bind_group --> $1 :: $3
+
+bind: ID "=" exp                  --> bind(id[$1],$3)
+\end{verbatim}
+
+Typing:
+\tcgrule{}{
+    \premise{}{typings\; of\; bindings}
+    \premise{+[\mathtt{let\_binding}[x]](\langle bindings : [\forall] \rangle)}{e : t}
+}{\mathbf{let}\;bindings\;\mathbf{in}\;e : t}{}{}
+
+\end{frame}
+
+\frame{
+	\frametitle{Processing lists}
+Does not work:
+\tcgrule{}{
+    \premise{}{typings\; of\; bindings}
+    \premise{+[\mathtt{let\_binding}[x]](\langle bindings : [\forall] \rangle)}{e : t}
+}{\mathbf{let}\;bindings\;\mathbf{in}\;e : t}{}{}
+
+Recursive implementation:
+$$\begin{array}{cc}
+\tcgrule{}{
+    {\vdash head}
+    \hspace{15pt}
+    {\vdash \mathtt{bind\_group}(tail)}
+}{\mathtt{bind\_group}(head\;\mbox{\tt ::}\;tail)}{}{}
+&
+\tcgrule{}{}{\mathtt{bind\_group}(\mbox{\tt []})}{}{}
+\end{array}$$
+Use for parallel bindings:
+\tcgrule{bs,e,t}{
+\premise{}{\mathtt{bind\_group}(bs)}
+    \premise{+[???](\langle ??? : [\forall] \rangle)}{e : t}
+}{\mathbf{let}\;bs\;\mathbf{in}\;e : t}{}{}
+}
+
+\frame{
 	\frametitle{The original work}
 
 	Holger Gast, \emph{The Generator for Type Checkers}, University~of~T\"ubingen, 2004
