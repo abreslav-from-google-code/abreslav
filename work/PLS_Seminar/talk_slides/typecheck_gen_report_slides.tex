@@ -273,6 +273,50 @@ Context modifiers:
 \end{columns}
 \end{frame}
 
+\begin{frame}[fragile]
+	\frametitle{The search procedure}
+A rule for the root of the tree:
+\tcgrule{es, ts}{
+\premise{}{\mathtt{[branch]}\; es : ts \; \mathbf{export} * \ldots}
+}{tops(es)}{tops}{}
+Initial context:
+\begin{verbatim}
+environment apply,lambda,tops
+\end{verbatim}
+\vspace{-1.75cm}
+\begin{center}
+	\begin{tikzpicture}[
+		level distance=.75cm,
+		sibling distance=3cm,
+%		level 1/.style={sibling distance=3cm},
+%		level 2/.style={sibling distance=1cm}		
+		] 
+		\node {tops}
+		child {node {::}
+		    child {node {apply}
+		    	child {node {apply}
+				child {node {lambda}
+					child {node {id[f]}}
+					child {node {lambda}
+						child {node {id[x]}}
+						child {node {apply}
+							child {node {id[f]}}
+							child {node {id[x]}}
+						}
+					}
+				}
+				child {node {id[g]}}
+		    	}
+			child {node {id[y]}}
+		    }
+		    child {node {[]}}
+		}
+		;
+                \end{tikzpicture}
+\end{center}
+
+\end{frame}
+
 \frame{
 	\frametitle{The original work}
 
