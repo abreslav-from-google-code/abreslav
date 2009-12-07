@@ -357,7 +357,7 @@ By now we did not show what to extract from the premise and what to compose it w
 \end{array}
 }{\mathbf{let}\;bs\;\mathbf{in}\;e : t}{}{}
 
-\Tcg{} provides a generalized for of rule extraction which is useful here: the rules may be marked with ``\textbf{export} \emph{label}'', the label will be put on the proof tree nodes; the extracting operator may be directed to extract not the whole tree but only the subtrees marked with a certain label. Not all the label in a proof tree are visible from its root, but only those which were \emph{propagated} up the tree. If a node in the tree is marked with a special label ``$*$'', it propagates labels of all the child nodes up. To be able to extract all the needed typing judgements from the proof of $\mathtt{bind\_group}(bs)$, we can do the following:
+\Tcg{} provides a generalized form of rule extraction which is useful here: the rules may be marked with ``\textbf{export} \emph{label}'', the label will be put on the proof tree nodes; the extracting operator may be directed to extract not the whole tree but only the subtrees marked with a certain label. Not all the labels in a proof tree are visible from its root, but only those which were \emph{propagated} up the tree. If a node in the tree is marked with a special label ``$*$'', it propagates labels of all the child nodes up. To be able to extract all the needed typing judgements from the proof of $\mathtt{bind\_group}(bs)$, we can do the following:
 $$\begin{array}{cc}
 \tcgrule{}{
     {\vdash head\;\mathbf{export}\; \mathtt{bind}}
@@ -377,7 +377,7 @@ By doing this, we label every typing judgement from $bs$ and propagate these lab
 The extraction operator is now $\langle 1 : \mathtt{bind} [\forall] \rangle$, which will extract from the proof of the first premise all the subproofs labeled with \texttt{bind} and universally quantify the inner variables \emph{of the whole proof} of the first premise (this ``over-quantification'' is safe). Note that the variable $ts$ is free, so it will be quantified. The auxiliary rule \code{exp_binding} is the following:
 \tcgrule{x,e,t}{\premise{}{x = e : t}}{x : t}{exp\_binding}{}
 
-We also need a rule to be able to rove judgements of the form $x = e : t$. It is straightforward:
+We also need a rule to be able to prove judgements of the form $x = e : t$. It is straightforward:
 \tcgrule{x,e,t}{\premise{}{e : t}}{x = e : t}{binding}{}
 
 \subsection{Mutual Recursion}

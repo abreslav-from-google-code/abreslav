@@ -470,6 +470,104 @@ Use for parallel bindings:
 }
 
 \frame{
+	\frametitle{}
+
+\tcgrule{bs,e,t}{
+\premise{}{\mathtt{bind\_group}(bs)}
+    \premise{+[???](\langle ??? : [\forall] \rangle)}{e : t}
+}{\mathbf{let}\;bs\;\mathbf{in}\;e : t}{}{}
+
+\tcgrule{}{
+\begin{array}{cl}
+	e'_1 : s_1\;\dots\;e'_n : s_n&\\
+	\vdots&\\
+	\vdash {\mathtt{bind\_group}(bs)}&\;\;
+    \premise{\ldots(\langle proofs\; for\; e_1\ldots e_n : [\forall] \rangle)}{e : t}
+\end{array}
+}{\mathbf{let}\;bs\;\mathbf{in}\;e : t}{}{}
+
+}
+
+\frame{
+	\frametitle{Exporting labels}
+The goal:
+\tcgrule{}{
+\begin{array}{cl}
+	e'_1 : s_1\;\dots\;e'_n : s_n&\\
+	\vdots&\\
+	\vdash {\mathtt{bind\_group}(bs)}&\;\;
+    \premise{\ldots(\langle proofs\; for\; e_1\ldots e_n : [\forall] \rangle)}{e : t}
+\end{array}
+}{\mathbf{let}\;bs\;\mathbf{in}\;e : t}{}{}
+
+A solution:
+$$\begin{array}{cc}
+\tcgrule{}{
+    {\vdash head\;\mathbf{export}\; \mathtt{bind}}
+    \hspace{5pt}
+    {\vdash {bind\_group}(tail)\;\mathbf{export}\;*}
+}{{bind\_group}(head\;\mbox{\tt ::}\;tail)}{}{}
+&
+\tcgrule{}{}{{bind\_group}(\mbox{\tt []})}{}{}
+\end{array}$$
+
+A shorthand:
+
+\tcgrule{bs,ts,e,t}{
+\premise{}{bs : ts \;\mathbf{export}\; \mathtt{bind} \; \ldots}
+\premise{+[\mathtt{exp\_binding}](\langle 1 : \mathtt{bind} [\forall] \rangle)}{e : t}
+}{\mathbf{let}\;bs\;\mathbf{in}\;e : t}{}{}
+
+}
+
+\frame{
+	\frametitle{Parallel bindings. Completed}
+\tcgrule{bs,ts,e,t}{
+\premise{}{bs : ts \;\mathbf{export}\; \mathtt{bind} \; \ldots}
+\premise{+[\mathtt{exp\_binding}](\langle 1 : \mathtt{bind} [\forall] \rangle)}{e : t}
+}{\mathbf{let}\;bs\;\mathbf{in}\;e : t}{}{}
+
+\tcgrule{x,e,t}{\premise{}{x = e : t}}{x : t}{exp\_binding}{}
+
+\tcgrule{x,e,t}{\premise{}{e : t}}{x = e : t}{binding}{}
+}
+
+\begin{frame}[fragile]
+	\frametitle{Mutual recursion}
+	Syntax:
+\begin{verbatim}
+  letrec 
+    even = \x. if (eq_int x) 0 then 
+                 true 
+               else odd ((sub x) 1)
+  and 
+    odd = \x. if (eq_int x) 0 then 
+                 false 
+              else even ((sub x) 1)
+  in even 5
+\end{verbatim}
+
+\end{frame}
+
+\frame{
+	\frametitle{Typing rules for mutual recursion}
+	{\small%
+\tcgrule{bs,e,t,x}{
+\premise{}{bind\_group(bs)\;\mathbf{export}*}
+\premise{-(:_1 = x \rightarrow :_1 = x); +[\mathtt{exp\_binding}](\langle 1 : \mathtt{bind} [\forall] \rangle)}{}
+\\{e : t}
+}{\mathbf{letrec}\;bs\;\mathbf{in}\;e : t}{letrec}{}
+
+\tcgrule{bs,ts,x}{
+\premise{}{bs : ts \;\mathbf{export}\;\mathtt{fwd}\;\ldots}
+\premise{-(:_1 = x \rightarrow :_1 = x); +[\mathtt{exp\_binding}](\langle 1 : \mathtt{fwd} \rangle)}{}
+\\{bs : ts\;\mathbf{export}\;\mathtt{bind}\;\ldots}
+}{{bind\_group}(bs)}{bind\_group}{}
+}
+	
+}
+
+\frame{
 	\frametitle{The original work}
 
 	Holger Gast, \emph{The Generator for Type Checkers}, University~of~T\"ubingen, 2004
