@@ -1,0 +1,12 @@
+Em | ~ $
+dim2 -> dim1
+Em | ~ $
+dim2 -> dim1
+Em | ~
+dim2 -> dim4dim4 -> dim5 $
+Em | ~ $
+dim2 -> dim1
+Em | ~ $
+dim2 -> dim1
+Em | ~
+dim2 -> dim4 -> dim1 -> Em
