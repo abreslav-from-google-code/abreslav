@@ -4,7 +4,7 @@
 \pagenumbering{none}
 
 \newcommand{\AMSE}{\href{http://amse.ru/about.php}{AMSE}}
-\newcommand{\SwiftTeams}{\href{http://swiftteams.com}{SwiftTeams}}
+\newcommand{\SwiftTeams}{\href{http://swiftteams.com}{\hyphenation{SwiftTeams}{SwiftTeams}}}
 \newcommand{\OpenWay}{\href{http://openwaygroup.com}{OpenWay}}
 \newcommand{\JetBrains}{\href{http://jetbrains.com}{JetBrains}}
 \newcommand{\DoRa}{\href{http://www.archimedes.ee/amk/File/DoRa_PROGRAMM_eng.doc}{DoRa}}
@@ -14,8 +14,9 @@
 \newcommand{\FASIE}{\href{http://www.fasie.ru}{FASIE Foundation}}
 \newcommand{\DigDes}{\href{http://www.digdes.com/}{Digital Design}}
 \newcommand{\Borland}{\href{http://borland.com}{Borland Labs Inc.}}
+\newcommand{\STACC}{\href{http://stacc.ee}{STACC}}
 \newcommand{\bl}[1]{
-\begin{tabular}[t]{lp{.7\textwidth}}
+\begin{tabular}[t]{lp{.77\textwidth}}
 $\circ$& #1 \\
 \end{tabular}
 }
@@ -26,7 +27,7 @@ $\circ$& #1 \\
 \subsection*{Contact Information}
 \begin{tabular}{rll}
 	Address &\hspace{10pt}& Udarnikov pr., 27-2-237, 195279 Saint-Petersburg, Russia\\
-	Phone (mobile) && +7 921 928 67 68 \\
+	Phone (mobile) && +7 921 928 67 68 or +372 581 12 831\\
 	E-Mail && abreslav@gmail.com \\
 	Home page && \url{http://abreslav.googlepages.com}\\
 \end{tabular}
@@ -40,7 +41,7 @@ $\circ$& #1 \\
 	&&Defence (planned): not later than September 2010\\
 	&&Topic: \textit{Automatically Derived Languages and Applications to DSLs with Aspects}\\
 	&&Our goal is to provide a formal framework for automatically deriving infrastructural functionality 
-	  from specifications of domain-specific languages.
+	  from specifications of domain-specific languages (DSLs).
 	  As an application, we consider derivation of languages of typed macros (templates) and structural patterns
 	  which we use to implement parameterized modules and aspect-oriented features in DSLs. \\
 	&&\\
@@ -50,25 +51,29 @@ $\circ$& #1 \\
 	\raggedleft{2007} && Master's Degree with Honors in Applied Mathematics and Informatics, \\
 	&&Computer Technology Department, ITMO, GPA 4.90/5.0\\
 	&&Thesis: \textit{DSL Development Based on Target Meta-models}\\
-	&&The main contribution is a language that allows one to declaratively describe an abstract syntax tree (AST) of a 
-	  DSL as a view (in terms of Model-View architecture) of its target meta-model. These descriptions are
-	  used as inputs for a generator of translators from mechanically created ASTs trees to target models 
-	  (including name resolution). \\
+	&&The main contribution is a declarative language for describing an abstract syntax tree (AST) of a 
+	  DSL as a view of its target meta-model. From these descriptions we generate translators. \\
 	&&\\
 	\raggedleft{2005} && Bachelor's Degree with Honors in Applied Mathematics and Informatics, \\
 	&&Computer Technology Department, ITMO, GPA 4.96/5.0\\
 	&&Thesis: \textit{Automated Generation of User Interfaces from Domain Models}\\
 \end{tabular*}
-
-\subsection*{Research Interests and Experience}
+\subsection*{Research Interests}
 \begin{itemize}
-	\item Software Modeling and Generative Programming
-	\item Domain-Specific Languages (Textual Syntax) 
-	\item Type Systems of Programming Languages
+	\setlength{\itemsep}{0pt}
+	\item Declarative specifications of Domain-Specific Languages
+		\begin{itemize}
+			\item Reuse and modularity of grammar-based specifications
+			\item Extensibility of textual languages
+		\end{itemize}
+	\item Formal semantics of transformations between text and models
+	\item Type systems for software languages
 \end{itemize}
 
+
+
 \subsection*{Teaching}
-\begin{tabular}[t]{ r l p{370pt} }
+\begin{tabular}[t]{ r l p{395pt} }
 	2006 -- 2009 && {\it Lecturer} at ITMO University and \AMSE{}\\%
 	Courses: && \bl{Software Design}\\
 		&& \bl{Introduction to Programming}\\
@@ -82,27 +87,24 @@ $\circ$& #1 \\
 		&& \bl{\textit{Extending JVM Instruction Set with Unchecked Method Calls for Speeding Up Execution on Mobile Platforms}}\\
 		&& \bl{\textit{Graph-based modelling, Generation and LTL$-$Verification of Data-Oriented User Interfaces}}\\
 		&&\\
-	summer 2008 && {\it Summer internship supervisor} at software companies: \OpenWay{} and \SwiftTeams{} / \JetBrains{} (as a part of \AMSE{} project)\\%
+	summer 2008 && {\it Summer internship supervisor} at software companies \OpenWay{} and \SwiftTeams{} / \JetBrains{} (as a part of \AMSE{} project)\\%
 		&&\\
 		 2003 -- 2009 && {\it Teacher of Informatics} at High School 239 (Lyceum with emphasis on Physics and Mathematics), Saint-Petersburg, Russia\\%
 \end{tabular}
 
 \subsection*{Software development}
-\noindent\textbf{Experience}\\
 \begin{tabular}{ r l p{395pt} }
-	2010 && STACC, R\verb & D Engineer in ``String-Embedded DSLs'' project. Working on static analyses of Java programs which generate other programs (i.e. SQL queries), applying methods from language and automata theory combined with static program analyses such as abstract interpretation.\\
-	2005 -- 2006 && Borland Labs, Inc., R\verb & D Engineer (Java developer) in Together for Eclipse project, MDA team: worked on QVT language implementation, Eclipse plug-in development and integration, EMF modeling, using QVT and XSL/OCL in generative programming samples. \\
+\multicolumn{3}{l}{\textbf{Experience}}\\
+	2010 && \STACC{}, R\verb & D Engineer in ``String-Embedded DSLs'' project. Working on static analyses of Java programs which generate other programs (i.e. SQL queries), applying methods from language and automata theory combined with static program analyses such as abstract interpretation.\\
+	2005 -- 2006 && \Borland{}, R\verb & D Engineer (Java developer) in Together for Eclipse project, MDA team: worked on QVT language implementation, Eclipse plug-in development and integration, EMF modeling, using QVT and XSL/OCL in generative programming samples. \\
 2004 -- 2005 && Freelance web development (PHP, MySQL).\\
 2003 && UI development (Delphi) for a suite for automatically planning routs for air photography.\\
+&&\\
+\multicolumn{1}{l}{\textbf{Skills}}
+&& Java, Scala, C++, Haskell, Pascal/Delphi, PHP, JavaScript, SQL, XML, XSLT/XPath, HTML/CSS, \LaTeX, Linux, Windows
 \end{tabular}
 
-\vspace{10pt}
-\noindent\textbf{Skills}\\
-\begin{tabular}{ r l p{395pt} }
-\qquad\qquad&& Java, Scala, C++, Haskell, Pascal/Delphi, PHP, JavaScript, SQL, XML, XSLT/XPath, HTML/CSS, \LaTeX, Linux, Windows
-\end{tabular}
-
-
+\newpage
 \subsection*{Grants and Scholarships}
 \begin{itemize}
 	\item \textit{\DoRa{} 5} scholarship for visiting PhD studies at University of Tartu from \textit{\ERDF{}} through \textit{\Archimedes{}}, 2009
@@ -123,6 +125,7 @@ $\circ$& #1 \\
 \begin{itemize}
 	\item Russian -- native
 	\item English -- fluent
+	\item Estonian -- basic
 \end{itemize}
 
 \subsection*{Publications}
