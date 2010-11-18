@@ -166,6 +166,13 @@
 % *** MATH PACKAGES ***
 %
 \usepackage[cmex10]{amsmath}
+\usepackage{amssymb}
+\usepackage{amsthm}
+
+\newtheorem{defn}{Definition}
+\newtheorem{lem}{Lemma}
+\newtheorem{thm}{Theorem}
+\newtheorem{exmp}{Example}[section]
 % A popular package from the American Mathematical Society that provides
 % many useful and powerful commands for dealing with mathematics. If using
 % it, be sure to load this package with the cmex10 option to ensure that
@@ -188,7 +195,9 @@
 
 % *** SPECIALIZED LIST PACKAGES ***
 %
-%\usepackage{algorithmic}
+\usepackage{algorithm}
+\usepackage{algorithmicx}
+\usepackage{algpseudocode}
 % algorithmic.sty was written by Peter Williams and Rogerio Brito.
 % This package provides an algorithmic environment fo describing algorithms.
 % You can use the algorithmic environment in-text or within a figure
@@ -339,6 +348,14 @@
 % to submit to, of course. )
 
 \usepackage{enumerate}
+\newcommand{\Hom}[2]{\mathit{Hom}(#1,#2)}
+\newcommand{\HImg}[1]{\mathit{Hom}(#1)}
+\newcommand{\seval}[3]{\mathit{seval}(#1,#2,#3)}
+\newcommand{\DefinedToBe}{\stackrel{\mathit{\cdot}}{=}}
+\newcommand{\terms}[1]{\mathcal{T}(#1)}
+\newcommand{\tclear}{\mathcal{T}}
+\newcommand{\iso}{\sim}
+\newcommand{\sols}[1]{\mathit{sols}(#1)}
 
 % correct bad hyphenation here
 \hyphenation{op-tical net-works semi-conduc-tor}
@@ -434,12 +451,10 @@ The abstract goes here.
 
 However, there is a fundamental limitation to many DSE approaches: They explore small subsets of possible architectures by varying a few system parameters. For example, a design space may be constructed by varying some details of a point design, such as the cache sizes of processors [] or the software implementations of FFTs []. The resulting design space contains a family of related point designs differing only along these predefined axes. This restricts optimization to a narrow range of variants derived from a particular point design. 
 
-In this paper we present a novel DSE approach that explores complex variations while supporting search-based optimization. Our approach works in the following way:
-\begin{enumerate}
-\item \textit{Define.} The design space is defined through constraints written in first-order logic extended with a fixpoint operator. The solutions to these constraints equals the design space. The engineer also provides a ranking function over points in the design space. 
-\item \textit{Sample.} Points in the design space are randomly sampled by composing a random sampling process with a \textit{satisfiability modulo theories} (SMT) solver. This provides a sampling procedure that, in practice, efficiently finds diverse points.
-\item \textit{Search.} Many points are sampled and ranked. Machine learning estimates those design choices that increase observed ranks, and then good design choices are converted back to first-order constraints. In the next round, variants exhibiting these choices are enumerated and ranked. The process continues to refine the design space as long as observed ranks correlate with estimates, and backtracks on design decisions otherwise.
-\end{enumerate}
+One way to overcome this limitation is by defining design spaces with more complex constraints; the solutions to these constraints equals the design space. Recent advances in constraint solvers can be utilized to efficiently enumerate points in the design space. This approach has been explored with the FORMULA specification language []. Here, the design space is defined through constraints written in first-order logic extended with a fixpoint operator. The efficient \text{satisfiability modulo theories} (SMT) solver is used to enumerate solitions.
+
+Ideally, an exploration algorithm should enumerate the points of a design space randomly with a uniform distribution; this (probabilistically) guarantees a diverse range of architectures are observed during an arbitrary run of the algorithm. Unfortunately, this goal is very difficult to achieve, because the solutions to a formula $\phi$ cannot be randomly picked. Instead, $\phi$ must be repeatedly \textit{solved} to discover its solutions. (This is in contrast to design spaces consisting of parameter ranges, where it is possible to uniformly sample the space.) Furthermore, efficient solvers, such as SAT/SMT solvers based on DPLL search, cannot be viewed as uniformly sampling the solution space. They employ carefully researched heuristics [] for finding the \textit{next} solution quickly using information about solutions already found. This means the solver may compute a long sequence of similar solutions, before producing another interesting point in the design space.
+
 
 We illustrate our approach with a case study where DSE explores different data paths of an embedded software architecture and different hardware platforms. The optimization problem takes into account performance estimates of CPU and bus utilization derived from discrete event simulation. The well-known technique of \textit{Naive Bayesian Learning} is employed to estimate the key design choices. 
 
@@ -454,11 +469,12 @@ The present work was motivated by a case study based on the Skinput project \cit
 
 The high-level structure of Skinput is the following: An array of sensors collect vibration amplitudes from the skin and pass this data forward to be classified as a certain gesture. First, a number of features such as average, standard deviation, FFT and center of masses of power spectra, are computed for every sensor. Then, these features are processed by an \mbox{SVM-based} classifier that determines the type of the gesture being observed.
 
-The abstraction we used to model such systems inherits the overall structure from Skinput: We view software as manipulating \emph{values} as inputs and outputs (these model Skinput's features), where some values can be \emph{primary} meaning that they are not computed inside the system (this implicitly models sensors). The values that constitute the output to the user are marked as \emph{target}. 
+The abstraction we use to model such systems inherits the overall structure from Skinput: We view software as manipulating \emph{values} as inputs and outputs (these model Skinput's features), where some values can be \emph{primary} meaning that they are not computed inside the system (this implicitly models sensors). The values that constitute the output to the user are marked as \emph{target}. 
 
 The software itself is modeled by \emph{programs} that relate input values to output ones. Programs rely on particular \emph{capabilities} of hardware, such as availability of certain instructions.
 
-For example, consider a program $Avg_{DIV}(\overrightarrow{x}, n)$ ($Avg$ stands for ``average'') that computes a value $\sum\limits_{i=0}^n x_i / n$ given two other values: vector $\overrightarrow{x}$ and its length $n$. Assume $Avg_{DIV}$ relies on a hardware implementation of devision; then it requires the following capabilities: $ADD$ and $JMP$ to compute a sum in a loop and $DIV$ to divide it by $n$. On the other hand, a program $Avg_{noDIV}$ that computes the same value but is designed for processors with no built-in division, would require capabilities needed to implement division using simpler instructions.
+\begin{exmp}[Average] Consider a program $Avg_{DIV}(\overrightarrow{x}, n)$ ($Avg$ stands for ``average'') that computes a value $\sum\limits_{i=0}^n x_i / n$ given two other values: vector $\overrightarrow{x}$ and its length $n$. Assume $Avg_{DIV}$ relies on a hardware implementation of devision; then it requires the following capabilities: $ADD$ and $JMP$ to compute a sum in a loop and $DIV$ to divide it by $n$. On the other hand, a program $Avg_{noDIV}$ that computes the same value but is designed for processors with no built-in division, would require capabilities needed to implement division using simpler instructions.
+\end{exmp}
 
 Hardware platform is modeled as a number of \emph{processors} communicating through \emph{media}. Every hardware element is characterized by its \emph{type}. Processor types specify capabilities the processors provide and medium types they can be connected on.
 
@@ -544,10 +560,157 @@ This specification allows two possible \emph{data paths} from $X$ to $Var(X)$: d
 
 The user provides the ``building blocks'' as a set of terms that is called a \emph{partial model}. Technically, this extends the set of predefined constraints: roughly speaking, it forces the designs to include the terms from the partial model. 
 
+\section{title}
+
+\subsection{Solving Design Spaces}
+We now introduce some notation to discuss constraint generation and solving. 
+\subsection{Data and Design Spaces}
+The input to a logic program is a finite set of data. The shape of this data is characterized by an algebraic signature, which we call the \textit{data signature}.
+\begin{defn}[Data Signature] The data signature $\Sigma$ is a structure:
+\begin{equation}
+\Sigma \DefinedToBe ( C, D, V ).
+\end{equation}
+\begin{enumerate}
+\item $C$ is a (possibly infinite) set of nullary function symbols called constants.
+\item $D$ is a finite set of non-nullary function symbols called data constructors.
+\item $V$ is an infinite set of nullary function symbols called variables.
+\end{enumerate}
+The sets $C$, $V$, and $D$ are pairwise disjoint.
+\end{defn}
+Let $\sigma,\sigma_1,\ldots$ range over members of $C$, $x,y,y_1,\ldots$ range over members of $V$, and $f,g,g_1,\ldots$ range over members of $D$. A $\Sigma$-\textit{term} is a sequence of function applications (respecting arity) and $\terms{\Sigma}$ is the set of all such terms (or even $\tclear$ when context is clear). Terms without variables are called \textit{ground terms}. The \textit{Herbrand Interpretation} of $\Sigma$ assumes every term stands for itself and no other. This is the interpretation we use for data terms. 
+
+\begin{exmp}[Directed Graphs] Consider the data signature:
+\begin{displaymath}
+\Sigma_G \DefinedToBe (v_0,v_1,v_2, v_3, e(,), V).
+\end{displaymath}
+where $C = \{v_0,v_1,v_2, v_3 \}$ is a finite set of vertex labels and $V$ is in arbitrary set of variables. A labeled directed graph $G$ over the vertices $C$ is a set of $\Sigma_G$-terms, such as the three-star below:
+\begin{displaymath}
+G_3 \DefinedToBe \{ e(v_0,v_1), e(v_0,v_2), e(v_0,v_3) \}.
+\end{displaymath}
+\end{exmp}
+\noindent Terms can encode relations, like the edge relation above, but can also directly represent recursive structures.
+\begin{exmp}[Binary Trees] This signature encodes unlabeled binary trees:
+\begin{displaymath}
+\Sigma_{BT} \DefinedToBe (nil, node(,), V)
+\end{displaymath}
+and this a small complete binary tree:
+\begin{displaymath}
+T \DefinedToBe \{ node(node(nil,nil),node(nil,nil)) \}.
+\end{displaymath}
+\end{exmp}
+
+Let $\Pi$ be a logic program, $q$ be a query defined in $\Pi$, and $X$ be a finite set of ground terms. Then $q$ evaluates to true on the input $X$ if and only if there is a derivation of $q$ using only the rules of $\Pi$ and $X$; $eval(\Pi,X,q)$ denotes this evaluation. The input $X$ can be viewed as a database of facts that are used by $\Pi$ to justify $q$. The set of all such solutions to $q$ forms a design space:
+\begin{equation}
+\sols{\Pi,q} \DefinedToBe \{ X \subseteq \tclear \ | \ eval(\Pi,X,q) \}.
+\end{equation}   
+Each point in the space is finite set of data carrying detailed information about an architecture. 
+
+\subsection{Symbolic Execution}
+One approach for finding solutions to the design space is by \textit{symbolic execution} of the logic program []. In this case, $\Pi$ is evaluated over an input set of non-ground terms $X$, such as:
+\begin{equation}
+X \DefinedToBe \{ e(x,y), e(y,z), e(z,x) \}.
+\label{ex:3cycle}
+\end{equation}
+During symbolic execution, a rule leading to a derivation of $q$ may encounter data terms containing variables. Whenever this occurs a constraint on the input variables is computed, which describes the values that can make the rule applicable. If symbolic execution terminates, then the result is a simpler existentially quantified formula $\psi$. For example,
+\begin{displaymath}
+\Pi \DefinedToBe \{ \ loop(a) \ :\!- \ e(a,a). \  \ hasLoop \ :? \ loop(a). \ \}
+\end{displaymath}
+Symbolic execution of $\Pi$ on $X$ for the $hasLoop$ query produces the formula:
+\begin{displaymath}
+\psi \DefinedToBe \exists x,y,z \ (x = y) \vee (y = z) \vee (x = z).
+\end{displaymath}
+We write $\seval{\Pi}{X}{q}$ the formula $\psi$ produced by symbolic execution.
+
+A solution to $\psi$ is a function $\nu$ from variables to ground terms, such that $\psi[x_i/\nu(x_i)]$ is true. The simplified form of $\psi$ allows it to be solved by state-of-the-art theorem provers, such as the satisfiability modulo theories (SMT) solver Z3[]. Importantly, the solutions to $\psi$ induce members of $\sols{\Pi,q}$, i.e. $X[x_i/\nu(x_i)] \in \sols{\Pi,q}$. Due to this correspondence, we write $\sols{\psi} \subseteq \sols{\Pi,q}$.
+For example, one solution to $\seval{\Pi}{X}{hasLoop}$ is:
+\begin{displaymath}
+\nu(x) = v_0, \ \nu(y) = v_1, \ \nu(z) = v_0.
+\end{displaymath}
+This induces a member of the design space:
+\begin{displaymath}
+\nu(X) = \{ e(v_0,v_1), \ e(v_1,v_0), \ e(v_0,v_0) \}.
+\end{displaymath}
+For the remainder of this paper, we assume constraints a generated by symbolic execution.
+
+\section{Random Sampling By Equivalence Classes}
+Ideally, an exploration algorithm should enumerate the points of a design space randomly with a uniform distribution; this (probabilistically) guarantees that a diverse range of architectures are observed during an arbitrary run of the algorithm. Unfortunately, this goal is very difficult to achieve, because the solutions to a formula $\psi$ cannot be randomly picked. Instead, $\psi$ must be repeatedly \textit{solved} to discover its solutions. (This is in contrast to design spaces consisting of parameter ranges, where it is possible to uniformly sample the space.) Furthermore, efficient solvers, such as SAT/SMT solvers based on DPLL search, cannot be viewed as uniformly sampling the solution space. They employ carefully researched heuristics [] for finding the \textit{next} solution quickly using information about solutions already found. This means the solver may compute a long sequence of similar solutions, before producing another interesting point in the design space.
+
+This problem can be addressed by defining equivalence classes $E = \{[Y_1],\ldots,[Y_n]\}$ on an over-approximation $\mathbb{X} \supseteq \sols{\Pi,q}$ of the design space. Solutions in the same equivalence class are, by definition, uninteresting. Assuming equivalence classes can be randomly sampled and enforced as additional constraints to the solver, then the design space can be randomly sampled. In particular, if $[Y]$ is an equivalence class, then let $\theta([Y])$ be a constraint such that $\sols{\psi \wedge \theta([Y])} \subseteq [Y]$. The general sketch of the sampling algorithm is:
+\begin{algorithm}
+\caption{Naive sampling by equivalence classes}
+\label{alg:naive}
+\begin{algorithmic}[1]
+\Procedure{NaiveExplore}{$\psi, E$}\Comment For finite $E$.
+\While{$E \neq \emptyset$}
+\State $[Y] \gets C\!hoose(E)$
+\State $E \gets E - [Y]$
+\If{$I\!sSat(\psi \wedge \theta([Y]))$}
+\State $Report(Solve(\psi \wedge \theta([Y])))$
+\EndIf
+\EndWhile
+\EndProcedure
+\end{algorithmic}
+\end{algorithm}
+
+Unfortunately, the naive algorithm has a major drawback: There may be many equivalence classes containing no solutions, i.e. $\sols{\psi \wedge \theta([Y])} = \emptyset$. In this case, the algorithm requires many iterations before reporting a solution. The number of iterations $n$ required to obtain at least one solution with probability $p$ follows the hypergeometric distribution:
+\begin{equation}
+n \approx \frac{ln(1-p)}{ln(1-r)}
+\end{equation}
+where $r$ is the ratio of equivalence classes with solutions to the total number of equivalence classes. Suppose $k$ solutions are distributed across $e^k$ equivalence classes, then the expected time to the first solution is approximately $O(e^k)$. The algorithms we present correct the naive sampling algorithm to achieve better run-time performance, while sacrificing some of the uniformity. Next, we describe a useful category of equivalence classes.
+
+\subsection{Equivalence by Isomorphism}
+We investigate the sampling problem when equivalence classes are defined by isomorphisms between sets of terms. Such isomorphisms generalize graph isomorphisms, and so they require the solver to return a sequence of structurally non-isomorphic points in the design space. These particular equivalence classes are useful for enumerating design spaces, because they return globally distinct solutions without additional domain-specific definitions of equivalence.  
+
+\begin{defn}[Homomorphisms] Let $X$ and $Y$ be finite sets of $\Sigma$-terms. A \textit{homomorphism} from $X$ to $Y$ is a function $\varphi$ from terms to terms satisfying:
+\begin{enumerate}
+\item $\varphi(\sigma) = \sigma$.
+\item $\varphi(f(t_1,\ldots,t_n)) = f(\varphi(t_1),\ldots,\varphi(t_n))$.
+\item $\varphi(X) = Y$.
+\end{enumerate}
+Let $\Hom{X}{Y}$ denote the set of all homomorphisms from $X$ to $Y$. If $\Hom{X}{Y} \neq \emptyset$, then $Y$ is a homomorphic image of $X$. Let $\HImg{X}$ denote the set of all homomorphic images of $X$.
+\end{defn}
+
+\begin{defn}[Isomorphisms] $X$ and $Y$ are isomorphic if $\Hom{X}{Y} \neq \emptyset$ and $\Hom{Y}{X} \neq \emptyset$. We write $X \iso Y$ to indicate that $X$ and $Y$ are isomorphic.
+\end{defn}
+
+\begin{defn}[Equivalence By Isomorphism] Let $\mathbb{X}$ be a (possibly infinite) set of finite sets of  $\Sigma$-terms. Then $E_{\iso}(\mathbb{X})$ is a set of equivalence classes over $\mathbb{X}$. The members of each class is given by:
+\begin{equation}
+[X] \DefinedToBe \{ Y \ | \ X \iso Y \}.
+\end{equation} 
+\end{defn}
+
+\begin{lem} $NaiveExplore(\seval{\Pi}{X}{q},E_{\iso}(\HImg{X}))$ uniformly samples the design space generated by $\seval{\Pi}{X}{q}$.
+\end{lem}
+\begin{proof}
+First, by construction $\sols{\psi} \subseteq \HImg{X}$. Second, $E_{\iso}$ contains a finite number of equivalence classes, which is bounded by the number of partitions over $var(X)$. Third, for every equivalence class $[Y]$ there is a formula $\theta([Y])$ such that $\sols{\theta([Y])} = [Y]$.
+\end{proof}
+
+\begin{exmp}Consider $X = \{ e(x,y), e(y,z), e(z,x) \}$ and $Y = \{ e(x,y), e(y,z) \}$. Then $Y \in \HImg{X}$ and 
+\begin{equation}
+\theta([Y]) = \begin{array}{l}
+ (x = y \wedge x \neq z \wedge y \neq z) \ \vee \\  
+				      (x = z \wedge x \neq y \wedge y \neq z) \ \vee \\
+				      (y = z \wedge x \neq y \wedge x \neq z).
+\end{array}				      
+\end{equation}
+\end{exmp}
+
+\section{}
+
+Algorithm \ref{alg:naive} samples the space uniformly (without replacement) and obviously terminates. Unfortunately, there may be many equivalence classes that do not contain a model, i.e. $sols(\psi \wedge \theta([X])) = \emptyset$. In this case, the algorithm may run for many iterations before a solution is reported. The number $n$. of iterations required to obtain at least one solutions with probability $p$ follows the hypergeometric distribution:
+\begin{equation}
+n \approx \frac{ln(1-p)}{ln(1-r)}
+\end{equation}
+where $r$ is the ratio of equivalence classes with solutions to the total number of equivalence classes.
+
+\section{Op}
+Applying the sampling algorithm to equivalence classes based on term isomorphisms is problematic for three reasons: 
 
 
-\section{Random Sampling}
-(Ethan)
+
+\section{Learning and Refinement}
+
+\section{Results}
 
 \section{Discussion and Conclusion}
 
