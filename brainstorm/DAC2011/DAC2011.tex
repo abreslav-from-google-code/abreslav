@@ -361,7 +361,7 @@
 \hyphenation{op-tical net-works semi-conduc-tor}
 
 
-\newcommand{\FORMULA}{\textsc{Formula}}
+\newcommand{\FORMULA}{FORMULA}%\textsc{Formula}}
 
 \begin{document}
 %
@@ -373,17 +373,17 @@
 % author names and affiliations
 % use a multiple column layout for up to three different
 % affiliations
-\author{\IEEEauthorblockN{Andrey Breslav}
-\IEEEauthorblockA{Department of Mathematics\\
-ITMO University\\
-St. Petersburg, Russia\\
-abreslav@gmail.com}
-\and
-\IEEEauthorblockN{Ethan K. Jackson}
-\IEEEauthorblockA{Research in Software Engineering\\
-Microsoft Research\\
-Redmond, WA, USA\\
-ejackson@microsoft.com}}
+%\author{\IEEEauthorblockN{Andrey Breslav}
+%\IEEEauthorblockA{Department of Mathematics\\
+%ITMO University\\
+%St. Petersburg, Russia\\
+%abreslav@gmail.com}
+%\and
+%\IEEEauthorblockN{Ethan K. Jackson}
+%\IEEEauthorblockA{Research in Software Engineering\\
+%Microsoft Research\\
+%Redmond, WA, USA\\
+%ejackson@microsoft.com}}
 
 % conference papers do not typically use \thanks and this command
 % is locked out in conference mode. If really needed, such as for
@@ -447,76 +447,104 @@ The abstract goes here.
 \IEEEpeerreviewmaketitle
 
 \section{Introduction}
-\textit{Design space exploration} (DSE) is a technique for automatically enumerating variants of a system; efficient DSE enables automated rapid prototyping and optimization. Consequently, DSE has been heavily investigated for hardware [,,] and software architectures [,,], yielding encouraging results. 
+\textit{Design space exploration} (DSE) is a technique for automatically enumerating variants of a system; efficient DSE enables automated rapid prototyping and optimization. Consequently, DSE has been heavily investigated for hardware \cite{Mariani2010,Ascia2007,Kakita2006} and software architectures \cite{}, yielding encouraging results. 
 
-However, there is a fundamental limitation to many DSE approaches: They explore small subsets of possible architectures by varying a few system parameters. For example, a design space may be constructed by varying some details of a point design, such as the cache sizes of processors [] or the software implementations of FFTs []. The resulting design space contains a family of related point designs differing only along these predefined axes. This restricts optimization to a narrow range of variants derived from a particular point design. 
+However, there is a fundamental limitation to many DSE approaches: They explore small subsets of possible architectures by varying a few system parameters. For example, a design space may be constructed by varying some details of a point design, such as the cache sizes of processors [] or the software implementations of FFTs []. We refer to such design spaces as \emph{uniform} below. More formally, a design space is uniform if every point in this space is characterized by a finite vector $X = \left(x_1, \ldots, x_n\right)$, where each \emph{degree of freedom} $x_i$ is known to belong to a set $S_i \subseteq \mathbb{R}$ of finite measure $\mu(S_i) < \infty$. The resulting design space contains a family of related point designs differing only along the predefined axes $x_i$. This restricts optimization to a narrow range of variants derived from a particular point design. 
 
-One way to overcome this limitation is by defining design spaces with more complex constraints; the solutions to these constraints equals the design space. Recent advances in constraint solvers can be utilized to efficiently enumerate points in the design space. This approach has been explored with the FORMULA specification language []. Here, the design space is defined through constraints written in first-order logic extended with a fixpoint operator. The efficient \text{satisfiability modulo theories} (SMT) solver is used to enumerate solitions.
+One way to overcome this limitation is by defining design spaces with more complex constraints; the solutions to these constraints equals the design space. Recent advances in constraint solvers can be utilized to efficiently enumerate points in the design space. This approach has been explored with the FORMULA specification language \cite{Jackson2009}. Here, the design space is defined through constraints written in first-order logic extended with a fixpoint operator. The efficient \text{satisfiability modulo theories} (SMT) solver is used to enumerate solitions.
 
 Ideally, an exploration algorithm should enumerate the points of a design space randomly with a uniform distribution; this (probabilistically) guarantees a diverse range of architectures are observed during an arbitrary run of the algorithm. Unfortunately, this goal is very difficult to achieve, because the solutions to a formula $\phi$ cannot be randomly picked. Instead, $\phi$ must be repeatedly \textit{solved} to discover its solutions. (This is in contrast to design spaces consisting of parameter ranges, where it is possible to uniformly sample the space.) Furthermore, efficient solvers, such as SAT/SMT solvers based on DPLL search, cannot be viewed as uniformly sampling the solution space. They employ carefully researched heuristics [] for finding the \textit{next} solution quickly using information about solutions already found. This means the solver may compute a long sequence of similar solutions, before producing another interesting point in the design space.
 
+???
 
-We illustrate our approach with a case study where DSE explores different data paths of an embedded software architecture and different hardware platforms. The optimization problem takes into account performance estimates of CPU and bus utilization derived from discrete event simulation. The well-known technique of \textit{Naive Bayesian Learning} is employed to estimate the key design choices. 
+%We illustrate our approach with a case study where DSE explores different data paths of an embedded software architecture and different hardware platforms. The optimization problem takes into account performance estimates of CPU and bus utilization derived from discrete event simulation. The well-known technique of \textit{Naive Bayesian Learning} is employed to estimate the key design choices. 
 
-This paper is organized as follows: 
+This paper is organized as follows: Section \ref{RelatedWork} outline the related work. Section \ref{CaseStudy} presents a case study and points out the degrees of freedom in the corresponding non-uniform design spaces. Section \ref{Encoding} describes the encoding of these design spaces in \FORMULA{}.
 
-\section{Related Work}
-(Ethan)
+???
 
-\section{Case Study}
+\section{Related Work} \label{RelatedWork}
 
-The present work was motivated by a case study based on the Skinput project \cite{?} that ``appropriates the human body as an input surface. Skinput resolves the location of finger taps on the arm and hand by analyzing mechanical vibrations that propagate through the body. This approach provides an always available, naturally portable, and on-body finger input system''.
+\cite{Mariani2010,Ascia2007} and others -- uniform design spaces
+
+\cite{Kakita2006} developed an algebraic approach for DSE
+of dataflow systems. In this approach, each point in the de-
+sign space is defined as a dataflow graph. Graph rewrite
+rules are applied to an initial graph iteratively to generate a
+set of alternative designs that preserve the scheduling con-
+straints of the original design. The authors tackle the prob-
+lem of the exponential growth in the design space by rep-
+resenting regularity in structures with compact recurrence
+relations. 
+
+
+\cite{Salcic2007} Genetic
+
+\section{Case Study} \label{CaseStudy}
+
+Possible designs of a non-trivial embedded system form a non-uniform space. To demonstrate this, we will use a case study based on the Skinput project \cite{Harrison2010} that ``appropriates the human body as an input surface. Skinput resolves the location of finger taps on the arm and hand by analyzing mechanical vibrations that propagate through the body. This approach provides an always available, naturally portable, and on-body finger input system''.
+
+\subsection{Basic Abstractions}
 
 The high-level structure of Skinput is the following: An array of sensors collect vibration amplitudes from the skin and pass this data forward to be classified as a certain gesture. First, a number of features such as average, standard deviation, FFT and center of masses of power spectra, are computed for every sensor. Then, these features are processed by an \mbox{SVM-based} classifier that determines the type of the gesture being observed.
 
-The abstraction we use to model such systems inherits the overall structure from Skinput: We view software as manipulating \emph{values} as inputs and outputs (these model Skinput's features), where some values can be \emph{primary} meaning that they are not computed inside the system (this implicitly models sensors). The values that constitute the output to the user are marked as \emph{target}. 
+To model the design space of different implementations of Skinput, we used the following abstraction: We view software as manipulating \emph{values} as inputs and outputs (these model Skinput's features), where some values can be \emph{primary} meaning that they are not computed inside the system (this implicitly models sensors). The values that constitute the output to the user are marked as \emph{target}. 
 
-The software itself is modeled by \emph{programs} that relate input values to output ones. Programs rely on particular \emph{capabilities} of hardware, such as availability of certain instructions.
+Units of software are called \emph{programs}; they relate input values to output ones. Programs rely on particular \emph{capabilities} of hardware, such as availability of certain instructions.
 
 \begin{exmp}[Average] Consider a program $Avg_{DIV}(\overrightarrow{x}, n)$ ($Avg$ stands for ``average'') that computes a value $\sum\limits_{i=0}^n x_i / n$ given two other values: vector $\overrightarrow{x}$ and its length $n$. Assume $Avg_{DIV}$ relies on a hardware implementation of devision; then it requires the following capabilities: $ADD$ and $JMP$ to compute a sum in a loop and $DIV$ to divide it by $n$. On the other hand, a program $Avg_{noDIV}$ that computes the same value but is designed for processors with no built-in division, would require capabilities needed to implement division using simpler instructions.
 \end{exmp}
 
-Hardware platform is modeled as a number of \emph{processors} communicating through \emph{media}. Every hardware element is characterized by its \emph{type}. Processor types specify capabilities the processors provide and medium types they can be connected on.
+Hardware platform is modeled as a number of \emph{processors} communicating through \emph{media}. Every hardware element is characterized by its \emph{type}. Processor types specify capabilities the processors provide and medium types they can be connected on. In general, there can be many processors connected on the same medium.
 
-An \emph{individual design} includes 
+Each point in the design space design includes 
 \begin{itemize}
 \item a hardware topology: processors connected by media,
 \item a software configuration: programs that take values as inputs and send resulting values over to other programs,
 \item a mapping that assigns programs to be executed on particular processors.
 \end{itemize}
+Obviously, this abstraction is not limited to our case study and can be used to model a wide range of embedded systems.
 
-\section{Design Spaces as Constraints}
+\subsection{Degrees of Freedom}
+
+Let us examine the degrees of freedom present in the abstraction described above.
+
+On the hardware level, there are two main degrees of freedom. On the one hand, points in the design space may have different topology of the hyper-graph formed by processors and media. For example, one can have a star-like topology or a ring-like one. On the other hand, each hardware element may have a type from a predefined set. Note that the topology restricts (or is restricted by) the element types as they may not allow to connect some processors on some media.
+
+....
+
+\section{Encoding Design Spaces in \FORMULA} \label{Encoding}
 
 \newcommand{\DataSig}{\Sigma}
 \newcommand{\FreeCons}{F}
 \newcommand{\Consts}{C}
-\newcommand{\Vars}{V}
+\newcommand{\Vars}{V} 
 
 To formally specify design spaces we used the \FORMULA{} language \cite{??}. In \FORMULA{}, the user defines a signature $\DataSig$ that includes \emph{free constructors}, constants of basic types such as \texttt{Integer} or \texttt{String}, and variables. A design is then represented as a set of terms over $\DataSig$. 
 
 For our case study, we defined a signature corresponding to the abstraction described in the previous section. For example, processors and their capabilities are captured by the following free constructors:
 
 {\scriptsize\begin{verbatim}
-    ProcessorType : (name : String).    
-    Capability : (name : String).
-    CapabilitySupported : (type : ProcessorType, capability : Capability).    
-    ConnectionSupported : (ptype : ProcessorType, mtype : MediumType).
+  ProcessorType : (name : String).    
+  Capability : (name : String).
+  CapabilitySupported : (pt : ProcessorType, c : Capability).    
+  ConnectionSupported : (pt : ProcessorType, mt : MediumType).
     
-    MediumType : (name : String).
+  MediumType : (name : String).
 
-    Processor : (name : String, type : ProcessorType).
-    Medium : (name : String, type : MediumType).    
-    Connection : (processor : Processor, medium : Medium).
+  Processor : (name : String, type : ProcessorType).
+  Medium : (name : String, type : MediumType).    
+  Connection : (processor : Processor, medium : Medium).
 \end{verbatim}}
 
 The following terms, as a part of a design representation, describe a simple processor type and two processors:    
 
 {\scriptsize\begin{verbatim}
-    CPU is ProcessorType("CPU"), // Bound variable
-      CapabilitySupported(CPU, Capability("ADD")),
-      CapabilitySupported(CPU, Capability("JMP")),
-    Processor("cpu1", CPU),
-    Processor("cpu2", CPU)
+  CPU is ProcessorType("CPU"), // Bound variable
+    CapabilitySupported(CPU, Capability("ADD")),
+    CapabilitySupported(CPU, Capability("JMP")),
+  Processor("cpu1", CPU),
+  Processor("cpu2", CPU)
 \end{verbatim}}
 
 A \emph{legal} design must fulfill a number of constraints. For example, 
@@ -524,10 +552,10 @@ A \emph{legal} design must fulfill a number of constraints. For example,
 In \FORMULA{}, constraints are expressed as a logic program that takes a set of terms as an input and evaluates to true iff the terms satisfy all the constraints. The following fragment of \FORMULA{} code shows how the constraint mentioned above can be encoded in a logic program:
 
 {\scriptsize\begin{verbatim}
-    unsupportedConnection(conn) :- 
-        conn is Connection(Processor(_, ptype), Medium(_, mtype)), 
-        fail ConnectionSupported(ptype, mtype).
-    conforms :? fail unsupportedConnection(_).
+  unsupportedConnection(conn) :- 
+    conn is Connection(Processor(_, ptype), Medium(_, mtype)), 
+    fail ConnectionSupported(ptype, mtype).
+  conforms :? fail unsupportedConnection(_).
 \end{verbatim}}
 
 In this example, a term with \texttt{unsupportedConnection} as a root constructor will be created for every connection between a processor and a medium of an unsupported type. The last line expresses the fact that in a legal design no such terms may appear. This is done by defining a special \emph{query} named \texttt{conforms}. A query roughly corresponds to a boolean variable computed by the logic program. The value of the \texttt{conforms} query is considered to be the result of the program written in \FORMULA{}. In our example \texttt{conforms} will be true iff no  \texttt{unsupportedConnection} terms are around.
@@ -716,7 +744,7 @@ Applying the sampling algorithm to equivalence classes based on term isomorphism
 
 
 \bibliographystyle{IEEEtran}
-\bibliography{DAC2011}
+\bibliography{IEEEabrv,DAC2011}
 \end{document}
 
 
